@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function CustomerPage() {
   return (
     <div>
-      <PageBreadcrumb pageTitle="Quản lý khách hàng"/>
+      <PageBreadcrumb pageTitle="Quản lý khách hàng" itemSearch={true}/>
       <div className="space-y-6">
         <ComponentCard title="Danh sách khách hàng" isDelete={false} linkBtn="customers" titleBtn="Khách Hàng" isAdd={true}>
           <CustomerTable />

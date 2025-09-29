@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function NewsPage() {
   return (
     <div>
-      <PageBreadcrumb pageTitle="Quản lý tin tức"/>
+      <PageBreadcrumb pageTitle="Quản lý tin tức" itemSearch={true}/>
       <div className="space-y-6">
         <ComponentCard title="Danh sách tin tức" isDelete={false} linkBtn="news" titleBtn="Tin Tức" isAdd={true}>
           <NewsTable />

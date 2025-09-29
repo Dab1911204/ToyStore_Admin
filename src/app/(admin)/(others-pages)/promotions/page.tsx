@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function PromotionsPage() {
   return (
     <div>
-      <PageBreadcrumb pageTitle="Quản lý khuyến mãi"/>
+      <PageBreadcrumb pageTitle="Quản lý khuyến mãi" itemSearch={true}/>
       <div className="space-y-6">
         <ComponentCard title="Danh sách khuyến mãi" isDelete={false} linkBtn="promotions" titleBtn="Khuyến Mãi" isAdd={true}>
           <PromotionsTable />

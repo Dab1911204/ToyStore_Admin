@@ -12,7 +12,6 @@ import Button from "@/components/ui/button/Button";
 import { FaEye } from "react-icons/fa6";
 import { useModal } from "@/hooks/useModal";
 import { Modal } from "@/components/ui/modal";
-import Badge from "@/components/ui/badge/Badge";
 
 interface User {
   image: string;

@@ -7,9 +7,6 @@ import {
 } from "../../../ui/table";
 
 import Button from "@/components/ui/button/Button";
-import { FaDeleteLeft } from "react-icons/fa6";
-import { useModal } from "@/hooks/useModal";
-import { Modal } from "@/components/ui/modal";
 import { RiResetLeftFill } from "react-icons/ri";
 
 interface User {
@@ -31,7 +28,6 @@ interface NewsTableBodyProps {
 const CategoriesTableBodyDelete: React.FC<NewsTableBodyProps> = ({
   tableData,
 }) => {
-  const { isOpen, openModal, closeModal } = useModal();
   return (
     <>
       <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
@@ -55,26 +51,11 @@ const CategoriesTableBodyDelete: React.FC<NewsTableBodyProps> = ({
                 <Button className="w-20" size="xxs" variant="warning" startIcon={<RiResetLeftFill />}>
                   Khôi phục
                 </Button>
-                <Button className="w-20" onClick={openModal} size="xxs" variant="danger" startIcon={<FaDeleteLeft />}>
-                  Xóa
-                </Button>
               </div>
             </TableCell>
           </TableRow>
         ))}
       </TableBody>
-      <Modal isOpen={isOpen} onClose={closeModal} className="max-w-[700px] m-4">
-        <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
-          <div className="px-2 pr-14">
-            <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
-              Chi tiết tin tức
-            </h4>
-            <p className="mb-6 text-sm text-gray-500 dark:text-gray-400 lg:mb-7">
-              Update your details to keep your profile up-to-date.
-            </p>
-          </div>
-        </div>
-      </Modal>
     </>
   );
 }

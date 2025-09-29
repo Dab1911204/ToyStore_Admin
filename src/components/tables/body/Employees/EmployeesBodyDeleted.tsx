@@ -8,7 +8,6 @@ import {
 
 import Button from "@/components/ui/button/Button";
 import { FaEye  } from "react-icons/fa";
-import { FaDeleteLeft } from "react-icons/fa6";
 import { Modal } from "@/components/ui/modal";
 import { useModal } from "@/hooks/useModal";
 import { RiResetLeftFill } from "react-icons/ri";
@@ -67,9 +66,6 @@ const EmployeesBodyDeleted: React.FC<NewsTableBodyProps> = ({
                 </Button>
                 <Button className="w-20" size="xxs" variant="warning" startIcon={<RiResetLeftFill />}>
                   Khôi phục
-                </Button>
-                <Button className="w-20" size="xxs" variant="danger" startIcon={<FaDeleteLeft />}>
-                  Xóa
                 </Button>
               </div>
             </TableCell>

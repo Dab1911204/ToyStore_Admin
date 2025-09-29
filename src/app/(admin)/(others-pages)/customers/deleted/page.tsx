@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function DeletedCustomerPage() {
   return (
     <div>
-      <PageBreadcrumb pageTitle="Khách hàng đã xóa" pageParent="Quản lý khách hàng" urlPageParent="/customers"/>
+      <PageBreadcrumb pageTitle="Khách hàng đã xóa" pageParent="Quản lý khách hàng" urlPageParent="/customers" itemSearch={true}/>
       <div className="space-y-6">
         <ComponentCard title="Danh sách khách hàng" linkBtn="customers" titleBtn="Khách Hàng" isDelete={false}>
           <CustomerTableDelete />

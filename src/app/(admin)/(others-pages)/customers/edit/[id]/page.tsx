@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function EditCustomerPage() {
   return (
     <div>
-      <PageBreadcrumb pageTitle="Sửa khách hàng" pageParent="Quản lý khách hàng" urlPageParent="/customers" />
+      <PageBreadcrumb pageTitle="Sửa khách hàng" pageParent="Quản lý khách hàng" urlPageParent="/customers"/>
       <FormProvider >
         <EditForm />
       </FormProvider>

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function DeletedNewsPage() {
   return (
     <div>
-      <PageBreadcrumb pageTitle="Khuyến mãi đã xóa" pageParent="Quản lý khuyến mãi" urlPageParent="/promotions"/>
+      <PageBreadcrumb pageTitle="Khuyến mãi đã xóa" pageParent="Quản lý khuyến mãi" urlPageParent="/promotions" itemSearch={true}/>
       <div className="space-y-6">
         <ComponentCard title="Danh sách khuyến mãi" linkBtn="promotions" titleBtn="Khuyến Mãi" isDelete={true}>
           <PromotionsTableDelete />
