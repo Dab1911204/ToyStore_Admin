@@ -1,9 +1,11 @@
+"use client"
 import React from "react";
 import Button from "../ui/button/Button";
 import Link from "next/link";
 
 import { FaPlusCircle } from "react-icons/fa";
 import { RiDeleteBin5Fill } from "react-icons/ri";
+import BaseSelect from "../form/select/select";
 
 interface ComponentCardProps {
   title: string;
@@ -15,6 +17,7 @@ interface ComponentCardProps {
   isAdd?: boolean; // Title for the button
   isDelete?: boolean; // Title for the button
   isOrder?: boolean; // Title for the button
+  filter?: { label: string; value: string }[]; 
 }
 
 const ComponentCard: React.FC<ComponentCardProps> = ({
@@ -27,6 +30,7 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
   isAdd,
   isDelete,
   isOrder=false,
+  filter = [],
 }) => {
   return (
     <div
@@ -44,6 +48,11 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
             </p>
           )}
         </div>
+        {filter.length > 0 && (
+          <div className="px-6 py-5">
+            <BaseSelect name="status" className="" placeholder="Lọc theo trạng thái" options={filter} size="xxs" onChange={() => {}}/>
+          </div>
+        )}
         {linkBtn && titleBtn && (
           <div className="px-6 py-5">
             <Link href={"/"+linkBtn+"/create"} className="mr-3">

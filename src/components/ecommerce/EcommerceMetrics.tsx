@@ -2,6 +2,7 @@
 import React from "react";
 import { CiBoxes } from "react-icons/ci";
 import { BsPeople } from "react-icons/bs";
+import { RiBillLine } from "react-icons/ri";
 import BaseDatePicker from "../form/date-picker";
 import BaseSelect from "../form/select/select";
 
@@ -60,7 +61,7 @@ export const EcommerceMetrics = () => {
             </h4>
           </div>
           <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
-            <CiBoxes className="text-gray-800 dark:text-white/90" />
+            <RiBillLine size={20} className="text-gray-800 dark:text-white/90" />
           </div>
         </div>
       </div>

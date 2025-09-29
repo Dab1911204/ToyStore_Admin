@@ -12,15 +12,6 @@ const nextConfig: NextConfig = {
       // Thêm các host khác nếu cần
     ],
   },
-  webpack(config) {
-    // Thêm support SVG
-    config.module.rules.push({
-      test: /\.svg$/i,
-      issuer: /\.[jt]sx?$/,
-      use: ["@svgr/webpack"],
-    });
-    return config;
-  },
 };
 
 export default nextConfig;

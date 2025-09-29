@@ -7,10 +7,10 @@ import { useSidebar } from "../context/SidebarContext";
 import { FaRegNewspaper } from "react-icons/fa";
 import { BsPeople } from "react-icons/bs";
 import { AiOutlineProduct,AiOutlineHome } from "react-icons/ai";
-import { RiDiscountPercentLine } from "react-icons/ri";
+import { RiDiscountPercentLine,RiBillLine } from "react-icons/ri";
 import { GrDeliver } from "react-icons/gr";
 import { LiaWarehouseSolid } from "react-icons/lia";
-import { MdBorderColor,MdOutlineCategory,MdLogout,MdKeyboardArrowDown,MdOutlineMenu } from "react-icons/md";
+import { MdOutlineCategory,MdLogout,MdKeyboardArrowDown,MdOutlineMenu } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
 import { NavItem } from "@/types/context";
 
@@ -46,7 +46,7 @@ const navItems: NavItem[] = [
     path: "/products",
   },
   {
-    icon: <MdBorderColor size={20} />,
+    icon: <RiBillLine size={20} />,
     name: "Quản lý đơn hàng",
     path: "/orders",
   },
