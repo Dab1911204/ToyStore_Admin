@@ -5,12 +5,9 @@ import Button from "@/components/ui/button/Button";
 import InputForm from "../form-elements/InputForm";
 import { useNotification } from "@/context/NotificationContext";
 import { FaRegSmileBeam } from "react-icons/fa";
-import SelectForm from "../form-elements/SelectForm";
-import SwitchForm from "../form-elements/SwitchForm";
-import DatePickerForm from "../form-elements/DatePickerForm";
 
 export default function AddForm() {
-    const { values, setErrors } = useFormContext();
+    const { setErrors } = useFormContext();
     const { openNotification } = useNotification();
 
     const handleSubmit = (data: Record<string, any> | FormData) => {

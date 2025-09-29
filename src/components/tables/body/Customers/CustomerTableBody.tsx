@@ -6,7 +6,6 @@ import {
   TableRow,
 } from "../../../ui/table";
 
-import Image from "next/image";
 import Button from "@/components/ui/button/Button";
 import Link from "next/link";
 import { FaWrench,FaEye  } from "react-icons/fa";

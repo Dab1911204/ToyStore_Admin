@@ -2,7 +2,7 @@
 import { useFormContext } from "@/context/FormContext";
 import React, { useState } from "react";
 import { BaseProps } from "@/types/props";
-import Input from "../input/inputField";
+import Input from "../input/InputField";
 
 export default function InputForm({
   name,

@@ -8,7 +8,7 @@ import { FaRegSmileBeam } from "react-icons/fa";
 import SwitchForm from "../form-elements/SwitchForm";
 
 export default function AddForm() {
-    const { values, setErrors } = useFormContext();
+    const { setErrors } = useFormContext();
     const { openNotification } = useNotification();
 
     const handleSubmit = (data: Record<string, any> | FormData) => {

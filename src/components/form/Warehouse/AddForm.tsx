@@ -10,7 +10,7 @@ import SwitchForm from "../form-elements/SwitchForm";
 import DatePickerForm from "../form-elements/DatePickerForm";
 
 export default function AddForm() {
-    const { values, setErrors } = useFormContext();
+    const { setErrors } = useFormContext();
     const { openNotification } = useNotification();
 
     const handleSubmit = (data: Record<string, any> | FormData) => {
