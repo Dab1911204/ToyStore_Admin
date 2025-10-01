@@ -52,12 +52,12 @@ const navItems: NavItem[] = [
   },
   {
     icon: <FaRegNewspaper size={20} />,
-    name: "Tin Tức",
+    name: "Quản lý tin tức",
     path: "/news",
   },
   {
     icon: <RiDiscountPercentLine size={20} />,
-    name: "Khuyễn mãi",
+    name: "Quản lý khuyến mãi",
     path: "/promotions",
   },
   {
