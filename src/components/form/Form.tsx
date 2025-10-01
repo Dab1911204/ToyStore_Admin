@@ -3,7 +3,7 @@ import { useFormContext } from "@/context/FormContext";
 import { FormProps } from "@/types/props";
 import React, { FC } from "react";
 
-const Form: FC<FormProps> = ({ onSubmit, children, className, mode = "json" }) => {
+const Form: FC<FormProps> = ({ onSubmit, children, className, mode = "json",method="GET"}) => {
   const { values, setSubmitted } = useFormContext();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -32,6 +32,7 @@ const Form: FC<FormProps> = ({ onSubmit, children, className, mode = "json" }) =
       onSubmit={handleSubmit}
       className={className}
       encType={mode === "multipart" ? "multipart/form-data" : undefined}
+      method={method}
     >
       {children}
     </form>

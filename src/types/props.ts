@@ -72,6 +72,7 @@ interface FormProps {
   children: ReactNode;
   className?: string;
   mode?: "json" | "multipart";
+  method?: "POST" | "PUT" | "PATCH" | "DELETE"
 }
 
 interface SelectFieldProps {
