@@ -28,6 +28,7 @@ export type NavItem = {
   icon: React.ReactNode;
   path?: string;
   subItems?: { name: string; path: string; pro?: boolean; new?: boolean }[];
+  action?: string;
 };
 
 export interface FormProviderProps {

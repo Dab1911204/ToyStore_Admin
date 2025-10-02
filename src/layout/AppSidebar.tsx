@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState,useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useSidebar } from "../context/SidebarContext";
 import { FaRegNewspaper } from "react-icons/fa";
 import { BsPeople } from "react-icons/bs";
@@ -13,6 +13,7 @@ import { LiaWarehouseSolid } from "react-icons/lia";
 import { MdOutlineCategory,MdLogout,MdKeyboardArrowDown,MdOutlineMenu } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
 import { NavItem } from "@/types/context";
+import { AuthService } from "@/services/authService";
 
 const navItems: NavItem[] = [
   {
@@ -74,27 +75,9 @@ const navItems: NavItem[] = [
   //   path: "/profile",
   // },
   // {
-  //   icon: <CalenderIcon />,
-  //   name: "Calendar",
-  //   path: "/calendar",
-  // },
-  // {
-  //   name: "Forms",
-  //   icon: <ListIcon />,
-  //   subItems: [{ name: "Form Elements", path: "/form-elements", pro: false }],
-  // },
-  // {
   //   name: "Tables",
   //   icon: <TableIcon />,
   //   subItems: [{ name: "Basic Tables", path: "/basic-tables", pro: false }],
-  // },
-  // {
-  //   name: "Pages",
-  //   icon: <PageIcon />,
-  //   subItems: [
-  //     { name: "Blank Page", path: "/blank", pro: false },
-  //     { name: "404 Error", path: "/error-404", pro: false },
-  //   ],
   // },
 ];
 
@@ -119,24 +102,40 @@ const othersItems: NavItem[] = [
   //     { name: "Videos", path: "/videos", pro: false },
   //   ],
   // },
-  // {
-  //   icon: <PlugInIcon />,
-  //   name: "Authentication",
-  //   subItems: [
-  //     { name: "Sign In", path: "/signin", pro: false },
-  //     { name: "Sign Up", path: "/signup", pro: false },
-  //   ],
-  // },
   {
     icon: <MdLogout />,
     name: "Đăng xuất",
-    path: "/signin",
+    action: "sign-out",
   },
 ];
 
-const AppSidebar: React.FC = () => {
+interface Props {
+  setHandling: (value: boolean) => void;
+  handling: boolean;
+  setMess: (value: string) => void;
+}
+
+const AppSidebar: React.FC<Props> = ( {setHandling,handling,setMess} ) => {
+  const router = useRouter();
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const pathname = usePathname();
+  const handleLogout = async () => {
+    if (handling) return; // tránh bấm nhiều lần
+    setHandling(true);     // bật overlay lock UI
+    setMess("Đang đăng xuất...");
+    try {
+      const success = await AuthService.logout();
+      if (success) {
+        router.push("/signin");
+      } else {
+        alert("Đăng xuất thất bại, thử lại!");
+        setHandling(false);
+      }
+    } catch (error) {
+      console.error(error);
+      setHandling(false);
+    }
+  };
 
   const renderMenuItems = (
     navItems: NavItem[],
@@ -182,27 +181,25 @@ const AppSidebar: React.FC = () => {
               )}
             </button>
           ) : (
-            nav.path && (
+            nav.path ? (
               <Link
                 href={nav.path}
-                className={`menu-item group ${
-                  isActive(nav.path) ? "menu-item-active" : "menu-item-inactive"
-                }`}
+                className={`menu-item group ${isActive(nav.path) ? "menu-item-active" : "menu-item-inactive"}`}
               >
-                <span
-                  className={`${
-                    isActive(nav.path)
-                      ? "menu-item-icon-active"
-                      : "menu-item-icon-inactive"
-                  }`}
-                >
+                <span className={isActive(nav.path) ? "menu-item-icon-active" : "menu-item-icon-inactive"}>
                   {nav.icon}
                 </span>
-                {(isExpanded || isHovered || isMobileOpen) && (
-                  <span className={`menu-item-text`}>{nav.name}</span>
-                )}
+                {(isExpanded || isHovered || isMobileOpen) && <span className="menu-item-text">{nav.name}</span>}
               </Link>
-            )
+            ) : nav.action === "sign-out" ? (
+              <button
+                onClick={handleLogout}
+                className="menu-item group menu-item-inactive"
+              >
+                <span className="menu-item-icon-inactive">{nav.icon}</span>
+                {(isExpanded || isHovered || isMobileOpen) && <span className="menu-item-text">{nav.name}</span>}
+              </button>
+            ) : null
           )}
           {nav.subItems && (isExpanded || isHovered || isMobileOpen) && (
             <div

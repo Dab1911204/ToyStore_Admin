@@ -114,7 +114,6 @@ const request = async <T>(
   } catch {
     responseBody = null
   }
-
   if (!res.ok) {
     if (res.status === 401) {
       if (typeof window !== "undefined") {
