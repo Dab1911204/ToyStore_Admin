@@ -11,4 +11,13 @@ export const AuthService = {
       requireAuth: false,
       baseUrl: ""
     }),
+  logout: async (force?: boolean) => {
+    try {
+      await post("/api/auth/sign-out", { force }, { requireAuth: false,credentials: "include",baseUrl: "" });
+      return true;
+    } catch (err) {
+      console.warn("Logout API failed:", err);
+      return false;
+    }
+  }
 };
