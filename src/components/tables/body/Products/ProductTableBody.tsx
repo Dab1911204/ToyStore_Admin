@@ -14,22 +14,10 @@ import { FaDeleteLeft } from "react-icons/fa6";
 import { Modal } from "@/components/ui/modal";
 import { useModal } from "@/hooks/useModal";
 import Badge from "@/components/ui/badge/Badge";
-
-
-interface User {
-  image: string;
-  name: string;
-}
-
-interface ProductsTableRow {
-  id: string | number;
-  user: User;
-  projectName: string;
-  // Add other fields if needed
-}
+import { ProductType } from "@/schemaValidations/product.schema";
 
 interface ProductsTableBodyProps {
-  tableData: ProductsTableRow[];
+  tableData: ProductType[];
 }
 
 const ProductTableBody: React.FC<ProductsTableBodyProps> = ({
@@ -39,10 +27,10 @@ const ProductTableBody: React.FC<ProductsTableBodyProps> = ({
   return (
     <>
       <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-        {tableData.map((order) => (
-          <TableRow key={order.id}>
+        {tableData.map((product,index) => (
+          <TableRow key={product.id}>
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-              {order.id}
+              {index}
             </TableCell>
             
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
@@ -51,36 +39,44 @@ const ProductTableBody: React.FC<ProductsTableBodyProps> = ({
                   <Image
                     width={100}
                     height={100}
-                    src={order.user.image}
-                    alt={order.user.name}
+                    src={product.image?.[0] || "/public/images/cards/card-03.png"}
+                    alt={product.productName}
                   />
                 </div>
               </div>
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-              {order.projectName}
+              {product.productName}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-              50.000
+              {product.price}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-              100
+              {product.quantity}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-              <Badge color="success" size="sm">Còn hàng</Badge>
+              {product.productStatus == 0 ? (
+                <Badge color="error" size="sm">
+                  Hết hàng
+                </Badge>
+              ):(
+                <Badge color="success" size="sm">
+                  Còn hàng
+                </Badge>
+              )}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
               <Badge color="info" size="sm">Mới</Badge>
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-              Nguyễn Văn A
+              {product.createdBy}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-              Nguyễn Văn A
+              {product.updatedBy}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
               <div className="flex flex-col gap-2">
-                <Link href={"/products/edit/"+order.id}>
+                <Link href={"/products/edit/"+product.slug}>
                   <Button className="w-20" size="xxs" variant="warning" startIcon={<FaWrench />}>
                     Sửa
                   </Button>
@@ -88,7 +84,7 @@ const ProductTableBody: React.FC<ProductsTableBodyProps> = ({
                 <Button onClick={openModal} className="w-20" size="xxs" variant="info" startIcon={<FaEye />}>
                   Chi tiết
                 </Button>
-                <Link href={"/products/"+order.id}>
+                <Link href={"/products/"+product.slug}>
                   <Button className="w-20" size="xxs" variant="danger" startIcon={<FaDeleteLeft />}>
                     Xóa
                   </Button>

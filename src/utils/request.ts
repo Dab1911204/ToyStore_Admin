@@ -70,6 +70,8 @@ const request = async <T>(
     // CLIENT: tự lấy token + role từ cookie
     token = getCookie("sessionToken") || options?.token
     role = getCookie("roleUser") || options?.role
+    console.log(token)
+    console.log(role)
   } else {
     // SERVER: chỉ lấy từ options
     token = options?.token
@@ -82,10 +84,12 @@ const request = async <T>(
     } else {
       redirectToLogin(true)
     }
+    console.log("Unauthorized - Missing token")
     throw new Error("Unauthorized - Missing token")
   }
 
   if (requireManager && role !== "manager") {
+    console.log("Unauthorized - Missing token")
     throw new Error("Forbidden - Requires manager role")
   }
 
@@ -105,26 +109,16 @@ const request = async <T>(
           : JSON.stringify(data)
         : undefined,
   }
+  console.log(fetchOptions)
 
   const res = await fetch(url, fetchOptions)
+  console.log("Kết quả"+res)
 
   let responseBody: any
   try {
     responseBody = await res.json()
   } catch {
     responseBody = null
-  }
-  if (!res.ok) {
-    if (res.status === 401) {
-      if (typeof window !== "undefined") {
-        redirectToLogin(false)
-      } else {
-        redirectToLogin(true)
-      }
-    }
-    throw new Error(
-      responseBody?.message || `HTTP error! status: ${res.status}`
-    )
   }
 
   return responseBody as T

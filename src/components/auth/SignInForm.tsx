@@ -22,6 +22,8 @@ export default function SignInForm() {
       setLoading(true)
       setErrorMessage("") // reset lỗi trước khi submit
       const res: LoginResType = await AuthService.login(values)
+      console.log(res)
+
 
       const expiresAt = new Date(Date.now() + 2 * 60 * 60 * 1000)
 

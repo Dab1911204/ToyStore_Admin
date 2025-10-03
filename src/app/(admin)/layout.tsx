@@ -3,6 +3,8 @@
 import { useSidebar } from "@/context/SidebarContext";
 import AppHeader from "@/layout/AppHeader";
 import AppSidebar from "@/layout/AppSidebar";
+import { LoadingOutlined } from '@ant-design/icons';
+import { Flex, Spin } from "antd";
 import React, { useState } from "react";
 
 export default function AdminLayout({
@@ -12,7 +14,6 @@ export default function AdminLayout({
 }) {
   const { isExpanded, isHovered, isMobileOpen } = useSidebar();
   const [handling, setHandling] = useState(false);
-  const [mess,setMess] = useState("")
 
   // Dynamic class for main content margin based on sidebar state
   const mainContentMargin = isMobileOpen
@@ -24,7 +25,7 @@ export default function AdminLayout({
   return (
     <div className="min-h-screen xl:flex relative">
       {/* Sidebar */}
-      <AppSidebar setHandling={setHandling} handling={handling} setMess={setMess} />
+      <AppSidebar setHandling={setHandling} handling={handling} />
 
       {/* Main Content Area */}
       <div
@@ -39,9 +40,9 @@ export default function AdminLayout({
       {/* Overlay khi logout */}
       {handling && (
         <div className="fixed inset-0 bg-black/30 z-[9999] flex items-center justify-center pointer-events-auto">
-          <div className="bg-white p-6 rounded shadow-md animate-pulse">
-            {mess}
-          </div>
+          <Flex align="center" gap="middle">
+            <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
+          </Flex>
         </div>
       )}
     </div>
