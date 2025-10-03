@@ -5,6 +5,7 @@ export const AuthService = {
   login: (data: LoginBodyType) =>
     post<LoginResType>("/api/Auth/sign-in", data, {
       requireAuth: false,
+      credentials: 'include'
     }),
   auth: (data: { sessionToken: string; expiresAt?: string; roleUser?: string}) =>
     post<LoginResType>("/api/auth", data,{
@@ -13,7 +14,7 @@ export const AuthService = {
     }),
   logout: async (force?: boolean) => {
     try {
-      await post("/api/auth/sign-out", { force }, { requireAuth: false,credentials: "include",baseUrl: "" });
+      await post("/api/auth/sign-out", { force }, { requireAuth: true,baseUrl: "" });
       return true;
     } catch (err) {
       console.warn("Logout API failed:", err);
