@@ -10,6 +10,8 @@ import Pagination from "../../Pagination";
 import { ProductType } from "@/schemaValidations/product.schema";
 import { useTableContext } from "@/context/TableContext";
 import { ProductService } from "@/services/productService";
+import { NoData } from "@/components/common/NoData";
+import { Loading } from "@/components/common/Loading";
 
 
 const title = ["STT",'Hình ảnh','Tên sản phẩm',"Giá","Số lượng","Trạng thái","Tình trạng","Người tạo","Người sửa","Hành động"]
@@ -18,6 +20,7 @@ export default function ProductTable() {
   const [currentPage,setCurrentPage] = useState(1)
   const [totalPages,setTotalPages] = useState(1)
   const [tableData,setTableData] = useState<ProductType[]>([])
+  const [loading, setLoading] = useState(true); // trạng thái đang load
   const { urlApi, setParam } = useTableContext();
   const onPageChange = async (page: number) => {
     setCurrentPage(page)
@@ -27,13 +30,17 @@ export default function ProductTable() {
     console.log(urlApi)
     const fetchDataTable = async () => {
       try {
+        setTableData([])
         const res = await ProductService.getListProduct(urlApi)
+        console.log(res)
         setTableData(res.result.items)
         setTotalPages(res.result.totalPages)
         setCurrentPage(res.result.currentPage)
       }
       catch (error) {
         console.log(error)
+      }finally{
+        setLoading(false)
       }
     }
     fetchDataTable()
@@ -46,21 +53,15 @@ export default function ProductTable() {
           <Table className="w-full">
             {/* Table Header */}
             <TableHeaderOne title={title}/>
-
+            {loading && (
+              <Loading colSpan={title.length} />
+            )}
             {/* Table Body */}
-            {Array.isArray(tableData) && tableData.length > 0 ? (
+            {!loading && tableData.length > 0 && (
               <ProductTableBody tableData={tableData} />
-            ) : (
-              <tbody>
-                <tr>
-                  <td
-                    colSpan={title.length}
-                    className="px-4 py-3 text-gray-500 text-center text-theme-lg"
-                  >
-                    Không có dữ liệu
-                  </td>
-                </tr>
-              </tbody>
+            )}
+            {!loading && tableData.length === 0 && (
+              <NoData colSpan={title.length} title="Không có dữ liệu" />
             )}
           </Table>
           {Array.isArray(tableData) && tableData.length > 0 && (

@@ -107,6 +107,7 @@ const request = async <T>(
           : JSON.stringify(data)
         : undefined,
   }
+  console.log(fetchOptions)
 
   const res = await fetch(url, fetchOptions)
 

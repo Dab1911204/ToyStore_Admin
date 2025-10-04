@@ -36,7 +36,7 @@ export const PromotionSchema = z.object({
 export type PromotionType = z.infer<typeof PromotionSchema>;
 
 // Schema cho response có phân trang
-export const NewsResponseSchema = z.object({
+export const PromotionResponseSchema = z.object({
   success: z.boolean(),
   result: z.object({
     currentPage: z.number().int(),
@@ -53,4 +53,4 @@ export const NewsResponseSchema = z.object({
   errors: z.array(z.any())
 });
 
-export type NewsResType = z.infer<typeof NewsResponseSchema>;
+export type PromotionResType = z.infer<typeof PromotionResponseSchema>;

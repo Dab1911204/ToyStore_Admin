@@ -13,12 +13,12 @@ export default function PromotionsPage() {
   return (
     <div>
       <TableContextProvider initialUrl="/api/Promotion">
-      <PageBreadcrumb pageTitle="Quản lý khuyến mãi" itemSearch={true}/>
-      <div className="space-y-6">
-        <ComponentCard title="Danh sách khuyến mãi" isDelete={false} isApprove={true} linkBtn="promotions" titleBtn="Khuyến Mãi" isAdd={true}>
-          <PromotionsTable />
-        </ComponentCard>
-      </div>
+        <PageBreadcrumb pageTitle="Quản lý khuyến mãi" itemSearch={true}/>
+        <div className="space-y-6">
+          <ComponentCard title="Danh sách khuyến mãi" isDelete={false} isApprove={true} linkBtn="promotions" titleBtn="Khuyến Mãi" isAdd={true}>
+            <PromotionsTable />
+          </ComponentCard>
+        </div>
       </TableContextProvider>
     </div>
   );
