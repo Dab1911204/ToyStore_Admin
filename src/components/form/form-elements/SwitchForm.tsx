@@ -27,7 +27,7 @@ const SwitchForm: React.FC<SwitchFormProps> = ({
 
   return (
     <>
-      <div className={`flex flex-col mb-4 ${className}`}>
+      <div className={`flex flex-col mb-4 mt-4 ${className}`}>
         {label && (<Label htmlFor={name}>{label}</Label>)}
         <Switch
           id={name}

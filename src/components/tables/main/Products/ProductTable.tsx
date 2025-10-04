@@ -19,15 +19,15 @@ export default function ProductTable() {
   const [totalPages,setTotalPages] = useState(1)
   const [tableData,setTableData] = useState<ProductType[]>([])
   const { urlApi, setParam } = useTableContext();
-  const onPageChange = (page: number) => {
+  const onPageChange = async (page: number) => {
     setCurrentPage(page)
     setParam("PageNumber",page)
   }
   useEffect(() => {
+    console.log(urlApi)
     const fetchDataTable = async () => {
       try {
         const res = await ProductService.getListProduct(urlApi)
-        console.log(res)
         setTableData(res.result.items)
         setTotalPages(res.result.totalPages)
         setCurrentPage(res.result.currentPage)
@@ -37,18 +37,6 @@ export default function ProductTable() {
       }
     }
     fetchDataTable()
-    // const fetchDataTable1= async () => {
-    //   const res = await fetch("https://cua-hang-do-choi-be.onrender.com/api/Product/admin",{
-    //     method:"GET",
-    //     headers:{
-    //       "Content-Type":"application/json",
-    //       "Authorization":"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE5ZDEwMzhkLTVmNjAtNGUyZi04MmRiLWRkYjAzNmQ3MThmOSIsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQHlvdXJhcHAubG9jYWwiLCJuYW1lIjoiU3lzdGVtIEFkbWluaXN0cmF0b3IiLCJyb2xlIjoibWFuYWdlciIsIm5iZiI6MTc1OTQ3NTY0MCwiZXhwIjoxNzU5NDc5MjQwLCJpYXQiOjE3NTk0NzU2NDAsImlzcyI6Imh0dHBzOi8veW91ci1hcHAub25yZW5kZXIuY29tIiwiYXVkIjoiaHR0cHM6Ly95b3VyLWFwcC5vbnJlbmRlci5jb20ifQ.T9qn4Eqi4PN3h66AB2PcnkX_jELvlSicgnJxouLrzDk"
-    //     }
-    //   })
-    //   const data = await res.json()
-    //   console.log(data)
-    // }
-    // fetchDataTable1()
   }, [urlApi])
 
   return (
@@ -60,11 +48,26 @@ export default function ProductTable() {
             <TableHeaderOne title={title}/>
 
             {/* Table Body */}
-            <ProductTableBody tableData={tableData}/>
+            {Array.isArray(tableData) && tableData.length > 0 ? (
+              <ProductTableBody tableData={tableData} />
+            ) : (
+              <tbody>
+                <tr>
+                  <td
+                    colSpan={title.length}
+                    className="px-4 py-3 text-gray-500 text-center text-theme-lg"
+                  >
+                    Không có dữ liệu
+                  </td>
+                </tr>
+              </tbody>
+            )}
           </Table>
-          <div className="w-full flex justify-center mt-4 mb-4">
-            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={onPageChange} />
-          </div>
+          {Array.isArray(tableData) && tableData.length > 0 && (
+            <div className="w-full flex justify-center mt-4 mb-4">
+              <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={onPageChange} />
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -17,7 +17,9 @@ export default function CreateOrdersPage() {
         <ComponentCard title="Danh sách sản phẩm" isOrder={true} isAdd={false} className="col-span-2">
           <ProductList/>
         </ComponentCard>
-        <InfoOrder/>
+        <ComponentCard title="Toys-World" isOrder={true} isAdd={false}>
+          <InfoOrder/>
+        </ComponentCard>
       </div>
     </div>
   );

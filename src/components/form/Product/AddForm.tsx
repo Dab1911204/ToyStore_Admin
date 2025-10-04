@@ -54,7 +54,7 @@ export default function AddForm() {
       <InputForm label="Tên sản phẩm" name="name" placeholder="Nhập tên sản phẩm" />
       <DropzoneImageInput name="images" multiple className="mt-4"/>
       <InputForm label="Giá" name="price" placeholder="Nhập giá" type="number" />
-      <div className="flex flex-nowrap gap-4 mt-4 w-full justify-center">
+      <div className="flex flex-nowrap gap-4 mt-4 w-full items-center">
         <SelectForm className="w-full" label="Danh mục" name="category" placeholder="Chọn danh mục" options={[{value: '1', label: 'Category 1'}, {value: '2', label: 'Category 2'}]} />
         <SelectForm className="w-full" label="Thương hiệu" name="brand" placeholder="Chọn thương hiệu" options={[{value: '1', label: 'Brand 1'}, {value: '2', label: 'Brand 2'}]} />
         <SwitchForm

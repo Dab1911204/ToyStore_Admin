@@ -17,17 +17,20 @@ export const TableContextProvider = ({ children, initialUrl = "" }: TableContext
   const [urlApi, setUrlApi] = useState<string>(initialUrl);
 
   const setParam = (name: string, value: string | number | null) => {
-    const url = new URL(urlApi);
-    
+    // Tách path và query string từ urlApi hiện tại
+    const [path, queryString] = urlApi.split("?");
+    const params = new URLSearchParams(queryString || "");
+
     if (value === "" || value === null) {
-      url.searchParams.delete(name); // xóa param nếu rỗng
+      params.delete(name); // xoá param nếu giá trị rỗng/null
     } else {
-      url.searchParams.set(name, value.toString()); // set hoặc update param
+      params.set(name, value.toString()); // thêm/cập nhật param
     }
 
-    setUrlApi(url.toString());
+    // Ghép lại URL
+    const newUrl = params.toString() ? `${path}?${params.toString()}` : path;
+    setUrlApi(newUrl);
   };
-
   return (
     <TableContext.Provider value={{ urlApi, setParam }}>
       {children}
