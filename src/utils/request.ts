@@ -70,8 +70,6 @@ const request = async <T>(
     // CLIENT: tự lấy token + role từ cookie
     token = getCookie("sessionToken") || options?.token
     role = getCookie("roleUser") || options?.role
-    console.log(token)
-    console.log(role)
   } else {
     // SERVER: chỉ lấy từ options
     token = options?.token
@@ -109,10 +107,8 @@ const request = async <T>(
           : JSON.stringify(data)
         : undefined,
   }
-  console.log(fetchOptions)
 
   const res = await fetch(url, fetchOptions)
-  console.log("Kết quả"+res)
 
   let responseBody: any
   try {

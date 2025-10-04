@@ -11,108 +11,7 @@ import { useTableContext } from "@/context/TableContext";
 import { NewsService } from "@/services/newsService";
 import { NewsType } from "@/schemaValidations/news.schema";
 
-interface Order {
-  id: number;
-  user: {
-    image: string;
-    name: string;
-    role: string;
-  };
-  projectName: string;
-  team: {
-    images: string[];
-  };
-  status: string;
-  budget: string;
-}
-
 const title = ["STT",'Hình ảnh','Tiêu đề',"Ngày tạo","Người tạo","Người duyệt","Hàng động"]
-
-// Define the table data using the interface
-const tableData: Order[] = [
-  {
-    id: 1,
-    user: {
-      image: "/images/user/user-17.jpg",
-      name: "Lindsey Curtis",
-      role: "Web Designer",
-    },
-    projectName: "Agency Website",
-    team: {
-      images: [
-        "/images/user/user-22.jpg",
-        "/images/user/user-23.jpg",
-        "/images/user/user-24.jpg",
-      ],
-    },
-    budget: "3.9K",
-    status: "Active",
-  },
-  {
-    id: 2,
-    user: {
-      image: "/images/user/user-18.jpg",
-      name: "Kaiya George",
-      role: "Project Manager",
-    },
-    projectName: "Technology",
-    team: {
-      images: ["/images/user/user-25.jpg", "/images/user/user-26.jpg"],
-    },
-    budget: "24.9K",
-    status: "Pending",
-  },
-  {
-    id: 3,
-    user: {
-      image: "/images/user/user-17.jpg",
-      name: "Zain Geidt",
-      role: "Content Writing",
-    },
-    projectName: "Blog Writing",
-    team: {
-      images: ["/images/user/user-27.jpg"],
-    },
-    budget: "12.7K",
-    status: "Active",
-  },
-  {
-    id: 4,
-    user: {
-      image: "/images/user/user-20.jpg",
-      name: "Abram Schleifer",
-      role: "Digital Marketer",
-    },
-    projectName: "Social Media",
-    team: {
-      images: [
-        "/images/user/user-28.jpg",
-        "/images/user/user-29.jpg",
-        "/images/user/user-30.jpg",
-      ],
-    },
-    budget: "2.8K",
-    status: "Cancel",
-  },
-  {
-    id: 5,
-    user: {
-      image: "/images/user/user-21.jpg",
-      name: "Carla George",
-      role: "Front-end Developer",
-    },
-    projectName: "Website",
-    team: {
-      images: [
-        "/images/user/user-31.jpg",
-        "/images/user/user-32.jpg",
-        "/images/user/user-33.jpg",
-      ],
-    },
-    budget: "4.5K",
-    status: "Active",
-  },
-];
 
 export default function NewsTable() {
   const [currentPage,setCurrentPage] = useState(1)
@@ -138,11 +37,11 @@ export default function NewsTable() {
       }
       fetchDataTable()
       // const fetchDataTable1= async () => {
-      //   const res = await fetch("https://cua-hang-do-choi-be.onrender.com/api/Product/admin",{
+      //   const res = await fetch("https://cua-hang-do-choi-be.onrender.com/api/News/Admin",{
       //     method:"GET",
       //     headers:{
       //       "Content-Type":"application/json",
-      //       "Authorization":"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE5ZDEwMzhkLTVmNjAtNGUyZi04MmRiLWRkYjAzNmQ3MThmOSIsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQHlvdXJhcHAubG9jYWwiLCJuYW1lIjoiU3lzdGVtIEFkbWluaXN0cmF0b3IiLCJyb2xlIjoibWFuYWdlciIsIm5iZiI6MTc1OTQ3NTY0MCwiZXhwIjoxNzU5NDc5MjQwLCJpYXQiOjE3NTk0NzU2NDAsImlzcyI6Imh0dHBzOi8veW91ci1hcHAub25yZW5kZXIuY29tIiwiYXVkIjoiaHR0cHM6Ly95b3VyLWFwcC5vbnJlbmRlci5jb20ifQ.T9qn4Eqi4PN3h66AB2PcnkX_jELvlSicgnJxouLrzDk"
+      //       "Authorization":"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE5ZDEwMzhkLTVmNjAtNGUyZi04MmRiLWRkYjAzNmQ3MThmOSIsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQHlvdXJhcHAubG9jYWwiLCJuYW1lIjoiU3lzdGVtIEFkbWluaXN0cmF0b3IiLCJyb2xlIjoibWFuYWdlciIsIm5iZiI6MTc1OTU2NzkwMiwiZXhwIjoxNzU5NTcxNTAyLCJpYXQiOjE3NTk1Njc5MDIsImlzcyI6Imh0dHBzOi8veW91ci1hcHAub25yZW5kZXIuY29tIiwiYXVkIjoiaHR0cHM6Ly95b3VyLWFwcC5vbnJlbmRlci5jb20ifQ.Kiu6uyYtRFpWsDJ1Ol7iLzYgrCj5bVIy2peka3v7GUU"
       //     }
       //   })
       //   const data = await res.json()
@@ -160,11 +59,26 @@ export default function NewsTable() {
             <TableHeaderOne title={title}/>
 
             {/* Table Body */}
-            <NewsTableBody tableData={tableData}/>
+            {Array.isArray(tableData) && tableData.length > 0 ? (
+              <NewsTableBody tableData={tableData} />
+            ) : (
+              <tbody>
+                <tr>
+                  <td
+                    colSpan={title.length}
+                    className="px-4 py-3 text-gray-500 text-center text-theme-lg"
+                  >
+                    Không có dữ liệu
+                  </td>
+                </tr>
+              </tbody>
+            )}
           </Table>
-          <div className="w-full flex justify-center mt-4 mb-4">
-            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={onPageChange} />
-          </div>
+          {Array.isArray(tableData) && tableData.length > 0 && (
+            <div className="w-full flex justify-center mt-4 mb-4">
+              <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={onPageChange} />
+            </div>
+          )}
         </div>
       </div>
     </div>
