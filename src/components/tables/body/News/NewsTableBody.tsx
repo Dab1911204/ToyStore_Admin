@@ -19,22 +19,6 @@ interface NewsTableBodyProps {
   tableData: NewsType[];
 }
 
-// interface User {
-//   image: string;
-//   name: string;
-// }
-
-// interface NewsTableRow {
-//   id: string | number;
-//   user: User;
-//   projectName: string;
-//   // Add other fields if needed
-// }
-
-// interface NewsTableBodyProps {
-//   tableData: NewsTableRow[];
-// }
-
 const NewsTableBody: React.FC<NewsTableBodyProps> = ({
   tableData,
 }) => {
@@ -42,11 +26,11 @@ const NewsTableBody: React.FC<NewsTableBodyProps> = ({
   return (
     <>
       <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-        {tableData.map((news) => (
+        {tableData.map((news,index) => (
           <TableRow key={news.id}>
             {/* ID */}
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-              {news.id}
+              {index+1}
             </TableCell>
 
             {/* Ảnh thumbnail */}

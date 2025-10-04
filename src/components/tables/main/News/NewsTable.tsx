@@ -10,6 +10,8 @@ import Pagination from "../../Pagination";
 import { useTableContext } from "@/context/TableContext";
 import { NewsService } from "@/services/newsService";
 import { NewsType } from "@/schemaValidations/news.schema";
+import { Loading } from "@/components/common/Loading";
+import { NoData } from "@/components/common/NoData";
 
 const title = ["STT",'Hình ảnh','Tiêu đề',"Ngày tạo","Người tạo","Người duyệt","Hàng động"]
 
@@ -17,6 +19,7 @@ export default function NewsTable() {
   const [currentPage,setCurrentPage] = useState(1)
     const [totalPages,setTotalPages] = useState(1)
     const [tableData,setTableData] = useState<NewsType[]>([])
+    const [loading, setLoading] = useState(true); // trạng thái đang load
     const { urlApi, setParam } = useTableContext();
     const onPageChange = (page: number) => {
       setCurrentPage(page)
@@ -25,6 +28,8 @@ export default function NewsTable() {
     useEffect(() => {
       const fetchDataTable = async () => {
         try {
+          setLoading(true)
+          setTableData([])
           const res = await NewsService.getListNews(urlApi)
           console.log(res)
           setTableData(res.result.items)
@@ -33,21 +38,11 @@ export default function NewsTable() {
         }
         catch (error) {
           console.log(error)
+        }finally{
+          setLoading(false)
         }
       }
       fetchDataTable()
-      // const fetchDataTable1= async () => {
-      //   const res = await fetch("https://cua-hang-do-choi-be.onrender.com/api/News/Admin",{
-      //     method:"GET",
-      //     headers:{
-      //       "Content-Type":"application/json",
-      //       "Authorization":"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE5ZDEwMzhkLTVmNjAtNGUyZi04MmRiLWRkYjAzNmQ3MThmOSIsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQHlvdXJhcHAubG9jYWwiLCJuYW1lIjoiU3lzdGVtIEFkbWluaXN0cmF0b3IiLCJyb2xlIjoibWFuYWdlciIsIm5iZiI6MTc1OTU2NzkwMiwiZXhwIjoxNzU5NTcxNTAyLCJpYXQiOjE3NTk1Njc5MDIsImlzcyI6Imh0dHBzOi8veW91ci1hcHAub25yZW5kZXIuY29tIiwiYXVkIjoiaHR0cHM6Ly95b3VyLWFwcC5vbnJlbmRlci5jb20ifQ.Kiu6uyYtRFpWsDJ1Ol7iLzYgrCj5bVIy2peka3v7GUU"
-      //     }
-      //   })
-      //   const data = await res.json()
-      //   console.log(data)
-      // }
-      // fetchDataTable1()
     }, [urlApi])
 
   return (
@@ -59,19 +54,14 @@ export default function NewsTable() {
             <TableHeaderOne title={title}/>
 
             {/* Table Body */}
-            {Array.isArray(tableData) && tableData.length > 0 ? (
+            {loading && (
+              <Loading colSpan={title.length} />
+            )}
+            {!loading && Array.isArray(tableData) && tableData.length > 0 && (
               <NewsTableBody tableData={tableData} />
-            ) : (
-              <tbody>
-                <tr>
-                  <td
-                    colSpan={title.length}
-                    className="px-4 py-3 text-gray-500 text-center text-theme-lg"
-                  >
-                    Không có dữ liệu
-                  </td>
-                </tr>
-              </tbody>
+            )}
+            {!loading && tableData.length === 0 && (
+              <NoData colSpan={title.length} title="Không có dữ liệu" />
             )}
           </Table>
           {Array.isArray(tableData) && tableData.length > 0 && (

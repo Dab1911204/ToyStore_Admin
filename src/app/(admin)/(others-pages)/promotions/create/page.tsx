@@ -5,13 +5,13 @@ import { Metadata } from "next";
 import React from "react";
 
 export const metadata: Metadata = {
-  title: "Thêm khuyễn mãi"
+  title: "Thêm khuyến mãi"
 };
 
 export default function CreatePromotionsPage() {
   return (
     <div>
-      <PageBreadcrumb pageTitle="Thêm khuyễn mãi" pageParent="Quản lý khuyễn mãi" urlPageParent="/promotions" />
+      <PageBreadcrumb pageTitle="Thêm khuyến mãi" pageParent="Quản lý khuyến mãi" urlPageParent="/promotions" />
       <FormProvider >
         <AddForm />
       </FormProvider>

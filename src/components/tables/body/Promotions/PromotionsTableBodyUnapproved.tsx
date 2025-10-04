@@ -7,60 +7,70 @@ import {
 } from "../../../ui/table";
 
 import Button from "@/components/ui/button/Button";
-import Link from "next/link";
-import { FaWrench,FaEye  } from "react-icons/fa";
-import { FaDeleteLeft } from "react-icons/fa6";
-import { Modal } from "@/components/ui/modal";
+import { FaEye } from "react-icons/fa6";
 import { useModal } from "@/hooks/useModal";
-import { PromotionType } from "@/schemaValidations/promotion.schema";
-import { formatDateTime } from "@/utils/format";
+import { Modal } from "@/components/ui/modal";
+import { AiFillCheckCircle } from "react-icons/ai";
+import { FiEdit } from "react-icons/fi";
+import { FaDeleteLeft } from "react-icons/fa6";
 
-interface PromotionsTableBodyProps {
-  tableData: PromotionType[];
+interface User {
+  image: string;
+  name: string;
 }
 
-const PromotionsTableBody: React.FC<PromotionsTableBodyProps> = ({
+interface PromotionTableRow {
+  id: string | number;
+  user: User;
+  projectName: string;
+  // Add other fields if needed
+}
+
+interface PromotionTableBodyProps {
+  tableData: PromotionTableRow[];
+}
+
+const PromotionTableBodyUnapproved: React.FC<PromotionTableBodyProps> = ({
   tableData,
 }) => {
   const { isOpen, openModal, closeModal } = useModal();
   return (
     <>
       <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-        {tableData.map((order,index) => (
+        {tableData.map((order) => (
           <TableRow key={order.id}>
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-              {index+1}
+              {order.id}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-              {order.title}
+              Tết thiếu nhi
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-              {order.discountPercent}
+              100%
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-              {formatDateTime(order.startDate)}
+              28/8/2025
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-              {formatDateTime(order.endDate)}
+              28/8/2026
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-              {order.createdBy}
+              Nguyễn Văn B
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
               <div className="flex flex-col gap-2">
-                <Link href={"/promotions/edit/"+order.id}>
-                  <Button className="w-20" size="xxs" variant="warning" startIcon={<FaWrench />}>
-                    Sửa
-                  </Button>
-                </Link>
                 <Button onClick={openModal} className="w-20" size="xxs" variant="info" startIcon={<FaEye />}>
                   Chi tiết
                 </Button>
-                <Link href={"/promotions/"+order.id}>
-                  <Button className="w-20" size="xxs" variant="danger" startIcon={<FaDeleteLeft />}>
-                    Xóa
-                  </Button>
-                </Link>
+                <Button className="w-20" size="xxs" variant="success" startIcon={<AiFillCheckCircle />}>
+                  Duyệt
+                </Button>
+                <Button className="w-20" size="xxs" variant="warning" startIcon={<FiEdit />}>
+                  Sửa
+                </Button>
+                <Button className="w-20" size="xxs" variant="danger" startIcon={<FaDeleteLeft />}>
+                  Xóa
+                </Button>
               </div>
             </TableCell>
           </TableRow>
@@ -82,4 +92,4 @@ const PromotionsTableBody: React.FC<PromotionsTableBodyProps> = ({
   );
 }
 
-export default PromotionsTableBody;
+export default PromotionTableBodyUnapproved;
