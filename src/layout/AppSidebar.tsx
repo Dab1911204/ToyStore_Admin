@@ -112,17 +112,15 @@ const othersItems: NavItem[] = [
 interface Props {
   setHandling: (value: boolean) => void;
   handling: boolean;
-  setMess: (value: string) => void;
 }
 
-const AppSidebar: React.FC<Props> = ( {setHandling,handling,setMess} ) => {
+const AppSidebar: React.FC<Props> = ( {setHandling,handling} ) => {
   const router = useRouter();
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const pathname = usePathname();
   const handleLogout = async () => {
     if (handling) return; // tránh bấm nhiều lần
     setHandling(true);     // bật overlay lock UI
-    setMess("Đang đăng xuất...");
     try {
       const success = await AuthService.logout();
       if (success) {

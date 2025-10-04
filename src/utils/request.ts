@@ -82,10 +82,12 @@ const request = async <T>(
     } else {
       redirectToLogin(true)
     }
+    console.log("Unauthorized - Missing token")
     throw new Error("Unauthorized - Missing token")
   }
 
   if (requireManager && role !== "manager") {
+    console.log("Unauthorized - Missing token")
     throw new Error("Forbidden - Requires manager role")
   }
 
@@ -113,18 +115,6 @@ const request = async <T>(
     responseBody = await res.json()
   } catch {
     responseBody = null
-  }
-  if (!res.ok) {
-    if (res.status === 401) {
-      if (typeof window !== "undefined") {
-        redirectToLogin(false)
-      } else {
-        redirectToLogin(true)
-      }
-    }
-    throw new Error(
-      responseBody?.message || `HTTP error! status: ${res.status}`
-    )
   }
 
   return responseBody as T
