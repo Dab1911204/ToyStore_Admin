@@ -17,7 +17,8 @@ interface ComponentCardProps {
   isAdd?: boolean; // Title for the button
   isDelete?: boolean; // Title for the button
   isOrder?: boolean; // Title for the button
-  filter?: { label: string; value: string }[]; 
+  isApprove?: boolean; // Title for the button
+  filter?: { label: string; value: string }[];
 }
 
 const ComponentCard: React.FC<ComponentCardProps> = ({
@@ -29,7 +30,8 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
   titleBtn,
   isAdd,
   isDelete,
-  isOrder=false,
+  isOrder = false,
+  isApprove = false,
   filter = [],
 }) => {
   return (
@@ -50,26 +52,33 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
         </div>
         {filter.length > 0 && (
           <div className="px-6 py-5">
-            <BaseSelect name="status" className="" placeholder="Lọc theo trạng thái" options={filter} size="xxs" onChange={() => {}}/>
+            <BaseSelect name="status" className="" placeholder="Lọc theo trạng thái" options={filter} size="xxs" onChange={() => { }} />
           </div>
         )}
         {linkBtn && titleBtn && (
           <div className="px-6 py-5">
-            <Link href={"/"+linkBtn+"/create"} className="mr-3">
+            <Link href={"/" + linkBtn + "/create"} className="mr-3">
               {isAdd && (
                 <Button size="sm" variant="success" startIcon={<FaPlusCircle />}>
                   Thêm Mới {titleBtn}
                 </Button>
               )}
             </Link>
+            {isApprove && (
+              <Link href={"/" + linkBtn + "/approve"} className="mr-3">
+                <Button size="sm" variant="warning" startIcon={<RiDeleteBin5Fill />}>
+                  {titleBtn} Chờ Duyệt
+                </Button>
+              </Link>
+            )}
             {!isOrder && (!isDelete ? (
-              <Link href={"/"+linkBtn+"/deleted"}>
+              <Link href={"/" + linkBtn + "/deleted"}>
                 <Button size="sm" variant="outline_danger" startIcon={<RiDeleteBin5Fill />}>
                   {titleBtn} Đã Xóa
                 </Button>
               </Link>
-            ):(
-              <Link href={"/"+linkBtn}>
+            ) : (
+              <Link href={"/" + linkBtn}>
                 <Button size="sm" variant="info">
                   Quản Lý {titleBtn}
                 </Button>
