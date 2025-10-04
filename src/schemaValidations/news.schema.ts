@@ -1,0 +1,38 @@
+import { z } from "zod";
+
+// Schema cho 1 bản tin
+export const NewsSchema = z.object({
+  id: z.string().uuid(),
+  title: z.string(),                 // tiêu đề tin tức
+  slug: z.string(),                  // đường dẫn thân thiện
+  content: z.string(),               // nội dung chính
+  description: z.string().optional(),// mô tả ngắn
+  author: z.string().nullable(),     // tác giả
+  thumbnail: z.string().url().nullable(), // ảnh đại diện
+  tags: z.array(z.string()).optional(),   // thẻ tag
+  status: z.enum(["draft", "published", "archived"]), // trạng thái
+  isDeleted: z.boolean().default(false),
+  createdOn: z.string(),             // ngày tạo
+  createdBy: z.string().optional(),  
+  updatedOn: z.string().nullable(),  // ngày cập nhật
+  updatedBy: z.string().nullable()
+}).strict();
+
+export type NewsType = z.infer<typeof NewsSchema>;
+
+// Schema cho response có phân trang
+export const NewsRes = z.object({
+  success: z.boolean(),
+  result: z.object({
+    currentPage: z.number().int().nonnegative(),
+    totalPages: z.number().int().nonnegative(),
+    pageSize: z.number().int().nonnegative(),
+    totalCount: z.number().int().nonnegative(),
+    hasPrevious: z.boolean(),
+    hasNext: z.boolean(),
+    items: z.array(NewsSchema), // danh sách tin tức
+  }),
+  errors: z.array(z.any())
+}).strict();
+
+export type NewsResType = z.infer<typeof NewsRes>;
