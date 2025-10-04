@@ -6,6 +6,7 @@ import Link from "next/link";
 import { FaPlusCircle } from "react-icons/fa";
 import { RiDeleteBin5Fill } from "react-icons/ri";
 import BaseSelect from "../form/select/select";
+import { AiFillCheckCircle } from "react-icons/ai";
 
 interface ComponentCardProps {
   title: string;
@@ -66,7 +67,7 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
             </Link>
             {isApprove && (
               <Link href={"/" + linkBtn + "/approve"} className="mr-3">
-                <Button size="sm" variant="warning" startIcon={<RiDeleteBin5Fill />}>
+                <Button size="sm" variant="warning" startIcon={<AiFillCheckCircle />}>
                   {titleBtn} Chờ Duyệt
                 </Button>
               </Link>
