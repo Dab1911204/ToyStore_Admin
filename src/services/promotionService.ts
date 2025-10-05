@@ -1,7 +1,8 @@
 import { PromotionResType } from "@/schemaValidations/promotion.schema";
-import {get} from "@/utils/request";
+import {get, post} from "@/utils/request";
 
 export const PromotionService = {
-  getListPromotion:(url:string)=>get<PromotionResType>(url,{requireAuth:true})
+  getListPromotion:(url:string)=>get<PromotionResType>(url,{requireAuth:true}),
+  createPromotion:(data:any)=>post<PromotionResType>("/api/Promotion",data,{requireAuth:true})
 };
 
