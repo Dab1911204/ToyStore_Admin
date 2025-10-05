@@ -106,3 +106,4 @@ const NewsTableBody: React.FC<NewsTableBodyProps> = ({
 }
 
 export default NewsTableBody;
+
