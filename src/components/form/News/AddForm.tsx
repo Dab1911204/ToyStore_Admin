@@ -27,24 +27,30 @@ export default function AddForm() {
 
     if (newErrors.length === 0) {
       try {
-        console.log("🚀 Submit data:", data);
-
         // ✅ Gọi API thêm tin tức
-        await NewsService.createNews(data);
-
-        // ✅ Hiển thị thông báo
-        openNotification({
-          message: "Thành công",
-          description: "Tin tức đã được thêm thành công!",
-          placement: "top",
-          duration: 3,
-          icon: <FaRegSmileBeam style={{ color: "green" }} />,
-          style: { borderLeft: "5px solid green" },
-        });
-
-        // ✅ Quay về trang danh sách và refresh
-        // router.push("/news");
-        // router.refresh();
+        const res = await NewsService.createNews(data);
+        if(res.success){
+          // ✅ Hiển thị thông báo
+          openNotification({
+            message: "Thành công",
+            description: "Tin tức đã được thêm thành công!",
+            placement: "top",
+            duration: 3,
+            icon: <FaRegSmileBeam style={{ color: "green" }} />,
+            style: { borderLeft: "5px solid green" },
+          });
+          // ✅ Quay về trang danh sách và refresh
+          router.push("/news");
+          router.refresh();
+        }else{
+          openNotification({
+            message: "Thất bại",
+            description: "Không thể thêm tin tức. Vui lòng thử lại!",
+            placement: "top",
+            duration: 3,
+            style: { borderLeft: "5px solid red" },
+          });
+        }
       } catch (error) {
         console.error("❌ Lỗi khi thêm tin tức:", error);
         openNotification({

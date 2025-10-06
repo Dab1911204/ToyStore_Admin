@@ -14,7 +14,7 @@ export const AuthService = {
     }),
   logout: async (force?: boolean) => {
     try {
-      await post("/api/auth/sign-out", { force }, { requireAuth: true,baseUrl: "" });
+      await post("/api/auth/sign-out", { force }, { requireAuth: false,baseUrl: "" });
       return true;
     } catch (err) {
       console.warn("Logout API failed:", err);

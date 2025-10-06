@@ -56,7 +56,7 @@ const makeHeaders = (
 }
 
 const request = async <T>(
-  method: "GET" | "POST" | "PATCH" | "DELETE",
+  method: "GET" | "POST" | "PATCH" | "DELETE" | "PUT",
   path: string,
   options?: CustomOption
 ): Promise<T> => {
@@ -130,6 +130,12 @@ export const post = <T>(
   data: BodyType,
   options?: Omit<CustomOption, "body">
 ) => request<T>("POST", path, { ...options, body: data })
+
+export const put = <T>(
+  path: string,
+  data: BodyType,
+  options?: Omit<CustomOption, "body">
+) => request<T>("PUT", path, { ...options, body: data })
 
 export const patch = <T>(
   path: string,
