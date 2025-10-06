@@ -11,6 +11,7 @@ import SelectForm from "../form-elements/SelectForm";
 import { useEffect, useState } from "react";
 import { ProductService } from "@/services/productService";
 import { PromotionService } from "@/services/promotionService";
+import { useRouter } from "next/navigation";
 
 type Option = {
   value: string;
@@ -21,6 +22,7 @@ export default function AddForm() {
   const { values, setErrors } = useFormContext();
   const { openNotification } = useNotification();
   const [optionSelect, setOptionSelect] = useState<Option[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -43,40 +45,47 @@ export default function AddForm() {
     const newErrors: { name: string; message: string }[] = [];
 
     // validate text fields
-    if (!values.title) newErrors.push({ name: "title", message: "Tiêu đề không được để trống" });
+    if (!values.Title) newErrors.push({ name: "Title", message: "Tiêu đề không được để trống" });
+    if (!values.StartDate) newErrors.push({ name: "StartDate", message: "Ngày bắt đầu không được để trống" });
+    if (!values.EndDate) newErrors.push({ name: "EndDate", message: "Ngày kết thúc không được để trống" });
+    if (!values.ProductIds) newErrors.push({ name: "ProductIds", message: "Sản phẩm không được để trống" });
+    if (!values.DiscountPercent) newErrors.push({ name: "DiscountPercent", message: "Phần trăm không được để trống" });
 
     setErrors(newErrors);
 
     if (newErrors.length === 0) {
       try {
-        console.log("🚀 Multipart FormData submit:");
-        
-        // 🧩 Chuyển toàn bộ FormData sang Object để debug dễ hơn
-        if (data instanceof FormData) {
-          const obj: Record<string, any> = {};
-          data.forEach((value, key) => {
-            if (obj[key]) {
-              obj[key] = Array.isArray(obj[key]) ? [...obj[key], value] : [obj[key], value];
-            } else {
-              obj[key] = value;
-            }
-          });
-          console.log("🔍 FormData -> Object:", obj);
-        }
-
         const res = await PromotionService.createPromotion(data);
-        console.log(res);
-
-        openNotification({
-          message: "Thêm khuyến mãi thành công",
-          description: "Khuyến mãi đã được thêm vào hệ thống.",
-          placement: "top",
-          duration: 3,
-          icon: <FaRegSmileBeam style={{ color: "green" }} />,
-          style: { borderLeft: "5px solid green" },
-        });
+        if(res.success){
+          openNotification({
+            message: "Thêm khuyến mãi thành công",
+            description: "Khuyến mãi đã được thêm vào hệ thống.",
+            placement: "top",
+            duration: 3,
+            icon: <FaRegSmileBeam style={{ color: "green" }} />,
+            style: { borderLeft: "5px solid green" },
+          });
+          router.push("/promotions");
+          router.refresh();
+        }else{
+          openNotification({
+            message: "Thêm khuyến mãi lỗi",
+            description: "Khuyến mãi không được thêm vào hệ thống",
+            placement: "top",
+            duration: 3,
+            icon: <FaRegSmileBeam style={{ color: "red" }} />,
+            style: { borderLeft: "5px solid red" },
+          });
+        }
       } catch (error) {
-        console.log("❌ Lỗi khi thêm khuyến mãi:", error);
+        openNotification({
+            message: "Thêm khuyến mãi lỗi",
+            description: "Khuyến mãi không được thêm vào hệ thống: "+error,
+            placement: "top",
+            duration: 3,
+            icon: <FaRegSmileBeam style={{ color: "red" }} />,
+            style: { borderLeft: "5px solid red" },
+          });
       }
     } else {
       console.log("❌ Errors:", newErrors);
@@ -85,27 +94,27 @@ export default function AddForm() {
 
   return (
     <Form onSubmit={handleSubmit} mode="multipart" method="POST">
-      <InputForm label="Tiêu đề" name="title" placeholder="Nhập tiêu đề" />
-      <TextAreaForm label="Mô tả" name="description" placeholder="Nhập nội dung" />
-      <InputForm label="% giảm giá" name="discountPercent" placeholder="Nhập % giảm giá" type="number" />
+      <InputForm label="Tiêu đề" name="Title" placeholder="Nhập tiêu đề" />
+      <TextAreaForm label="Mô tả" name="Description" placeholder="Nhập nội dung" />
+      <InputForm label="% giảm giá" name="DiscountPercent" placeholder="Nhập % giảm giá" type="number" />
       <DatePickerForm
-        id="startDate"
-        name="startDate"
+        id="StartDate"
+        name="StartDate"
         label="Ngày bắt đầu"
         placeholder="Chọn ngày bắt đầu"
         mode="single"
         required
       />
       <DatePickerForm
-        id="endDate"
-        name="endDate"
+        id="EndDate"
+        name="EndDate"
         label="Ngày kết thúc"
         placeholder="Chọn ngày kết thúc"
         mode="single"
         required
       />
       <SelectForm
-        name="productIds"
+        name="ProductIds"
         label="Sản phẩm áp dụng khuyến mãi"
         mode="multiple"
         placeholder="Chọn sản phẩm áp dụng khuyến mãi"

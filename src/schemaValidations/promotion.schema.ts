@@ -36,7 +36,7 @@ export const PromotionSchema = z.object({
 export type PromotionType = z.infer<typeof PromotionSchema>;
 
 // Schema cho response có phân trang
-export const PromotionResponseSchema = z.object({
+export const PromotionsResponseSchema = z.object({
   success: z.boolean(),
   result: z.object({
     currentPage: z.number().int(),
@@ -53,4 +53,38 @@ export const PromotionResponseSchema = z.object({
   errors: z.array(z.any())
 });
 
+export type PromotionsResType = z.infer<typeof PromotionsResponseSchema>;
+
+export const PromotionResponseSchema = z.object({
+  success: z.boolean(),
+  result: z.object({
+    id: z.string().uuid(),
+    title: z.string(),
+    description: z.string(),
+    discountPercent: z.number(),
+    startDate: z.string().datetime(),
+    endDate: z.string().datetime(),
+    approvedBy: z.string().uuid(),
+    isApproved: z.boolean(),
+    products: z.array(
+      z.object({
+        id: z.string().uuid(),
+        name: z.string(),
+        price: z.number(),
+        promotion: z.object({
+          title: z.string(),
+          discountPercent: z.number(),
+        }),
+        discountedPrice: z.number(),
+      })
+    ),
+    slug: z.string(),
+    isDeleted: z.boolean(),
+    createdBy: z.string(),
+    createdOn: z.string().datetime(),
+    updatedBy: z.string(),
+    updatedOn: z.string().datetime(),
+  }),
+  errors: z.array(z.string()),
+});
 export type PromotionResType = z.infer<typeof PromotionResponseSchema>;

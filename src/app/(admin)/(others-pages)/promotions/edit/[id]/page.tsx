@@ -5,15 +5,25 @@ import { Metadata } from "next";
 import React from "react";
 
 export const metadata: Metadata = {
-  title: "Sửa khuyến mãi"
+  title: "Sửa khuyến mãi",
 };
 
-export default function EditPromotionsPage() {
+export default async function EditPromotionsPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params; // ✅ Giải promise
+
   return (
     <div>
-      <PageBreadcrumb pageTitle="Thêm khuyến mãi" pageParent="Quản lý khuyến mãi" urlPageParent="/promotions" />
-      <FormProvider >
-        <EditForm />
+      <PageBreadcrumb
+        pageTitle="Sửa khuyến mãi"
+        pageParent="Quản lý khuyến mãi"
+        urlPageParent="/promotions"
+      />
+      <FormProvider>
+        <EditForm id={id} />
       </FormProvider>
     </div>
   );
