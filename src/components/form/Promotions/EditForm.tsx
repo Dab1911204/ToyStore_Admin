@@ -2,119 +2,167 @@
 import { useFormContext } from "@/context/FormContext";
 import Form from "../Form";
 import Button from "@/components/ui/button/Button";
-import { usePrefill } from "@/hooks/usePrefill";
+import { renderData } from "@/hooks/usePrefill";
 import InputForm from "../form-elements/InputForm";
 import TextAreaForm from "../form-elements/TextAreaForm";
 import { useNotification } from "@/context/NotificationContext";
 import { FaRegSmileBeam } from "react-icons/fa";
 import SelectForm from "../form-elements/SelectForm";
 import DatePickerForm from "../form-elements/DatePickerForm";
+import { useEffect, useRef, useState } from "react";
+import { PromotionService } from "@/services/promotionService";
+import { ProductService } from "@/services/productService";
+import { useRouter } from "next/navigation";
 
-export default function EditForm() {
-  const { values, setErrors } = useFormContext();
+type EditFormProps = {
+  id: string;
+};
+
+type Option = {
+  value: string;
+  label: string;
+};
+
+type InfoPromotion ={
+  Title: string;
+  Description: string;
+  DiscountPercent: number;
+  StartDate: string;
+  EndDate: string;
+  ProductIds: string[];
+}
+
+
+export default function EditForm({ id }: EditFormProps) {
+  const { values, setErrors,setValue } = useFormContext();
   const { openNotification } = useNotification();
+  const openNotificationRef = useRef(openNotification);
+  const setValueRef = useRef(setValue);
+  const [optionSelect, setOptionSelect] = useState<Option[]>([]);
+  const router = useRouter();
+  const fetchDataProducts = async () => {
+    // Lấy danh sách sản phẩm
+      const resOption = await ProductService.getListProduct("/api/Product/admin");
+      const options: Option[] = resOption.result.items.map((item: any) => ({
+        value: item.id,
+        label: item.productName,
+      }));
+      setOptionSelect(options);
+  }
+  const fetchDataPromotion = async (id: string) => {
+    // Lấy thông tin khuyến mãi
+      const res = await PromotionService.infoPromotion(id);
+      if (res.success) {
+        const infoPromotion: InfoPromotion = {
+          Title: res.result.title,
+          Description: res.result.description,
+          DiscountPercent: res.result.discountPercent,
+          StartDate: res.result.startDate,
+          EndDate: res.result.endDate,
+          ProductIds: res.result.products?.map((item: any) => item.id) || [],
+        };
+        renderData(infoPromotion, setValueRef.current);
+      } else {
+        openNotificationRef.current({
+          message: "Lỗi",
+          description: "Không lấy được thông tin khuyến mãi",
+          placement: "top",
+          duration: 3,
+          icon: <FaRegSmileBeam style={{ color: "red" }} />,
+          style: { borderLeft: "5px solid red" },
+        });
+      }
+  }
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await fetchDataProducts()
+        await fetchDataPromotion(id)
+      } catch (error) {
+        openNotificationRef.current({
+          message: "Lỗi",
+          description: "Có lỗi xảy ra: " + error,
+          placement: "top",
+          duration: 3,
+          icon: <FaRegSmileBeam style={{ color: "red" }} />,
+          style: { borderLeft: "5px solid red" },
+        });
+      }
+    };
 
-  // Populate dữ liệu cũ (edit)
-  // Populate dữ liệu cũ (edit) chỉ 1 lần khi mount
-  usePrefill({
-    title:"Tết thiếu nhi",
-    description:"jsjsjjsjs",
-    discountPercent:10,
-    startDate:"2025-10-11",
-    endDate:"2026-10-11",
-    category:["1","2","3"]
-  });
+    fetchData();
+  }, [id]);
 
-
-  const handleSubmit = (data: Record<string, any> | FormData) => {
+  const handleSubmit = async (data: Record<string, any> | FormData) => {
     const newErrors: { name: string; message: string }[] = [];
-
     // validate text fields
-    if (!values.title) newErrors.push({ name: "title", message: "Tiêu đề không được để trống" });
-
+    if (!values.Title) newErrors.push({ name: "Title", message: "Tiêu đề không được để trống" });
+    if (!values.StartDate) newErrors.push({ name: "StartDate", message: "Ngày bắt đầu không được để trống" });
+    if (!values.EndDate) newErrors.push({ name: "EndDate", message: "Ngày kết thúc không được để trống" });
+    if (!values.ProductIds) newErrors.push({ name: "ProductIds", message: "Sản phẩm không được để trống" });
+    if (!values.DiscountPercent) newErrors.push({ name: "DiscountPercent", message: "Phần trăm không được để trống" });
     setErrors(newErrors);
 
     if (newErrors.length === 0) {
-      if (data instanceof FormData) {
-        // multipart submit
-        console.log("🚀 Multipart FormData submit:");
-        for (const [key, value] of data.entries()) {
-          console.log(key, value);
-        }
-      } else {
-        // json submit
-        console.log("🚀 JSON submit:", data);
+      const res = await PromotionService.updatePromotion(id, data)
+      if (res.success){
+        openNotification({
+          message: "Sửa khuyến mãi thành công",
+          description: "Khuyến mãi đã được sửa vào hệ thống.",
+          placement: "top",
+          duration: 3,
+          icon: <FaRegSmileBeam style={{ color: "green" }} />,
+          style: { borderLeft: "5px solid green" },
+        })
+        router.push("/promotions");
+        router.refresh();
+      }else{
+        openNotification({
+          message: "Sửa khuyến mãi lỗi",
+          description: "Khuyến mãi không được sửa vào hệ thống",
+          placement: "top",
+          duration: 3,
+          icon: <FaRegSmileBeam style={{ color: "red" }} />,
+          style: { borderLeft: "5px solid red" },
+        })
       }
-      openNotification({
-        message: "Custom Notification",
-        description: "Nội dung chi tiết thông báo",
-        placement: "top",
-        duration: 3,
-        icon: <FaRegSmileBeam style={{ color: "green" }} />,
-        style: { borderLeft: "5px solid green" },
-      })
     } else {
       console.log("❌ Errors:", newErrors);
     }
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <InputForm label="Tiêu đề" name="title" placeholder="Nhập tiêu đề" />
-      <TextAreaForm label="Mô tả" name="description" placeholder="Nhập nội dung" />
-      <InputForm label="% giảm giá" name="discountPercent" placeholder="Nhập % giảm giá" type="number"/>
-      <DatePickerForm
-        id="startDate"
-        name="startDate"
-        label="Ngày bắt đầu"
-        placeholder="Chọn ngày bắt đầu"
-        mode="single"
-        required
-      />
-      <DatePickerForm
-        id="endDate"
-        name="endDate"
-        label="Ngày kết thúc"
-        placeholder="Chọn ngày kết thúc"
-        mode="single"
-        required
-      />
-      <SelectForm
-        name="category"
-        label="Sản phẩm áp dụng khuyến mãi"
-        mode="multiple"
-        placeholder="Chọn sản phẩm áp dụng khuyến mãi"
-        options={[
-          {
-            value:"1",
-            label:"Sản phẩm 1"
-          },
-          {
-            value:"2",
-            label:"Sản phẩm 2"
-          },
-          {
-            value:"3",
-            label:"Sản phẩm 3"
-          },
-          {
-            value:"4",
-            label:"Sản phẩm 4"
-          },
-          {
-            value:"5",
-            label:"Sản phẩm 5"
-          },
-          {
-            value:"6",
-            label:"Sản phẩm 6"
-          },
-        ]}
-      />
+    <Form onSubmit={handleSubmit} mode="multipart" method="POST">
+      <InputForm label="Tiêu đề" name="Title" placeholder="Nhập tiêu đề" />
+        <TextAreaForm label="Mô tả" name="Description" placeholder="Nhập nội dung" />
+        <InputForm label="% giảm giá" name="DiscountPercent" placeholder="Nhập % giảm giá" type="number" />
+        <DatePickerForm
+          id="StartDate"
+          name="StartDate"
+          label="Ngày bắt đầu"
+          placeholder="Chọn ngày bắt đầu"
+          mode="single"
+          required
+        />
+        <DatePickerForm
+          id="EndDate"
+          name="EndDate"
+          label="Ngày kết thúc"
+          placeholder="Chọn ngày kết thúc"
+          mode="single"
+          required
+        />
+        <SelectForm
+          name="ProductIds"
+          label="Sản phẩm áp dụng khuyến mãi"
+          mode="multiple"
+          placeholder="Chọn sản phẩm áp dụng khuyến mãi"
+          options={optionSelect}
+        />
       <div className="flex justify-center">
         <Button type="submit" variant="primary" className="mt-4" size="md">
-          Thêm khuyến mãi
+          Sửa khuyến mãi
         </Button>
       </div>
     </Form>
