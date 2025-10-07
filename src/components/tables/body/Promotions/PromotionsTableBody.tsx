@@ -10,19 +10,17 @@ import Button from "@/components/ui/button/Button";
 import Link from "next/link";
 import { FaWrench,FaEye  } from "react-icons/fa";
 import { FaDeleteLeft } from "react-icons/fa6";
-import { Modal } from "@/components/ui/modal";
-import { useModal } from "@/hooks/useModal";
 import { PromotionType } from "@/schemaValidations/promotion.schema";
 import { formatDateTime } from "@/utils/format";
 
 interface PromotionsTableBodyProps {
   tableData: PromotionType[];
+  onOpenModal: (type: "delete" | "detail",id?:string) => void;
 }
 
 const PromotionsTableBody: React.FC<PromotionsTableBodyProps> = ({
-  tableData,
+  tableData,onOpenModal
 }) => {
-  const { isOpen, openModal, closeModal } = useModal();
   return (
     <>
       <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
@@ -53,31 +51,17 @@ const PromotionsTableBody: React.FC<PromotionsTableBodyProps> = ({
                     Sửa
                   </Button>
                 </Link>
-                <Button onClick={openModal} className="w-20" size="xxs" variant="info" startIcon={<FaEye />}>
+                <Button onClick={()=>onOpenModal("detail",order.id)} className="w-20" size="xxs" variant="info" startIcon={<FaEye />}>
                   Chi tiết
                 </Button>
-                <Link href={"/promotions/"+order.id}>
-                  <Button className="w-20" size="xxs" variant="danger" startIcon={<FaDeleteLeft />}>
-                    Xóa
-                  </Button>
-                </Link>
+                <Button onClick={() => onOpenModal("delete",order.id)} className="w-20" size="xxs" variant="danger" startIcon={<FaDeleteLeft />}>
+                  Xóa
+                </Button>
               </div>
             </TableCell>
           </TableRow>
         ))}
       </TableBody>
-      <Modal isOpen={isOpen} onClose={closeModal} className="max-w-[700px] m-4">
-        <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
-          <div className="px-2 pr-14">
-            <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
-              Chi tiết tin tức
-            </h4>
-            <p className="mb-6 text-sm text-gray-500 dark:text-gray-400 lg:mb-7">
-              Update your details to keep your profile up-to-date.
-            </p>
-          </div>
-        </div>
-      </Modal>
     </>
   );
 }

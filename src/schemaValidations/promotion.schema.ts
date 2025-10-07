@@ -88,3 +88,10 @@ export const PromotionResponseSchema = z.object({
   errors: z.array(z.string()),
 });
 export type PromotionResType = z.infer<typeof PromotionResponseSchema>;
+
+export const PromotionDeleteResponseSchema = z.object({
+  success: z.boolean(),
+  result: z.boolean(),
+  errors: z.array(z.string()),
+})
+export type PromotionDeleteResType = z.infer<typeof PromotionDeleteResponseSchema>

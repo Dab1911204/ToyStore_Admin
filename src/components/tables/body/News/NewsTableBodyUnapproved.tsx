@@ -13,6 +13,7 @@ import { Modal } from "@/components/ui/modal";
 import { AiFillCheckCircle } from "react-icons/ai";
 import { FiEdit } from "react-icons/fi";
 import { FaDeleteLeft } from "react-icons/fa6";
+import Image from "next/image";
 import Badge from "@/components/ui/badge/Badge";
 
 interface User {
@@ -20,18 +21,18 @@ interface User {
   name: string;
 }
 
-interface PromotionTableRow {
+interface NewsTableRow {
   id: string | number;
   user: User;
   projectName: string;
   // Add other fields if needed
 }
 
-interface PromotionTableBodyProps {
-  tableData: PromotionTableRow[];
+interface NewsTableBodyProps {
+  tableData: NewsTableRow[];
 }
 
-const PromotionTableBodyUnapproved: React.FC<PromotionTableBodyProps> = ({
+const NewsTableBodyUnapproved: React.FC<NewsTableBodyProps> = ({
   tableData,
 }) => {
   const { isOpen, openModal, closeModal } = useModal();
@@ -44,16 +45,18 @@ const PromotionTableBodyUnapproved: React.FC<PromotionTableBodyProps> = ({
               {order.id}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-              Tết thiếu nhi
+              <Image 
+                width={100}
+                height={100}
+                src="/images/product/product-03.jpg"
+                alt={order.user.name}
+              />
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-              100%
+              Tết thiếu nhi
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
               28/8/2025
-            </TableCell>
-            <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-              28/8/2026
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
               <Badge color="warning" size="sm">
@@ -95,4 +98,4 @@ const PromotionTableBodyUnapproved: React.FC<PromotionTableBodyProps> = ({
   );
 }
 
-export default PromotionTableBodyUnapproved;
+export default NewsTableBodyUnapproved;
