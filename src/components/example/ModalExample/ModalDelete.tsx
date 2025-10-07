@@ -1,5 +1,6 @@
 "use client";
 import { useNotification } from "@/context/NotificationContext";
+import { capitalizeFirstLetter } from "@/utils/format";
 import React, { useState } from "react";
 import { FaRegSmileBeam } from "react-icons/fa";
 
@@ -14,6 +15,7 @@ type ModelDeleteProps = {
 export default function ModelDelete({ id, title, description, onDelete, closeModal }: ModelDeleteProps) {
   const { openNotification } = useNotification();
   const [loading, setLoading] = useState(false);
+  const description1 = capitalizeFirstLetter(description??"")
 
   const handleDelete = async () => {
     try {
@@ -22,7 +24,7 @@ export default function ModelDelete({ id, title, description, onDelete, closeMod
       if (res.success){
         closeModal();
         openNotification({
-          message: "Xóa khuyến mãi thành công",
+          message: `Xóa ${description1} thành công`,
           description: "Khuyến mãi đã được xóa khỏi hệ thống.",
           placement: "top",
           duration: 3,
@@ -31,8 +33,8 @@ export default function ModelDelete({ id, title, description, onDelete, closeMod
         });
       } else {
         openNotification({
-          message: "Xóa khuyến mãi thất bại",
-          description: "Khuyến mãi không được xóa khỏi hệ thống.",
+          message: `Xóa ${description1} thất bại`,
+          description: `${description1} không được xóa khỏi hệ thống.`,
           placement: "top",
           duration: 3,
           icon: <FaRegSmileBeam style={{ color: "red" }} />,
