@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function PromotionsPage() {
   return (
     <div>
-      <TableContextProvider initialUrl="/api/Promotion">
+      <TableContextProvider initialUrl="/api/Promotion?PageSize=15&Type=1">
         <PageBreadcrumb pageTitle="Quản lý khuyến mãi" itemSearch={true}/>
         <div className="space-y-6">
           <ComponentCard title="Danh sách khuyến mãi" isDelete={false} isApprove={true} linkBtn="promotions" titleBtn="Khuyến Mãi" isAdd={true}>

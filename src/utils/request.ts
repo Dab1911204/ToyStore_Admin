@@ -133,9 +133,16 @@ export const post = <T>(
 
 export const put = <T>(
   path: string,
-  data: BodyType,
+  data?: BodyType,
   options?: Omit<CustomOption, "body">
-) => request<T>("PUT", path, { ...options, body: data })
+) => {
+  const requestOptions = data
+    ? { ...options, body: data }
+    : { ...options };
+
+  return request<T>("PUT", path, requestOptions);
+};
+
 
 export const patch = <T>(
   path: string,

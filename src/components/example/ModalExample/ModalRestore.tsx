@@ -5,31 +5,31 @@ import { capitalizeFirstLetter } from "@/utils/format";
 import React, { useState } from "react";
 import { FaRegSmileBeam } from "react-icons/fa";
 
-type ModelDeleteProps = {
+type ModelRestoreProps = {
   id: string;
   title: string;
   description?: string;
-  onDelete: (id: string) => Promise<any>;
+  onRestore: (id: string) => Promise<any>;
   closeModal: () => void;
   loadData?: (urlApi: string) => void;
   urlApi?: string;
 };
 
-export default function ModelDelete({ id, title, description, onDelete, closeModal, loadData,urlApi}: ModelDeleteProps) {
+export default function ModelRestore({ id, title, description, onRestore, closeModal, loadData, urlApi }: ModelRestoreProps) {
   const { openNotification } = useNotification();
   const [loading, setLoading] = useState(false);
-  const description1 = capitalizeFirstLetter(description??"")
+  const description1 = capitalizeFirstLetter(description ?? "")
 
-  const handleDelete = async () => {
+  const handleRestore = async () => {
     try {
       setLoading(true);
-      const res = await onDelete(id);
-      if (res.success){
+      const res = await onRestore(id);
+      if (res.success) {
         if (loadData && urlApi) loadData(urlApi);
         closeModal();
         openNotification({
-          message: `Xóa ${description1} thành công`,
-          description: "Khuyến mãi đã được xóa khỏi hệ thống.",
+          message: `Khôi phục ${description1} thành công`,
+          description: "Khuyến mãi đã được khôi phục lại hệ thống.",
           placement: "top",
           duration: 3,
           icon: <FaRegSmileBeam style={{ color: "green" }} />,
@@ -37,8 +37,8 @@ export default function ModelDelete({ id, title, description, onDelete, closeMod
         });
       } else {
         openNotification({
-          message: `Xóa ${description1} thất bại`,
-          description: `${description1} không được xóa khỏi hệ thống.`,
+          message: `Khôi phục ${description1} thất bại`,
+          description: `${description1} không được khôi phục lại hệ thống.`,
           placement: "top",
           duration: 3,
           icon: <FaRegSmileBeam style={{ color: "red" }} />,
@@ -46,7 +46,7 @@ export default function ModelDelete({ id, title, description, onDelete, closeMod
         });
       }
     } catch (error) {
-      console.error("Lỗi khi xóa:", error);
+      console.error("Lỗi khi khôi phục:", error);
     } finally {
       setLoading(false);
     }
@@ -60,7 +60,7 @@ export default function ModelDelete({ id, title, description, onDelete, closeMod
         </h4>
 
         <p className="mb-6 text-sm text-gray-800 dark:text-gray-200">
-          Bạn có chắc chắn muốn <strong className="text-red-600">xóa {description}</strong> này không?
+          Bạn có chắc chắn muốn <strong className="text-red-600">khôi phục {description}</strong> này không?
         </p>
 
         <div className="flex justify-end gap-3">
@@ -72,12 +72,12 @@ export default function ModelDelete({ id, title, description, onDelete, closeMod
             Hủy
           </button>
           <Button
-            onClick={handleDelete}
+            onClick={handleRestore}
             disabled={loading}
             size="sm"
-            variant="danger"
+            variant="warning"
           >
-            {loading ? "Đang xóa..." : "Xác nhận xóa"}
+            {loading ? "Đang khôi phục..." : "Xác nhận khôi phục"}
           </Button>
         </div>
       </div>
