@@ -3,6 +3,8 @@ import { useRef } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import Label from "../Label";
 import { BaseTextAreaProps } from "@/types/props";
+import envConfig from "@/config/envConfig";
+
 
 const TextArea: React.FC<BaseTextAreaProps> = ({
   name,
@@ -22,12 +24,11 @@ const TextArea: React.FC<BaseTextAreaProps> = ({
       {label && <Label>{label}</Label>}
 
       <div
-        className={`rounded-md border ${
-          error ? "border-red-500" : "border-gray-300"
-        }`}
+        className={`rounded-md border ${error ? "border-red-500" : "border-gray-300"
+          }`}
       >
         <Editor
-          apiKey="rb8401ud5yvnk1uai2vxr55oe39ajvh1fbxrfpczzxs3ypic"
+          apiKey={envConfig.NEXT_PUBLIC_API_KEY_TINYMCE}
           onInit={(_evt, editor) => (editorRef.current = editor)}
           value={value}
           onEditorChange={(content) => onChange(content)}
@@ -75,9 +76,8 @@ const TextArea: React.FC<BaseTextAreaProps> = ({
 
       {message && (
         <p
-          className={`mt-2 text-sm ${
-            error ? "text-red-500" : "text-gray-500"
-          }`}
+          className={`mt-2 text-sm ${error ? "text-red-500" : "text-gray-500"
+            }`}
         >
           {message}
         </p>

@@ -25,3 +25,8 @@ export function formatCurrency(amount: number, locale: string = "vi-VN"): string
     maximumFractionDigits: 0
   }).format(amount);
 }
+
+export function capitalizeFirstLetter(str: string) {
+  if (!str) return '';
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
