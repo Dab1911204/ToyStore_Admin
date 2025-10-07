@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function NewsPage() {
   return (
     <div>
-      <TableContextProvider initialUrl="/api/News/Admin">
+      <TableContextProvider initialUrl="/api/News/Admin?pageSize=15">
       <PageBreadcrumb pageTitle="Quản lý tin tức" itemSearch={true}/>
       <div className="space-y-6">
         <ComponentCard title="Danh sách tin tức" isDelete={false} isApprove={true} linkBtn="news" titleBtn="Tin Tức" isAdd={true}>
