@@ -4,7 +4,7 @@ import {
 } from "../../../ui/table";
 
 import TableHeaderOne from "../../header/TableHeaderOne";
-import PromotionsTableBodyDelete from "../../body/Promotions/PromotionsTableBodyUnapproved";
+import NewsTableBodyDelete from "../../body/News/NewsTableBodyUnapproved";
 
 interface Order {
   id: number;
@@ -21,7 +21,7 @@ interface Order {
   budget: string;
 }
 
-const title = ["STT", 'Tiêu đề', "Giảm", "Ngày bắt đầu", "Ngày kết thúc", "Trạng thái", "Hàng động"]
+const title = ["STT",'Hình ảnh','Tiêu đề',"Ngày tạo", "Trạng thái", "Hàng động"]
 
 // Define the table data using the interface
 const tableData: Order[] = [
@@ -109,7 +109,7 @@ const tableData: Order[] = [
   },
 ];
 
-export default function PromotionsTableBodyUnapproved() {
+export default function NewsTableBodyUnapproved() {
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
       <div className="max-w-full overflow-x-auto">
@@ -119,7 +119,7 @@ export default function PromotionsTableBodyUnapproved() {
             <TableHeaderOne title={title} />
 
             {/* Table Body */}
-            <PromotionsTableBodyDelete tableData={tableData} />
+            <NewsTableBodyDelete tableData={tableData} />
           </Table>
         </div>
       </div>
