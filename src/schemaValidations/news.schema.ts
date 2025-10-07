@@ -11,6 +11,7 @@ export const NewsSchema = z.object({
   thumbnail: z.string().url().nullable(), // ảnh đại diện
   tags: z.array(z.string()).optional(),   // thẻ tag
   status: z.enum(["draft", "published", "archived"]), // trạng thái
+  isApproved: z.boolean().default(false), // đã duyệt hay chưa
   isDeleted: z.boolean().default(false),
   createdOn: z.string(),             // ngày tạo
   createdBy: z.string().optional(),  
@@ -36,3 +37,26 @@ export const NewsRes = z.object({
 }).strict();
 
 export type NewsResType = z.infer<typeof NewsRes>;
+
+
+export const NewsDetailRes = z.object({
+  success: z.boolean(),
+  result: z.object({
+    id: z.string().uuid(),
+    image: z.string(),                       // ảnh tin tức
+    title: z.string(),
+    content: z.string(),
+    createdBy: z.string(),
+    createdOn: z.string(),
+    slug: z.string(),
+    approvedBy: z.string().uuid(),
+    approvedByName: z.string(),
+    isApproved: z.boolean(),
+    approvedOn: z.string(),
+    isDeleted: z.boolean(),
+    createdbyStr: z.string()
+  }),
+  errors: z.array(z.any())
+}).strict();
+
+export type NewsDetailResType = z.infer<typeof NewsDetailRes>;

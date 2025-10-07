@@ -2,68 +2,103 @@
 import { useFormContext } from "@/context/FormContext";
 import Form from "../Form";
 import Button from "@/components/ui/button/Button";
-import { usePrefill } from "@/hooks/usePrefill";
+import { renderData } from "@/hooks/usePrefill";
 import InputForm from "../form-elements/InputForm";
 import TextAreaForm from "../form-elements/TextAreaForm";
 import ImageInputForm from "../form-elements/ImageInputForm";
 import { useNotification } from "@/context/NotificationContext";
 import { FaRegSmileBeam } from "react-icons/fa";
+import { useEffect, useRef } from "react";
+import { NewsService } from "@/services/newsService"; // ✅ service news
+import { useRouter } from "next/navigation";
 
-export default function EditForm() {
-  const { values, setErrors } = useFormContext();
+type EditFormProps = {
+  id: string;
+};
+
+type InfoNews = {
+  Title: string;
+  Content: string;
+  Image: string;
+};
+
+export default function EditForm({ id }: EditFormProps) {
+  const { values, setErrors, setValue } = useFormContext();
   const { openNotification } = useNotification();
+  const openNotificationRef = useRef(openNotification);
+  const setValueRef = useRef(setValue);
+  const router = useRouter();
 
+  // fetch dữ liệu tin tức
+  const fetchDataNews = async (id: string) => {
+    const res = await NewsService.infoNews(id);
+    if (res.success) {
+      const infoNews: InfoNews = {
+        Title: res.result.title,
+        Content: res.result.content,
+        Image: res.result.image,
+      };
+      renderData(infoNews, setValueRef.current);
+    } else {
+      openNotificationRef.current({
+        message: "Lỗi",
+        description: "Không lấy được thông tin tin tức",
+        placement: "top",
+        duration: 3,
+        icon: <FaRegSmileBeam style={{ color: "red" }} />,
+        style: { borderLeft: "5px solid red" },
+      });
+    }
+  };
 
-  // Populate dữ liệu cũ (edit)
-  // Populate dữ liệu cũ (edit) chỉ 1 lần khi mount
-  usePrefill({
-    title: "Tiêu đề có sẵn",
-    content: "<p>Nội dung có sẵn</p>",
-    category: ["news"],
-    email: "abc@example.com",
-    image: "https://tse1.mm.bing.net/th/id/OIP.CFG1RgZ9gTRtNgk_wWxG8QHaEO?rs=1&pid=ImgDetMain&o=7&rm=3",
-  });
+  useEffect(() => {
+    fetchDataNews(id);
+  }, [id]);
 
-
-  const handleSubmit = (data: Record<string, any> | FormData) => {
+  const handleSubmit = async (data: Record<string, any> | FormData) => {
     const newErrors: { name: string; message: string }[] = [];
 
-    // validate text fields
-    if (!values.title) newErrors.push({ name: "title", message: "Tiêu đề không được để trống" });
-    if (!values.content) newErrors.push({ name: "content", message: "Nội dung không được để trống" });
-    if (!values.image) newErrors.push({ name: "image", message: "Vui lòng chọn ảnh" });
+    // validate
+    if (!values.Title) newErrors.push({ name: "Title", message: "Tiêu đề không được để trống" });
+    if (!values.Content) newErrors.push({ name: "Content", message: "Nội dung không được để trống" });
+    if (!values.Image) newErrors.push({ name: "Image", message: "Vui lòng chọn ảnh" });
 
     setErrors(newErrors);
 
     if (newErrors.length === 0) {
-      if (data instanceof FormData) {
-        // multipart submit
-        console.log("🚀 Multipart FormData submit:");
-        for (const [key, value] of data.entries()) {
-          console.log(key, value);
-        }
+      const res = await NewsService.updateNews(id, data);
+      console.log(res);
+      if (res.success) {
+        openNotification({
+          message: "Sửa tin tức thành công",
+          description: "Tin tức đã được cập nhật.",
+          placement: "top",
+          duration: 3,
+          icon: <FaRegSmileBeam style={{ color: "green" }} />,
+          style: { borderLeft: "5px solid green" },
+        });
+        router.push("/news");
+        router.refresh();
       } else {
-        // json submit
-        console.log("🚀 JSON submit:", data);
+        openNotification({
+          message: "Sửa tin tức lỗi",
+          description: "Không thể cập nhật tin tức",
+          placement: "top",
+          duration: 3,
+          icon: <FaRegSmileBeam style={{ color: "red" }} />,
+          style: { borderLeft: "5px solid red" },
+        });
       }
-      openNotification({
-        message: "Custom Notification",
-        description: "Nội dung chi tiết thông báo",
-        placement: "top",
-        duration: 3,
-        icon: <FaRegSmileBeam style={{ color: "green" }} />,
-        style: { borderLeft: "5px solid green" },
-      })
     } else {
       console.log("❌ Errors:", newErrors);
     }
   };
 
   return (
-    <Form onSubmit={handleSubmit} mode="multipart">
-      <InputForm label="Tiêu đề" name="title" placeholder="Nhập tiêu đề" />
-      <ImageInputForm label="Hình ảnh" name="image" />
-      <TextAreaForm label="Nội dung" name="content" placeholder="Nhập nội dung" />
+    <Form onSubmit={handleSubmit} mode="multipart" method="POST">
+      <InputForm label="Tiêu đề" name="Title" placeholder="Nhập tiêu đề" />
+      <ImageInputForm label="Hình ảnh" name="Image" />
+      <TextAreaForm label="Nội dung" name="Content" placeholder="Nhập nội dung" />
       <div className="flex justify-center">
         <Button type="submit" variant="primary" className="mt-4" size="md">
           Sửa Tin Tức

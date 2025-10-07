@@ -2,6 +2,10 @@ import { ReactNode } from "react";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.css";
 
+type EditFormProps = {
+  id: string;
+};
+
 interface FileInputProps {
   id?: string;
   name: string;
@@ -263,4 +267,6 @@ export type {
   TableBodyProps,
   TableRowProps,
   TableCellProps,
+  EditFormProps,
+
 };
