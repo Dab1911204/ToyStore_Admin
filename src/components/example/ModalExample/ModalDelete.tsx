@@ -1,5 +1,7 @@
 "use client";
+import { useNotification } from "@/context/NotificationContext";
 import React, { useState } from "react";
+import { FaRegSmileBeam } from "react-icons/fa";
 
 type ModelDeleteProps = {
   id: string;
@@ -9,7 +11,8 @@ type ModelDeleteProps = {
   closeModal: () => void;
 };
 
-export default function ModelDelete({ id, title, description, onDelete, closeModal}: ModelDeleteProps) {
+export default function ModelDelete({ id, title, description, onDelete, closeModal }: ModelDeleteProps) {
+  const { openNotification } = useNotification();
   const [loading, setLoading] = useState(false);
 
   const handleDelete = async () => {
@@ -17,14 +20,27 @@ export default function ModelDelete({ id, title, description, onDelete, closeMod
       setLoading(true);
       const res = await onDelete(id);
       if (res.success){
-        alert("Xóa thành công!");
         closeModal();
+        openNotification({
+          message: "Xóa khuyến mãi thành công",
+          description: "Khuyến mãi đã được xóa khỏi hệ thống.",
+          placement: "top",
+          duration: 3,
+          icon: <FaRegSmileBeam style={{ color: "green" }} />,
+          style: { borderLeft: "5px solid green" },
+        });
       } else {
-        alert("Đã xảy ra lỗi khi xóa!");
+        openNotification({
+          message: "Xóa khuyến mãi thất bại",
+          description: "Khuyến mãi không được xóa khỏi hệ thống.",
+          placement: "top",
+          duration: 3,
+          icon: <FaRegSmileBeam style={{ color: "red" }} />,
+          style: { borderLeft: "5px solid red" },
+        });
       }
     } catch (error) {
       console.error("Lỗi khi xóa:", error);
-      alert("Đã xảy ra lỗi khi xóa!");
     } finally {
       setLoading(false);
     }
