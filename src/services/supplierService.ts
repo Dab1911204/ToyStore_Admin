@@ -1,6 +1,6 @@
 
 import { SuppliersResType } from "@/schemaValidations/supplier.shema";
-import { del, get, post, put } from "@/utils/request";
+import { get, post } from "@/utils/request";
 
 export const SupplierService = {
   // Lấy danh sách supplier có phân trang

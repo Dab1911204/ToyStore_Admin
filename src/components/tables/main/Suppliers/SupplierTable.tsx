@@ -10,6 +10,7 @@ import { Loading } from "@/components/common/Loading";
 import { NoData } from "@/components/common/NoData";
 import { useModal } from "@/hooks/useModal";
 import { SupplierService } from "@/services/supplierService";
+import { Modal } from "@/components/ui/modal";
 
 // kiểu dữ liệu supplier
 interface SupplierType {
@@ -114,17 +115,11 @@ export default function SupplierTable() {
       </div>
 
       {/* Modal */}
-      {/* <Modal isOpen={isOpen} onClose={closeModal}>
+      <Modal isOpen={isOpen} onClose={closeModal}>
         {modalType === "delete" && selectedId && (
-          <ModelDelete
-            id={selectedId}
-            title="Xóa nhà cung cấp"
-            description="nhà cung cấp"
-            onDelete={SupplierService.deleteSupplier}
-            closeModal={closeModal}
-          />
+        <></>
         )}
-      </Modal> */}
+      </Modal>
     </>
   );
 }
