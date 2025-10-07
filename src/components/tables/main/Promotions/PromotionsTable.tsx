@@ -39,23 +39,22 @@ export default function PromotionsTable() {
     if (id) setSelectedId(id);
     openModal();
   };
-
+  const fetchDataTable = async (urlApi: string) => {
+    try {     // bật loading
+      setTableData([]);      // reset tableData để ko hiển thị dữ liệu cũ
+      const res = await PromotionService.getListPromotion(urlApi);
+      setTableData(res.result.items);
+      setTotalPages(res.result.totalPages);
+      setCurrentPage(res.result.currentPage);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      // dùng setTimeout để đảm bảo loading hiển thị ít nhất 0.5s
+      setLoading(false)
+    }
+  };
   useEffect(() => {
-    const fetchDataTable = async () => {
-      try {     // bật loading
-        setTableData([]);      // reset tableData để ko hiển thị dữ liệu cũ
-        const res = await PromotionService.getListPromotion(urlApi);
-        setTableData(res.result.items);
-        setTotalPages(res.result.totalPages);
-        setCurrentPage(res.result.currentPage);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        // dùng setTimeout để đảm bảo loading hiển thị ít nhất 0.5s
-        setLoading(false)
-      }
-    };
-    fetchDataTable();
+    fetchDataTable(urlApi);
   }, [urlApi]);
 
 
@@ -107,6 +106,8 @@ export default function PromotionsTable() {
             description="khuyến mãi"
             onDelete={PromotionService.deletePromotion}
             closeModal={closeModal}
+            loadData={fetchDataTable}
+            urlApi={urlApi}
           />
         )}
       </Modal>
