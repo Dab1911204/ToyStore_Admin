@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: "Khuyến Mãi chờ duyệt"
 };
 
-export default function ApproveNewsPage() {
+export default function ApprovePromotionsPage() {
   return (
     <div>
       <PageBreadcrumb pageTitle="Khuyến mãi chờ duyệt" pageParent="Quản lý khuyến mãi" urlPageParent="/promotions" itemSearch={true}/>

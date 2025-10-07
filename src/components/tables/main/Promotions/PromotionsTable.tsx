@@ -10,6 +10,9 @@ import Pagination from "../../Pagination";
 import { PromotionService } from "@/services/promotionService";
 import { Loading } from "@/components/common/Loading";
 import { NoData } from "@/components/common/NoData";
+import { useModal } from "@/hooks/useModal";
+import { Modal } from "@/components/ui/modal";
+import ModelDelete from "@/components/example/ModalExample/ModalDelete";
 
 const title = ["STT", "Tiêu đề", "Giảm", "Ngày bắt đầu", "Ngày kết thúc", "Người tạo", "Hành động"];
 
@@ -20,9 +23,21 @@ export default function PromotionsTable() {
   const [loading, setLoading] = useState(true); // trạng thái đang load
   const { urlApi, setParam } = useTableContext();
 
+  // ✅ quản lý modal ở đây
+  const { isOpen, openModal, closeModal } = useModal();
+  const [modalType, setModalType] = useState<"delete" | "detail" | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+
+
   const onPageChange = async (page: number) => {
     setCurrentPage(page);
     setParam("PageNumber", page);
+  };
+
+  const handleOpenModal = (type: "delete" | "detail", id?: string) => {
+    setModalType(type);
+    if (id) setSelectedId(id);
+    openModal();
   };
 
   useEffect(() => {
@@ -45,39 +60,56 @@ export default function PromotionsTable() {
 
 
   return (
-    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
-      <div className="max-w-full overflow-x-auto">
-        <div className="min-w-[1102px]">
-          <Table className="w-full">
-            {/* Table Header */}
-            <TableHeaderOne title={title} />
+    <>
+      <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
+        <div className="max-w-full overflow-x-auto">
+          <div className="min-w-[1102px]">
+            <Table className="w-full">
+              {/* Table Header */}
+              <TableHeaderOne title={title} />
 
-            {/* Table Body */}
-            {loading && (
-              <Loading colSpan={title.length} />
+              {/* Table Body */}
+              {loading && (
+                <Loading colSpan={title.length} />
+              )}
+
+              {!loading && tableData.length > 0 && (
+                <PromotionsTableBody
+                  tableData={tableData}
+                  onOpenModal={handleOpenModal} // ✅ truyền hàm mở modal xuống
+                />
+              )}
+
+              {!loading && tableData.length === 0 && (
+                <NoData colSpan={title.length} title="Không có dữ liệu" />
+              )}
+            </Table>
+
+            {/* Pagination */}
+            {!loading && Array.isArray(tableData) && tableData.length > 0 && (
+              <div className="w-full flex justify-center mt-4 mb-4">
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={onPageChange}
+                />
+              </div>
             )}
-
-            {!loading && tableData.length > 0 && (
-              <PromotionsTableBody tableData={tableData} />
-            )}
-
-            {!loading && tableData.length === 0 && (
-              <NoData colSpan={title.length} title="Không có dữ liệu" />
-            )}
-          </Table>
-
-          {/* Pagination */}
-          {!loading && Array.isArray(tableData) && tableData.length > 0 && (
-            <div className="w-full flex justify-center mt-4 mb-4">
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={onPageChange}
-              />
-            </div>
-          )}
+          </div>
         </div>
       </div>
-    </div>
+      {/* ✅ Modal nằm ngoài table */}
+      <Modal isOpen={isOpen} onClose={closeModal}>
+        {modalType === "delete" && selectedId && (
+          <ModelDelete
+            id={selectedId}
+            title="Xóa khuyến mãi"
+            description="khuyến mãi"
+            onDelete={PromotionService.deletePromotion}
+            closeModal={closeModal}
+          />
+        )}
+      </Modal>
+    </>
   );
 }
