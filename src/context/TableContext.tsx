@@ -43,3 +43,12 @@ export const useTableContext = (): TableContextType => {
   if (!ctx) throw new Error("useTableContext phải được dùng bên trong TableContextProvider");
   return ctx;
 };
+
+// ✅ Hook an toàn, không gây lỗi nếu nằm ngoài Provider
+export const useSafeTableContext = () => {
+  try {
+    return useTableContext();
+  } catch {
+    return { urlApi: null, setUrlApi: () => {}, param: {}, setParam: () => {} };
+  }
+};
