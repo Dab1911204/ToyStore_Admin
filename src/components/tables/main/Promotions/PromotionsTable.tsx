@@ -102,7 +102,7 @@ export default function PromotionsTable() {
         {modalType === "delete" && selectedId && (
           <ModalConfirm
             id={selectedId}
-            title="Xóa khuyến mãi"
+            title="Xóa"
             description="khuyến mãi"
             onHandle={PromotionService.deletePromotion}
             closeModal={closeModal}
