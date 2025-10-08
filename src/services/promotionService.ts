@@ -7,6 +7,7 @@ export const PromotionService = {
   infoPromotion:(id:string)=>get<PromotionResType>(`/api/Promotion/${id}`,{requireAuth:true}),
   updatePromotion:(id:string,data:any)=>put<PromotionResType>(`/api/Promotion/${id}`,data,{requireAuth:true}),
   deletePromotion:(id:string)=>del<PromotionDRResType>(`/api/Promotion`,id,{requireAuth:true}),
-  restorePromotion:(id:string)=>put<PromotionDRResType>(`/api/Promotion/restore/${id}`,undefined,{requireAuth:true})
+  restorePromotion:(id:string)=>put<PromotionDRResType>(`/api/Promotion/restore/${id}`,undefined,{requireAuth:true}),
+  approvePromotion:(id:string)=>put<PromotionDRResType>(`/api/Promotion/approve/${id}`,undefined,{requireAuth:true})
 };
 

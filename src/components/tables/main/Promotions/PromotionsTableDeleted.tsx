@@ -14,9 +14,9 @@ import { PromotionType } from "@/schemaValidations/promotion.schema";
 import { Loading } from "@/components/common/Loading";
 import { NoData } from "@/components/common/NoData";
 import Pagination from "../../Pagination";
-import ModelRestore from "@/components/example/ModalExample/ModalRestore";
+import ModalConfirm from "@/components/example/ModalExample/ModalConfirm";
 
-const title = ["STT", 'Tiêu đề', "Giảm", "Ngày bắt đầu", "Ngày kết thúc", "Người xóa", "Hàng động"]
+const title = ["STT", 'Tiêu đề', "Giảm", "Ngày bắt đầu", "Ngày kết thúc","Trạng thái", "Người xóa", "Hàng động"]
 
 export default function PromotionsTableDelete() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -104,11 +104,11 @@ export default function PromotionsTableDelete() {
         )}
         {modalType === "restore" && selectedId && (
           <>
-            <ModelRestore
+            <ModalConfirm
               id={selectedId}
-              title="Khôi phục khuyến mãi"
+              title="Khôi phục"
               description="khuyến mãi"
-              onRestore={PromotionService.restorePromotion}
+              onHandle={PromotionService.restorePromotion}
               closeModal={closeModal}
               loadData={fetchDataTable}
               urlApi={urlApi}

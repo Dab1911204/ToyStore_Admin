@@ -12,6 +12,7 @@ import Button from "@/components/ui/button/Button";
 import { FaEye } from "react-icons/fa6";
 import { PromotionType } from "@/schemaValidations/promotion.schema";
 import { formatDateTime } from "@/utils/format";
+import Badge from "@/components/ui/badge/Badge";
 
 interface PromotionsTableBodyProps {
   tableData: PromotionType[];
@@ -40,6 +41,17 @@ const NewsTableBodyDelete: React.FC<PromotionsTableBodyProps> = ({
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
               {formatDateTime(order.endDate)}
+            </TableCell>
+            <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
+              {order.isApproved ? (
+                <Badge color="info" size="sm">
+                  Đã duyệt
+                </Badge>
+              ) : (
+                <Badge color="warning" size="sm">
+                  Chờ duyệt
+                </Badge>
+              )}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
               {order.createdBy}

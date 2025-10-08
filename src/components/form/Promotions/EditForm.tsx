@@ -13,10 +13,7 @@ import { useEffect, useRef, useState } from "react";
 import { PromotionService } from "@/services/promotionService";
 import { ProductService } from "@/services/productService";
 import { useRouter } from "next/navigation";
-
-type EditFormProps = {
-  id: string;
-};
+import { EditFormProps } from "@/types/props";
 
 type Option = {
   value: string;

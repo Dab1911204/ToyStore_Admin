@@ -26,7 +26,14 @@ export function formatCurrency(amount: number, locale: string = "vi-VN"): string
   }).format(amount);
 }
 
+//Viết hoa chứ cái đầu
 export function capitalizeFirstLetter(str: string) {
   if (!str) return '';
   return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+//Viết thường chữ cái đầu
+export function uncapitalizeFirstLetter(str: string) {
+  if (!str) return '';
+  return str.charAt(0).toLowerCase() + str.slice(1);
 }

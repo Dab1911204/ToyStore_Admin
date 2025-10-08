@@ -12,7 +12,7 @@ import { Loading } from "@/components/common/Loading";
 import { NoData } from "@/components/common/NoData";
 import { useModal } from "@/hooks/useModal";
 import { Modal } from "@/components/ui/modal";
-import ModelDelete from "@/components/example/ModalExample/ModalDelete";
+import ModalConfirm from "@/components/example/ModalExample/ModalConfirm";
 
 const title = ["STT", "Tiêu đề", "Giảm", "Ngày bắt đầu", "Ngày kết thúc", "Người tạo", "Hành động"];
 
@@ -100,11 +100,11 @@ export default function PromotionsTable() {
       {/* ✅ Modal nằm ngoài table */}
       <Modal isOpen={isOpen} onClose={closeModal}>
         {modalType === "delete" && selectedId && (
-          <ModelDelete
+          <ModalConfirm
             id={selectedId}
             title="Xóa khuyến mãi"
             description="khuyến mãi"
-            onDelete={PromotionService.deletePromotion}
+            onHandle={PromotionService.deletePromotion}
             closeModal={closeModal}
             loadData={fetchDataTable}
             urlApi={urlApi}
