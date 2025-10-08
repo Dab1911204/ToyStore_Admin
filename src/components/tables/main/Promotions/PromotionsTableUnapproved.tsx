@@ -36,7 +36,7 @@ export default function PromotionsTableUnapproved() {
       setParam("PageNumber", page);
     };
   
-    const handleOpenModal = (type: "approve" | "detail", id?: string) => {
+    const handleOpenModal = (type: "approve" | "detail" | "delete", id?: string) => {
       setModalType(type);
       if (id) setSelectedId(id);
       openModal();
