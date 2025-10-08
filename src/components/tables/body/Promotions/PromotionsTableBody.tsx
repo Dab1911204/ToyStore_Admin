@@ -19,7 +19,8 @@ interface PromotionsTableBodyProps {
 }
 
 const PromotionsTableBody: React.FC<PromotionsTableBodyProps> = ({
-  tableData,onOpenModal
+  tableData,
+  onOpenModal,
 }) => {
   return (
     <>

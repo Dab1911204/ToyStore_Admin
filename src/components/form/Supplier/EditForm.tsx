@@ -5,60 +5,92 @@ import Button from "@/components/ui/button/Button";
 import InputForm from "../form-elements/InputForm";
 import { useNotification } from "@/context/NotificationContext";
 import { FaRegSmileBeam } from "react-icons/fa";
+import { useRouter } from "next/navigation";
+import { EditFormProps } from "@/types/props";
+import { useEffect } from "react";
 
-import { usePrefill } from "@/hooks/usePrefill";
+type InfoSupplier = {
+    SupplierName: string;
+    Phone: string;
+    Email: string;
+    Address: string;
+    Note: string;
+};
 
-
-export default function EditForm() {
-    const { values, setErrors } = useFormContext();
+export default function EditForm({ id, supplier }: EditFormProps & { supplier?: InfoSupplier }) {
+    const { values, setValue, setErrors } = useFormContext();
     const { openNotification } = useNotification();
+    const router = useRouter();
 
-    usePrefill({
-        name: "Tên Sản Phẩm",
-        images: ["https://tse1.mm.bing.net/th/id/OIP.CFG1RgZ9gTRtNgk_wWxG8QHaEO?rs=1&pid=ImgDetMain&o=7&rm=3"],
-        category: ["1"],
-        brand: ["1"],
-        price: 100000,
-        description: "Mô tả sản phẩm",
-    });
+    // Prefill form khi mở
+    useEffect(() => {
+        if (supplier) {
+            setValue("name", supplier.SupplierName);
+            setValue("phone", supplier.Phone);
+            setValue("email", supplier.Email);
+            setValue("address", supplier.Address);
+            setValue("note", supplier.Note ?? "");
+        }
+    }, [supplier, setValue]);
 
-    const handleSubmit = (data: Record<string, any> | FormData) => {
+
+    const handleSubmit = async (data: Record<string, any> | FormData) => {
         const newErrors: { name: string; message: string }[] = [];
 
-        // validate text fields
-        if (!values.name) newErrors.push({ name: "name", message: "Tiêu đề không được để trống" });
-        if (!values.description) newErrors.push({ name: "description", message: "Nội dung không được để trống" });
-        if (!values.images) newErrors.push({ name: "images", message: "Vui lòng chọn ảnh" });
+        // validate các trường
+        if (!values.name) newErrors.push({ name: "name", message: "Tên không được để trống" });
+        if (!values.phone) newErrors.push({ name: "phone", message: "Số điện thoại không được để trống" });
+        if (!values.email) newErrors.push({ name: "email", message: "Email không được để trống" });
+        if (!values.address) newErrors.push({ name: "address", message: "Địa chỉ không được để trống" });
 
         setErrors(newErrors);
 
         if (newErrors.length === 0) {
-            if (data instanceof FormData) {
-                // multipart submit
-                console.log("🚀 Multipart FormData submit:");
-                for (const [key, value] of data.entries()) {
-                    console.log(key, value);
+            try {
+                const res = await fetch(`/api/Supplier/${id}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data),
+                }).then(r => r.json());
+
+                if (res.success) {
+                    openNotification({
+                        message: "Sửa nhà cung cấp thành công",
+                        description: "Thông tin nhà cung cấp đã được cập nhật.",
+                        placement: "top",
+                        duration: 3,
+                        icon: <FaRegSmileBeam style={{ color: "green" }} />,
+                        style: { borderLeft: "5px solid green" },
+                    });
+                    router.push("/suppliers");
+                    router.refresh();
+                } else {
+                    openNotification({
+                        message: "Lỗi sửa nhà cung cấp",
+                        description: res.errors?.join(", ") || "Không thể cập nhật thông tin",
+                        placement: "top",
+                        duration: 3,
+                        icon: <FaRegSmileBeam style={{ color: "red" }} />,
+                        style: { borderLeft: "5px solid red" },
+                    });
                 }
-                console.log("Categories:", data); // nếu là multi select
-            } else {
-                // json submit
-                console.log("🚀 JSON submit:", data);
+            } catch (error) {
+                openNotification({
+                    message: "Lỗi",
+                    description: "Có lỗi xảy ra: " + error,
+                    placement: "top",
+                    duration: 3,
+                    icon: <FaRegSmileBeam style={{ color: "red" }} />,
+                    style: { borderLeft: "5px solid red" },
+                });
             }
-            openNotification({
-                message: "Custom Notification",
-                description: "Nội dung chi tiết thông báo",
-                placement: "top",
-                duration: 3,
-                icon: <FaRegSmileBeam style={{ color: "green" }} />,
-                style: { borderLeft: "5px solid green" },
-            })
         } else {
             console.log("❌ Errors:", newErrors);
         }
     };
 
     return (
-        <Form onSubmit={handleSubmit} mode="multipart">
+        <Form onSubmit={handleSubmit} mode="multipart" method="POST">
             <InputForm label="Tên nhà cung cấp" name="name" placeholder="Nhập tên nhà cung cấp" />
             <InputForm label="Số điện thoại" name="phone" placeholder="Nhập số điện thoại" />
             <InputForm label="Email" name="email" placeholder="Nhập email" />
