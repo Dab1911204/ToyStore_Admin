@@ -17,7 +17,7 @@ import { formatDateTime } from "@/utils/format";
 
 interface PromotionsTableBodyUnapprovedProps {
   tableData: PromotionType[];
-  onOpenModal: (type: "approve" | "detail",id?:string) => void;
+  onOpenModal: (type: "approve" | "detail" | "delete",id?:string) => void;
 }
 
 const PromotionTableBodyUnapproved: React.FC<PromotionsTableBodyUnapprovedProps> = ({
@@ -59,7 +59,7 @@ const PromotionTableBodyUnapproved: React.FC<PromotionsTableBodyUnapprovedProps>
                 <Button className="w-20" size="xxs" variant="warning" startIcon={<FiEdit />}>
                   Sửa
                 </Button>
-                <Button className="w-20" size="xxs" variant="danger" startIcon={<FaDeleteLeft />}>
+                <Button onClick={() => onOpenModal("delete",order.id)}className="w-20" size="xxs" variant="danger" startIcon={<FaDeleteLeft />}>
                   Xóa
                 </Button>
               </div>
