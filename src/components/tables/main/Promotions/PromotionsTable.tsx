@@ -13,6 +13,7 @@ import { NoData } from "@/components/common/NoData";
 import { useModal } from "@/hooks/useModal";
 import { Modal } from "@/components/ui/modal";
 import ModalConfirm from "@/components/example/ModalExample/ModalConfirm";
+import ModelDetailPromotion from "@/components/example/ModalExample/ModelDetailPromotion";
 
 const title = ["STT", "Tiêu đề", "Giảm", "Ngày bắt đầu", "Ngày kết thúc", "Người tạo", "Hành động"];
 
@@ -109,6 +110,22 @@ export default function PromotionsTable() {
             loadData={fetchDataTable}
             urlApi={urlApi}
           />
+        )}
+        {modalType === "detail" && selectedId && (
+          <>
+            <ModelDetailPromotion
+              title="Giảm giá Tết 2025"
+              description="Khuyến mãi mừng năm mới – giảm 20% cho tất cả rau củ."
+              startDate="2025-02-01"
+              endDate="2025-02-15"
+              discountPercent={20}
+              isApproved={true}
+              products={[
+                { id: "1", name: "Rau cải xanh", price: 15000, discountedPrice: 12000 },
+                { id: "2", name: "Cà rốt Đà Lạt", price: 20000, discountedPrice: 16000 },
+              ]}
+            />
+          </>
         )}
       </Modal>
     </>
