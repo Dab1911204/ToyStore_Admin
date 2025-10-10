@@ -10,7 +10,6 @@ export const SupplierService = {
   infoSupplier:(id:string)=>get<SupplierResType>(`/api/Supplier/${id}`,{requireAuth:true}),
   // Cập nhật supplier
   updateSupplier: (id: string, data: any) => put<SupplierResType>(`/api/Supplier/${id}`, data, { requireAuth: true }),
-
   //Xóa supplier
   deleteSupplier: (id: string) => del<SupplierDRResType>(`/api/Supplier`, id, { requireAuth: true }),
 };
