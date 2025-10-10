@@ -61,7 +61,7 @@ export default function ModalConfirm({ id, title, description, onHandle, closeMo
         </h4>
 
         <p className="mb-6 text-sm text-gray-800 dark:text-gray-200">
-          Bạn có chắc chắn muốn <strong className="text-red-600">${title} {description}</strong> này không?
+          Bạn có chắc chắn muốn <strong className="text-red-600">{title1} {description}</strong> này không?
         </p>
 
         <div className="flex justify-end gap-3">
