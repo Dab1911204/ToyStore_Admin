@@ -62,4 +62,4 @@ export const SupplierDRResponseSchema = z.object({
   errors: z.array(z.string()),
 });
 
-export type SupplierDRResType = z.infer<typeof SupplierDRResponseSchema>;
+export type SupplierDRResType = z.infer<typeof SupplierDRResponseSchema>; 

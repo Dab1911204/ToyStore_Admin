@@ -47,7 +47,7 @@ export default function EditForm({ id }: EditFormProps) {
       setOptionSelect(options);
   }
   const fetchDataPromotion = async (id: string) => {
-    // Lấy thông tin khuyến mãi
+    // Lấy thông tininfoPromotion khuyến mãi
       const res = await PromotionService.infoPromotion(id);
       if (res.success) {
         const infoPromotion: InfoPromotion = {
