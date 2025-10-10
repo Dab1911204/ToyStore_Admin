@@ -60,3 +60,13 @@ export const NewsDetailRes = z.object({
 }).strict();
 
 export type NewsDetailResType = z.infer<typeof NewsDetailRes>;
+
+export const NewsDeleteRes = z.object({
+  success: z.boolean(),
+  result: z.string(),
+  errors: z.array(z.string())
+}).strict();
+
+export type NewsDeleteResType = z.infer<typeof NewsDeleteRes>;
+
+

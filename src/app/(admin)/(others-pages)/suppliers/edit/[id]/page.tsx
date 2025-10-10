@@ -5,15 +5,25 @@ import { Metadata } from "next";
 import React from "react";
 
 export const metadata: Metadata = {
-  title: "Sửa nhà cung cấp"
+  title: "Sửa nhà cung cấp",
 };
 
-export default function EditSupplierPage() {
+export default function EditSupplierPage({
+  params,
+}: {
+  params: { id: string };
+}) {
+  const { id } = params;
+
   return (
     <div>
-      <PageBreadcrumb pageTitle="Sửa nhà cung cấp" pageParent="Quản lý nhà cung cấp" urlPageParent="/suppliers" />
-      <FormProvider >
-        <EditForm />
+      <PageBreadcrumb
+        pageTitle="Sửa nhà cung cấp"
+        pageParent="Quản lý nhà cung cấp"
+        urlPageParent="/suppliers"
+      />
+      <FormProvider>
+        <EditForm id={id} /> {/* ✅ Bây giờ EditForm nhận id */}
       </FormProvider>
     </div>
   );

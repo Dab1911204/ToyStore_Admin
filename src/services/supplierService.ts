@@ -1,20 +1,16 @@
 
-import { SuppliersResType } from "@/schemaValidations/supplier.shema";
-import { get, post } from "@/utils/request";
+import { SupplierDRResType, SupplierResType, SuppliersResType } from "@/schemaValidations/supplier.shema";
+import { del, get, post, put } from "@/utils/request";
 
 export const SupplierService = {
   // Lấy danh sách supplier có phân trang
   getListSupplier: (url: string) => get<SuppliersResType>(url, { requireAuth: true }),
-
   // Tạo mới supplier
-  createSupplier: (data: any) => post<SuppliersResType>("/api/Supplier/Supplier", data, { requireAuth: true }),
-
-  // Lấy thông tin chi tiết 1 supplier
-  //infoSupplier: (id: string) => get<SupplierResType>(`/api/Supplier/${id}`, { requireAuth: true }),
-
+  createSupplier: (data: any) => post<SupplierResType>("/api/Supplier/Supplier", data, { requireAuth: true }),
+  infoSupplier:(id:string)=>get<SupplierResType>(`/api/Supplier/${id}`,{requireAuth:true}),
   // Cập nhật supplier
-  //updateSupplier: (id: string, data: any) => put<SupplierResType>(`/api/Supplier/${id}`, data, { requireAuth: true }),
+  updateSupplier: (id: string, data: any) => put<SupplierResType>(`/api/Supplier/${id}`, data, { requireAuth: true }),
 
-  // Xóa supplier
-  //deleteSupplier: (id: string) => del<SupplierDeleteResType>(`/api/Supplier`, id, { requireAuth: true }),
+  //Xóa supplier
+  deleteSupplier: (id: string) => del<SupplierDRResType>(`/api/Supplier`, id, { requireAuth: true }),
 };
