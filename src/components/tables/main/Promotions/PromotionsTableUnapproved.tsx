@@ -14,6 +14,7 @@ import { Loading } from "@/components/common/Loading";
 import { NoData } from "@/components/common/NoData";
 import Pagination from "../../Pagination";
 import { Modal } from "@/components/ui/modal";
+import ModalConfirm from "@/components/example/ModalExample/ModalConfirm";
 
 const title = ["STT", 'Tiêu đề', "Giảm", "Ngày bắt đầu", "Ngày kết thúc", "Trạng thái", "Hàng động"]
 
@@ -26,7 +27,7 @@ export default function PromotionsTableUnapproved() {
   
     // ✅ quản lý modal ở đây
     const { isOpen, openModal, closeModal } = useModal();
-    const [modalType, setModalType] = useState<"approve" | "detail" | null>(null);
+    const [modalType, setModalType] = useState<"approve" | "detail" | "delete" | null>(null);
     const [selectedId, setSelectedId] = useState<string | null>(null);
   
   
@@ -35,7 +36,7 @@ export default function PromotionsTableUnapproved() {
       setParam("PageNumber", page);
     };
   
-    const handleOpenModal = (type: "approve" | "detail", id?: string) => {
+    const handleOpenModal = (type: "approve" | "detail" | "delete", id?: string) => {
       setModalType(type);
       if (id) setSelectedId(id);
       openModal();
@@ -102,9 +103,26 @@ export default function PromotionsTableUnapproved() {
           </>
         )}
         {modalType === "approve" && selectedId && (
-          <>
-            
-          </>
+          <ModalConfirm
+            id={selectedId}
+            title="Duyệt"
+            description="khuyến mãi"
+            onHandle={PromotionService.approvePromotion}
+            closeModal={closeModal}
+            loadData={fetchDataTable}
+            urlApi={urlApi}
+          />  
+        )}
+        {modalType === "delete" && selectedId && (
+          <ModalConfirm
+            id={selectedId}
+            title="Xóa"
+            description="khuyến mãi"
+            onHandle={PromotionService.deletePromotion}
+            closeModal={closeModal}
+            loadData={fetchDataTable}
+            urlApi={urlApi}
+          /> 
         )}
       </Modal>
     </div>

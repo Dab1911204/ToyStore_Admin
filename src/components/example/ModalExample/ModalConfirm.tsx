@@ -1,35 +1,36 @@
 "use client";
 import Button from "@/components/ui/button/Button";
 import { useNotification } from "@/context/NotificationContext";
-import { capitalizeFirstLetter } from "@/utils/format";
+import { capitalizeFirstLetter, uncapitalizeFirstLetter } from "@/utils/format";
 import React, { useState } from "react";
 import { FaRegSmileBeam } from "react-icons/fa";
 
-type ModelRestoreProps = {
+type ModalConfirmProps = {
   id: string;
   title: string;
   description?: string;
-  onRestore: (id: string) => Promise<any>;
+  onHandle: (id: string) => Promise<any>;
   closeModal: () => void;
   loadData?: (urlApi: string) => void;
   urlApi?: string;
 };
 
-export default function ModelRestore({ id, title, description, onRestore, closeModal, loadData, urlApi }: ModelRestoreProps) {
+export default function ModalConfirm({ id, title, description, onHandle, closeModal, loadData, urlApi }: ModalConfirmProps) {
   const { openNotification } = useNotification();
   const [loading, setLoading] = useState(false);
   const description1 = capitalizeFirstLetter(description ?? "")
+  const title1 = uncapitalizeFirstLetter(title ?? "")
 
   const handleRestore = async () => {
     try {
       setLoading(true);
-      const res = await onRestore(id);
+      const res = await onHandle(id);
       if (res.success) {
         if (loadData && urlApi) loadData(urlApi);
         closeModal();
         openNotification({
-          message: `Khôi phục ${description1} thành công`,
-          description: "Khuyến mãi đã được khôi phục lại hệ thống.",
+          message: `${title} ${description} thành công`,
+          description: `${description1} đã được ${title1} được.`,
           placement: "top",
           duration: 3,
           icon: <FaRegSmileBeam style={{ color: "green" }} />,
@@ -37,8 +38,8 @@ export default function ModelRestore({ id, title, description, onRestore, closeM
         });
       } else {
         openNotification({
-          message: `Khôi phục ${description1} thất bại`,
-          description: `${description1} không được khôi phục lại hệ thống.`,
+          message: `${title} thất bại`,
+          description: `${description1} không được ${title1} được.`,
           placement: "top",
           duration: 3,
           icon: <FaRegSmileBeam style={{ color: "red" }} />,
@@ -56,11 +57,11 @@ export default function ModelRestore({ id, title, description, onRestore, closeM
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
       <div className="w-full max-w-[450px] rounded-2xl bg-white p-6 shadow-lg dark:bg-gray-900">
         <h4 className="mb-2 text-xl font-semibold text-gray-800 dark:text-white">
-          {title}
+          {title} {description}
         </h4>
 
         <p className="mb-6 text-sm text-gray-800 dark:text-gray-200">
-          Bạn có chắc chắn muốn <strong className="text-red-600">khôi phục {description}</strong> này không?
+          Bạn có chắc chắn muốn <strong className="text-red-600">{title1} {description}</strong> này không?
         </p>
 
         <div className="flex justify-end gap-3">
@@ -77,7 +78,7 @@ export default function ModelRestore({ id, title, description, onRestore, closeM
             size="sm"
             variant="warning"
           >
-            {loading ? "Đang khôi phục..." : "Xác nhận khôi phục"}
+            {loading ? `Đang ${title1}...` : `Xác nhận ${title1}`}
           </Button>
         </div>
       </div>
