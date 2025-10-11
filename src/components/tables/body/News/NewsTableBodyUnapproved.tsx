@@ -8,73 +8,70 @@ import {
 
 import Button from "@/components/ui/button/Button";
 import { FaEye } from "react-icons/fa6";
-import { useModal } from "@/hooks/useModal";
-import { Modal } from "@/components/ui/modal";
 import { AiFillCheckCircle } from "react-icons/ai";
 import { FiEdit } from "react-icons/fi";
 import { FaDeleteLeft } from "react-icons/fa6";
 import Image from "next/image";
 import Badge from "@/components/ui/badge/Badge";
-
-interface User {
-  image: string;
-  name: string;
-}
-
-interface NewsTableRow {
-  id: string | number;
-  user: User;
-  projectName: string;
-  // Add other fields if needed
-}
+import { NewsType } from "@/schemaValidations/news.schema";
+import { getFirstImageFromString } from "@/utils/format";
 
 interface NewsTableBodyProps {
-  tableData: NewsTableRow[];
+  tableData: NewsType[];
+  onOpenModal: (type: "delete" | "detail" | "approve", id?: string) => void;
 }
 
 const NewsTableBodyUnapproved: React.FC<NewsTableBodyProps> = ({
   tableData,
+  onOpenModal,
 }) => {
-  const { isOpen, openModal, closeModal } = useModal();
   return (
     <>
       <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-        {tableData.map((order) => (
-          <TableRow key={order.id}>
+        {tableData.map((news, index) => (
+          <TableRow key={news.id}>
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-              {order.id}
+              {index + 1}
+            </TableCell>
+            <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400 align-middle">
+              <div className="flex justify-center items-center">
+                <div className="w-[280px] h-[180px] overflow-hidden rounded-lg bg-gray-50 flex justify-center items-center">
+                  <Image
+                    width={100}
+                    height={70}
+                    src={getFirstImageFromString(news.image) || "/default-news.jpg"}
+                    alt={news.title}
+                    className="object-cover w-full h-full"
+                  />
+                </div>
+              </div>
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-              <Image 
-                width={100}
-                height={100}
-                src="/images/product/product-03.jpg"
-                alt={order.user.name}
-              />
-            </TableCell>
-            <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-              Tết thiếu nhi
+              {news.title}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-              28/8/2025
+              {new Date(news.createdOn).toLocaleDateString("vi-VN")}
+            </TableCell>
+            <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
+              {news.author || "Chưa rõ"}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
               <Badge color="warning" size="sm">
-                Chờ duyệt
+                {news.status === "published" ? "Đã đăng" : news.status === "draft" ? "Nháp" : "Lưu trữ"}
               </Badge>
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
               <div className="flex flex-col gap-2">
-                <Button onClick={openModal} className="w-20" size="xxs" variant="info" startIcon={<FaEye />}>
+                <Button onClick={() => onOpenModal("detail", news.id)}className="w-20" size="xxs" variant="info" startIcon={<FaEye />}>
                   Chi tiết
                 </Button>
-                <Button className="w-20" size="xxs" variant="success" startIcon={<AiFillCheckCircle />}>
+                <Button onClick={() => onOpenModal("approve", news.id)}className="w-20" size="xxs" variant="success" startIcon={<AiFillCheckCircle />}>
                   Duyệt
                 </Button>
                 <Button className="w-20" size="xxs" variant="warning" startIcon={<FiEdit />}>
                   Sửa
                 </Button>
-                <Button className="w-20" size="xxs" variant="danger" startIcon={<FaDeleteLeft />}>
+                <Button onClick={() => onOpenModal("delete", news.id)} className="w-20" size="xxs" variant="danger" startIcon={<FaDeleteLeft />}>
                   Xóa
                 </Button>
               </div>
@@ -82,18 +79,7 @@ const NewsTableBodyUnapproved: React.FC<NewsTableBodyProps> = ({
           </TableRow>
         ))}
       </TableBody>
-      <Modal isOpen={isOpen} onClose={closeModal} className="max-w-[700px] m-4">
-        <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
-          <div className="px-2 pr-14">
-            <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
-              Chi tiết tin tức
-            </h4>
-            <p className="mb-6 text-sm text-gray-500 dark:text-gray-400 lg:mb-7">
-              Update your details to keep your profile up-to-date.
-            </p>
-          </div>
-        </div>
-      </Modal>
+    
     </>
   );
 }
