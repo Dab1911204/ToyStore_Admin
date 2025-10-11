@@ -16,7 +16,7 @@ import { getFirstImageFromString } from "@/utils/format";
 
 interface NewsTableBodyProps {
   tableData: NewsType[];
-  onOpenModal: (type: "delete" | "detail",id?:string) => void;
+  onOpenModal: (type: "delete" | "detail", id?: string) => void;
 }
 
 const NewsTableBody: React.FC<NewsTableBodyProps> = ({
@@ -26,27 +26,26 @@ const NewsTableBody: React.FC<NewsTableBodyProps> = ({
   return (
     <>
       <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-        {tableData.map((news,index) => (
+        {tableData.map((news, index) => (
           <TableRow key={news.id}>
             {/* ID */}
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-              {index+1}
+              {index + 1}
             </TableCell>
-
             {/* Ảnh thumbnail */}
-            <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-              <div className="flex -space-x-2">
-                <div className="w-50 h-50 overflow-hidden">
+            <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400 align-middle">
+              <div className="flex justify-center items-center">
+                <div className="w-[280px] h-[180px] overflow-hidden rounded-lg bg-gray-50 flex justify-center items-center">
                   <Image
-                    width={300}
-                    height={300}
-                    src={getFirstImageFromString(news.image) || "/default-news.jpg"} // fallback nếu chưa có ảnh
+                    width={100}
+                    height={70}
+                    src={getFirstImageFromString(news.image) || "/default-news.jpg"}
                     alt={news.title}
+                    className="object-cover w-full h-full"
                   />
                 </div>
               </div>
             </TableCell>
-
             {/* Tiêu đề tin */}
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
               {news.title}
@@ -75,12 +74,12 @@ const NewsTableBody: React.FC<NewsTableBodyProps> = ({
                     Sửa
                   </Button>
                 </Link>
-                <Button onClick={() => onOpenModal("detail",news.id)}className="w-20" size="xxs" variant="info" startIcon={<FaEye />}>
+                <Button onClick={() => onOpenModal("detail", news.id)} className="w-20" size="xxs" variant="info" startIcon={<FaEye />}>
                   Chi tiết
-                </Button>              
-                  <Button onClick={() => onOpenModal("delete",news.id)} className="w-20" size="xxs" variant="danger" startIcon={<FaDeleteLeft />}>
-                    Xóa
-                  </Button>               
+                </Button>
+                <Button onClick={() => onOpenModal("delete", news.id)} className="w-20" size="xxs" variant="danger" startIcon={<FaDeleteLeft />}>
+                  Xóa
+                </Button>
               </div>
             </TableCell>
           </TableRow>
