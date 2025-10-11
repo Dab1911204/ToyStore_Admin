@@ -26,22 +26,22 @@ const PromotionTableBodyUnapproved: React.FC<PromotionsTableBodyUnapprovedProps>
   return (
     <>
       <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-        {tableData.map((order,index) => (
-          <TableRow key={order.id}>
+        {tableData.map((item,index) => (
+          <TableRow key={item.id}>
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
               {index+1}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-              {order.title}
+              {item.title}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-              {order.discountPercent}
+              {item.discountPercent}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-              {formatDateTime(order.startDate)}
+              {formatDateTime(item.startDate)}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-              {formatDateTime(order.endDate)}
+              {formatDateTime(item.endDate)}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
               <Badge color="warning" size="sm">
@@ -50,16 +50,16 @@ const PromotionTableBodyUnapproved: React.FC<PromotionsTableBodyUnapprovedProps>
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
               <div className="flex flex-col gap-2">
-                <Button onClick={()=>onOpenModal("detail",order.id)} className="w-20" size="xxs" variant="info" startIcon={<FaEye />}>
+                <Button onClick={()=>onOpenModal("detail",item.id)} className="w-20" size="xxs" variant="info" startIcon={<FaEye />}>
                   Chi tiết
                 </Button>
-                <Button onClick={()=>onOpenModal("approve",order.id)} className="w-20" size="xxs" variant="success" startIcon={<AiFillCheckCircle />}>
+                <Button onClick={()=>onOpenModal("approve",item.id)} className="w-20" size="xxs" variant="success" startIcon={<AiFillCheckCircle />}>
                   Duyệt
                 </Button>
                 <Button className="w-20" size="xxs" variant="warning" startIcon={<FiEdit />}>
                   Sửa
                 </Button>
-                <Button onClick={() => onOpenModal("delete",order.id)}className="w-20" size="xxs" variant="danger" startIcon={<FaDeleteLeft />}>
+                <Button onClick={() => onOpenModal("delete",item.id)}className="w-20" size="xxs" variant="danger" startIcon={<FaDeleteLeft />}>
                   Xóa
                 </Button>
               </div>

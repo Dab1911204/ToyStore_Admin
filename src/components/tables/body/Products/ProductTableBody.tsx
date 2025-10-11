@@ -39,7 +39,7 @@ const ProductTableBody: React.FC<ProductsTableBodyProps> = ({
                   <Image
                     width={100}
                     height={100}
-                    src={product.image?.[0] || "/public/images/cards/card-03.png"}
+                    src={product.image?.[0] || "/images/cards/card-03.png"}
                     alt={product.productName}
                   />
                 </div>

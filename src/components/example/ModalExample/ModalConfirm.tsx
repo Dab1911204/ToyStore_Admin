@@ -54,8 +54,8 @@ export default function ModalConfirm({ id, title, description, onHandle, closeMo
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <div className="w-full max-w-[450px] rounded-2xl bg-white p-6 shadow-lg dark:bg-gray-900">
+    <div className="p-6 mt-6 bg-white shadow-lg rounded-2xl">
+      <div >
         <h4 className="mb-2 text-xl font-semibold text-gray-800 dark:text-white">
           {title} {description}
         </h4>

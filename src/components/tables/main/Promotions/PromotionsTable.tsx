@@ -41,8 +41,9 @@ export default function PromotionsTable() {
     openModal();
   };
   const fetchDataTable = async (urlApi: string) => {
-    try {     // bật loading
-      setTableData([]);      // reset tableData để ko hiển thị dữ liệu cũ
+    try {
+      setTableData([]);
+      setLoading(true)
       const res = await PromotionService.getListPromotion(urlApi);
       setTableData(res.result.items);
       setTotalPages(res.result.totalPages);
@@ -114,16 +115,9 @@ export default function PromotionsTable() {
         {modalType === "detail" && selectedId && (
           <>
             <ModelDetailPromotion
-              title="Giảm giá Tết 2025"
-              description="Khuyến mãi mừng năm mới – giảm 20% cho tất cả rau củ."
-              startDate="2025-02-01"
-              endDate="2025-02-15"
-              discountPercent={20}
-              isApproved={true}
-              products={[
-                { id: "1", name: "Rau cải xanh", price: 15000, discountedPrice: 12000 },
-                { id: "2", name: "Cà rốt Đà Lạt", price: 20000, discountedPrice: 16000 },
-              ]}
+              id={selectedId}
+              onHandle={PromotionService.infoPromotion}
+              closeModal={closeModal}
             />
           </>
         )}

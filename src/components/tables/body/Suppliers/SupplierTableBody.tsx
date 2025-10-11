@@ -13,7 +13,7 @@ import { FaDeleteLeft } from "react-icons/fa6";
 
 interface SuppliersTableRow {
   id: string;
-  supplierName: string;  
+  supplierName: string;
   phone: string;
   email: string;
   address: string;
@@ -37,56 +37,33 @@ const SupplierTableBody: React.FC<SuppliersTableBodyProps> = ({
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
               {index + 1}
             </TableCell>
-
             {/* ✅ hiển thị supplierName thay vì name */}
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
               {supplier.supplierName}
             </TableCell>
-
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
               {supplier.phone}
             </TableCell>
-
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
               {supplier.email}
             </TableCell>
-
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
               {supplier.address}
             </TableCell>
-
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
               {supplier.note || "Không có ghi chú"}
             </TableCell>
-
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
               <div className="flex flex-col gap-2">
                 <Link href={"/suppliers/edit/" + supplier.id}>
-                  <Button
-                    className="w-20"
-                    size="xxs"
-                    variant="warning"
-                    startIcon={<FaWrench />}
-                  >
+                  <Button className="w-20" size="xxs" variant="warning" startIcon={<FaWrench />}>
                     Sửa
                   </Button>
                 </Link>
-                <Button
-                  onClick={() => onOpenModal("detail", supplier.id)}
-                  className="w-20"
-                  size="xxs"
-                  variant="info"
-                  startIcon={<FaEye />}
-                >
+                <Button onClick={() => onOpenModal("detail", supplier.id)} className="w-20" size="xxs" variant="info" startIcon={<FaEye />}>
                   Chi tiết
                 </Button>
-                <Button
-                  onClick={() => onOpenModal("delete", supplier.id)}
-                  className="w-20"
-                  size="xxs"
-                  variant="danger"
-                  startIcon={<FaDeleteLeft />}
-                >
+                <Button onClick={() => onOpenModal("delete", supplier.id)} className="w-20" size="xxs" variant="danger" startIcon={<FaDeleteLeft />}>
                   Xóa
                 </Button>
               </div>

@@ -11,6 +11,7 @@ import { NoData } from "@/components/common/NoData";
 import { useModal } from "@/hooks/useModal";
 import { SupplierService } from "@/services/supplierService";
 import { Modal } from "@/components/ui/modal";
+import ModalConfirm from "@/components/example/ModalExample/ModalConfirm";
 
 // kiểu dữ liệu supplier
 interface SupplierType {
@@ -57,9 +58,7 @@ export default function SupplierTable() {
     if (id) setSelectedId(id);
     openModal();
   };
-
-  useEffect(() => {
-    const fetchDataTable = async () => {
+  const fetchDataTable = async (urlApi: string) => {
       try {
         setLoading(true);
         setTableData([]);
@@ -73,7 +72,9 @@ export default function SupplierTable() {
         setLoading(false);
       }
     };
-    fetchDataTable();
+  useEffect(() => {
+    
+    fetchDataTable(urlApi);
   }, [urlApi]);
 
   return (
@@ -115,9 +116,18 @@ export default function SupplierTable() {
       </div>
 
       {/* Modal */}
+      {/* ✅ Modal nằm ngoài table */}
       <Modal isOpen={isOpen} onClose={closeModal}>
         {modalType === "delete" && selectedId && (
-        <></>
+          <ModalConfirm
+            id={selectedId}
+            title="Xóa"
+            description="Nhà cung cấp"
+            onHandle={SupplierService.deleteSupplier}
+            closeModal={closeModal}
+            loadData={fetchDataTable}
+            urlApi={urlApi}
+          />
         )}
       </Modal>
     </>

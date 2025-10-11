@@ -7,82 +7,69 @@ import {
 } from "../../../ui/table";
 
 import Button from "@/components/ui/button/Button";
+import Image from "next/image";
 import Link from "next/link";
 import { FaWrench } from "react-icons/fa";
 import { FaDeleteLeft } from "react-icons/fa6";
-import { Modal } from "@/components/ui/modal";
-import { useModal } from "@/hooks/useModal";
+import { CategoryType } from "@/schemaValidations/category.schema";
 
-interface User {
-  image: string;
-  name: string;
+
+interface CategoriesTableBodyProps {
+  tableData: CategoryType[];
+  onOpenModal: (type: "delete" | "detail",id?:string) => void;
 }
 
-interface NewsTableRow {
-  id: string | number;
-  user: User;
-  projectName: string;
-  // Add other fields if needed
-}
-
-interface NewsTableBodyProps {
-  tableData: NewsTableRow[];
-}
-
-const CategoriesTableBody: React.FC<NewsTableBodyProps> = ({
+const CategoriesTableBody: React.FC<CategoriesTableBodyProps> = ({
   tableData,
+  onOpenModal,
 }) => {
-  const { isOpen, openModal, closeModal } = useModal();
   return (
     <>
       <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-        {tableData.map((order) => (
-          <TableRow key={order.id}>
+        {tableData.map((item,index) => (
+          <TableRow key={item.id}>
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-              {order.id}
-            </TableCell>
-            
-            <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-              Ô tô điều khiển
+              {index + 1}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-              Xe ô tô
+              <div className="flex -space-x-2">
+                <div className="w-15 h-15 overflow-hidden rounded-full">
+                  <Image
+                    width={100}
+                    height={100}
+                    src={"/images/cards/card-03.png"}
+                    alt={item.categoryName}
+                  />
+                </div>
+              </div>
+            </TableCell>
+            <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+              {item.categoryName}
+            </TableCell>
+            <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+              {item.parentName}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-              Nguyễn Văn A
+              {item.createdBy}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-              Nguyễn Văn B
+              {item.updatedBy}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
               <div className="flex flex-col gap-2">
-                <Link href={"/categories/edit/"+order.id}>
+                <Link href={"/categories/edit/"+item.id}>
                   <Button className="w-20" size="xxs" variant="warning" startIcon={<FaWrench />}>
                     Sửa
                   </Button>
                 </Link>
-                <Link href={"/news/"+order.id}>
-                  <Button className="w-20" onClick={openModal} size="xxs" variant="danger" startIcon={<FaDeleteLeft />}>
-                    Xóa
-                  </Button>
-                </Link>
+                <Button className="w-20" onClick={()=>onOpenModal("delete",item.id)} size="xxs" variant="danger" startIcon={<FaDeleteLeft />}>
+                  Xóa
+                </Button>
               </div>
             </TableCell>
           </TableRow>
         ))}
       </TableBody>
-      <Modal isOpen={isOpen} onClose={closeModal} className="max-w-[700px] m-4">
-        <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
-          <div className="px-2 pr-14">
-            <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
-              Xóa danh mục
-            </h4>
-            <p className="mb-6 text-sm text-gray-500 dark:text-gray-400 lg:mb-7">
-              Update your details to keep your profile up-to-date.
-            </p>
-          </div>
-        </div>
-      </Modal>
     </>
   );
 }

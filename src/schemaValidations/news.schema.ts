@@ -3,12 +3,12 @@ import { z } from "zod";
 // Schema cho 1 bản tin
 export const NewsSchema = z.object({
   id: z.string().uuid(),
-  title: z.string(),                 // tiêu đề tin tức
+  title: z.string(),
   slug: z.string(),                  // đường dẫn thân thiện
   content: z.string(),               // nội dung chính
   description: z.string().optional(),// mô tả ngắn
   author: z.string().nullable(),     // tác giả
-  thumbnail: z.string().url().nullable(), // ảnh đại diện
+  image: z.string().url().nullable(), // ảnh đại diện
   tags: z.array(z.string()).optional(),   // thẻ tag
   status: z.enum(["draft", "published", "archived"]), // trạng thái
   isApproved: z.boolean().default(false), // đã duyệt hay chưa
@@ -60,3 +60,13 @@ export const NewsDetailRes = z.object({
 }).strict();
 
 export type NewsDetailResType = z.infer<typeof NewsDetailRes>;
+
+export const NewsDeleteRes = z.object({
+  success: z.boolean(),
+  result: z.string(),
+  errors: z.array(z.string())
+}).strict();
+
+export type NewsDeleteResType = z.infer<typeof NewsDeleteRes>;
+
+

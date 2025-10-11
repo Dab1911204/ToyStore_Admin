@@ -6,6 +6,7 @@ import InputForm from "../form-elements/InputForm";
 import { useNotification } from "@/context/NotificationContext";
 import { FaRegSmileBeam } from "react-icons/fa";
 import SelectForm from "../form-elements/SelectForm";
+import ImageInputForm from "../form-elements/ImageInputForm";
 
 export default function AddForm() {
   const { values, setErrors} = useFormContext();
@@ -15,10 +16,9 @@ export default function AddForm() {
     const newErrors: { name: string; message: string }[] = [];
 
     // validate text fields
-    if (!values.title) newErrors.push({ name: "title", message: "Tiêu đề không được để trống" });
-    if (!values.content) newErrors.push({ name: "content", message: "Nội dung không được để trống" });
-    if (!values.image) newErrors.push({ name: "image", message: "Vui lòng chọn ảnh" });
-    if (!values.publishDate) newErrors.push({ name: "publishDate", message: "Vui lòng chọn ngày đăng" });
+    if (!values.CategoryName) newErrors.push({ name: "CategoryName", message: "Tiêu đề không được để trống" });
+    if (!values.Image) newErrors.push({ name: "Image", message: "Vui lòng chọn ảnh" });
+    if (!values.ParentId) newErrors.push({ name: "ParentId", message: "Vui lòng chọn danh mục cha" });
 
     setErrors(newErrors);
 
@@ -49,8 +49,9 @@ export default function AddForm() {
 
   return (
     <Form onSubmit={handleSubmit}>
-      <InputForm label="Tên danh mục" name="name" placeholder="Nhập tên danh mục" />
-      <SelectForm className="w-full" label="Danh mục cha" name="categoryParent" placeholder="Chọn danh mục cha" options={[{value: '1', label: 'Danh mục cha 1'}, {value: '2', label: 'Danh mục cha 2'}]} />
+      <ImageInputForm label="Hình ảnh" name="Image" />
+      <InputForm label="Tên danh mục" name="CategoryName" placeholder="Nhập tên danh mục" />
+      <SelectForm className="w-full" label="Danh mục cha" name="ParentId" placeholder="Chọn danh mục cha" options={[{value: '1', label: 'Danh mục cha 1'}, {value: '2', label: 'Danh mục cha 2'}]} />
       <div className="flex justify-center">
         <Button type="submit" variant="primary" className="mt-4" size="md">
           Thêm danh mục
