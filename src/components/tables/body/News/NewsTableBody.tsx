@@ -36,10 +36,10 @@ const NewsTableBody: React.FC<NewsTableBodyProps> = ({
             {/* Ảnh thumbnail */}
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
               <div className="flex -space-x-2">
-                <div className="w-15 h-15 overflow-hidden rounded-full">
+                <div className="w-50 h-50 overflow-hidden">
                   <Image
-                    width={100}
-                    height={100}
+                    width={300}
+                    height={300}
                     src={getFirstImageFromString(news.image) || "/default-news.jpg"} // fallback nếu chưa có ảnh
                     alt={news.title}
                   />
@@ -75,7 +75,7 @@ const NewsTableBody: React.FC<NewsTableBodyProps> = ({
                     Sửa
                   </Button>
                 </Link>
-                <Button className="w-20" size="xxs" variant="info" startIcon={<FaEye />}>
+                <Button onClick={() => onOpenModal("detail",news.id)}className="w-20" size="xxs" variant="info" startIcon={<FaEye />}>
                   Chi tiết
                 </Button>              
                   <Button onClick={() => onOpenModal("delete",news.id)} className="w-20" size="xxs" variant="danger" startIcon={<FaDeleteLeft />}>

@@ -15,8 +15,9 @@ import { NoData } from "@/components/common/NoData";
 import { useModal } from "@/hooks/useModal";
 import { Modal } from "@/components/ui/modal";
 import ModalConfirm from "@/components/example/ModalExample/ModalConfirm";
+import ModalDetailNews from "@/components/example/ModalExample/ModelDetailNews";
 
-const title = ["STT","Hình ảnh","Tiêu đề","Ngày tạo","Người tạo","Người duyệt","Hành động"];
+const title = ["STT", "Hình ảnh", "Tiêu đề", "Ngày tạo", "Người tạo", "Người duyệt", "Hành động"];
 
 export default function NewsTable() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -27,7 +28,7 @@ export default function NewsTable() {
 
   // ✅ quản lý modal
   const { isOpen, openModal, closeModal } = useModal();
-  const [modalType, setModalType] = useState<"delete" | "detail"| null>(null);
+  const [modalType, setModalType] = useState<"delete" | "detail" | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   // đổi trang
@@ -109,6 +110,15 @@ export default function NewsTable() {
             loadData={fetchDataTable}
             urlApi={urlApi}
           />
+        )}
+        {modalType === "detail" && selectedId && (
+          <>
+            <ModalDetailNews
+              id={selectedId}
+              onHandle={NewsService.infoNews}
+              closeModal={closeModal}
+            />
+          </>
         )}
       </Modal>
     </>
