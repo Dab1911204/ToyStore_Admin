@@ -35,7 +35,7 @@ export default function NewsTable() {
 
   // ✅ quản lý modal
   const { isOpen, openModal, closeModal } = useModal();
-  const [modalType, setModalType] = useState<"delete" | null>(null);
+  const [modalType, setModalType] = useState<"delete" | "detail"| null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   // đổi trang
@@ -45,7 +45,7 @@ export default function NewsTable() {
   };
 
   // mở modal
-  const handleOpenModal = (type: "delete", id?: string) => {
+  const handleOpenModal = (type: "delete" | "detail", id?: string) => {
     setModalType(type);
     if (id) setSelectedId(id);
     openModal();

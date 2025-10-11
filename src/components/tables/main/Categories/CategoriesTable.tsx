@@ -15,7 +15,7 @@ import { NoData } from "@/components/common/NoData";
 import { Modal } from "@/components/ui/modal";
 import { CategoryService } from "@/services/categoryService";
 
-const title = ["STT",'Tên danh mục','Danh mục cha',"Người tạo","Người sửa","Hàng động"]
+const title = ["STT",'Hình ảnh','Tên danh mục',"Người tạo","Người sửa","Hàng động"]
 
 export default function CategoriesTable() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -44,8 +44,10 @@ export default function CategoriesTable() {
       try {     // bật loading
         setTableData([]);      // reset tableData để ko hiển thị dữ liệu cũ
         const res = await CategoryService.getListCategory(urlApi);
-        console.log(res);
-        setTableData(res.result.items);
+        const parentCategories: CategoryType[]= res.result.items.filter(
+          (item: CategoryType) => item.parentId === null
+        );
+        setTableData(parentCategories);
         setTotalPages(res.result.totalPages);
         setCurrentPage(res.result.currentPage);
       } catch (error) {
