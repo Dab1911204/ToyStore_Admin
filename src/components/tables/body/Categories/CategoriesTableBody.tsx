@@ -37,7 +37,7 @@ const CategoriesTableBody: React.FC<CategoriesTableBodyProps> = ({
                   <Image
                     width={100}
                     height={100}
-                    src={item.image || "/images/cards/card-03.png"}
+                    src={"/images/cards/card-03.png"}
                     alt={item.categoryName}
                   />
                 </div>
@@ -45,6 +45,9 @@ const CategoriesTableBody: React.FC<CategoriesTableBodyProps> = ({
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
               {item.categoryName}
+            </TableCell>
+            <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+              {item.parentName}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
               {item.createdBy}
