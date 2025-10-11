@@ -15,6 +15,7 @@ import { NoData } from "@/components/common/NoData";
 import Pagination from "../../Pagination";
 import { Modal } from "@/components/ui/modal";
 import ModalConfirm from "@/components/example/ModalExample/ModalConfirm";
+import ModelDetailPromotion from "@/components/example/ModalExample/ModelDetailPromotion";
 
 const title = ["STT", 'Tiêu đề', "Giảm", "Ngày bắt đầu", "Ngày kết thúc", "Trạng thái", "Hàng động"]
 
@@ -99,7 +100,11 @@ export default function PromotionsTableUnapproved() {
       <Modal isOpen={isOpen} onClose={closeModal}>
         {modalType === "detail" && selectedId && (
           <>
-            
+            <ModelDetailPromotion
+              id={selectedId}
+              onHandle={PromotionService.infoPromotion}
+              closeModal={closeModal}
+            />
           </>
         )}
         {modalType === "approve" && selectedId && (

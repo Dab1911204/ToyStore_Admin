@@ -8,12 +8,12 @@ export const metadata: Metadata = {
   title: "Sửa nhà cung cấp",
 };
 
-export default function EditSupplierPage({
+export default async function EditSupplierPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  const { id } = params;
+  const { id } = await params;
 
   return (
     <div>

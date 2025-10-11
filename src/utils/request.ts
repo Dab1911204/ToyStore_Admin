@@ -107,6 +107,10 @@ const request = async <T>(
           : JSON.stringify(data)
         : undefined,
   }
+  // ❗ Nếu là GET hoặc DELETE => bỏ Content-Type
+  if (method === "GET" || method === "DELETE") {
+    delete (fetchOptions.headers as any)["Content-Type"];
+  }
   console.log(fetchOptions)
 
   const res = await fetch(url, fetchOptions)
@@ -146,10 +150,15 @@ export const put = <T>(
 
 export const patch = <T>(
   path: string,
-  id: string | number,
-  data: BodyType,
+  data?: BodyType,
   options?: Omit<CustomOption, "body">
-) => request<T>("PATCH", `${path}/${id}`, { ...options, body: data })
+) => {
+  const requestOptions = data
+    ? { ...options, body: data }
+    : { ...options };
+
+  return request<T>("PATCH", path, requestOptions);
+};
 
 export const del = <T>(
   path: string,
