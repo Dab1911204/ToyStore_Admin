@@ -25,25 +25,25 @@ const NewsTableBodyDelete: React.FC<PromotionsTableBodyProps> = ({
   return (
     <>
       <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-        {tableData.map((order,index) => (
-          <TableRow key={order.id}>
+        {tableData.map((item,index) => (
+          <TableRow key={item.id}>
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
               {index+1}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-              {order.title}
+              {item.title}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-              {order.discountPercent}
+              {item.discountPercent}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-              {formatDateTime(order.startDate)}
+              {formatDateTime(item.startDate)}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-              {formatDateTime(order.endDate)}
+              {formatDateTime(item.endDate)}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-              {order.isApproved ? (
+              {item.isApproved ? (
                 <Badge color="info" size="sm">
                   Đã duyệt
                 </Badge>
@@ -54,14 +54,14 @@ const NewsTableBodyDelete: React.FC<PromotionsTableBodyProps> = ({
               )}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-              {order.createdBy}
+              {item.createdBy}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
               <div className="flex flex-col gap-2">
-                <Button onClick={()=>onOpenModal("detail",order.id)} className="w-20" size="xxs" variant="info" startIcon={<FaEye />}>
+                <Button onClick={()=>onOpenModal("detail",item.id)} className="w-20" size="xxs" variant="info" startIcon={<FaEye />}>
                   Chi tiết
                 </Button>
-                <Button onClick={()=>onOpenModal("restore",order.id)} className="w-20" size="xxs" variant="warning" startIcon={<RiResetLeftFill />}>
+                <Button onClick={()=>onOpenModal("restore",item.id)} className="w-20" size="xxs" variant="warning" startIcon={<RiResetLeftFill />}>
                   Khôi phục
                 </Button>
               </div>
