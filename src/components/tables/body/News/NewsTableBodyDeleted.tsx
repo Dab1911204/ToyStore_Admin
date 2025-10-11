@@ -12,7 +12,6 @@ import { FaEye } from "react-icons/fa6";
 import Button from "@/components/ui/button/Button";
 import Badge from "@/components/ui/badge/Badge";
 import { NewsType } from "@/schemaValidations/news.schema";
-import { formatDateTime } from "@/utils/format";
 
 interface NewsTableBodyDeleteProps {
   tableData: NewsType[];
@@ -31,31 +30,18 @@ const NewsTableBodyDelete: React.FC<NewsTableBodyDeleteProps> = ({
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
               {index + 1}
             </TableCell>
-
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
               {news.title}
             </TableCell>
-
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
               {news.author}
             </TableCell>
-
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
               {news.title}
             </TableCell>
-
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
               {news.author}
             </TableCell>
-
-            {/* <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-              {formatDateTime(news.createdAt)}
-            </TableCell>
-
-            <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-              {formatDateTime(news.updatedAt)}
-            </TableCell> */}
-
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
               {news.isApproved ? (
                 <Badge color="info" size="sm">
@@ -67,25 +53,12 @@ const NewsTableBodyDelete: React.FC<NewsTableBodyDeleteProps> = ({
                 </Badge>
               )}
             </TableCell>
-
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
               <div className="flex flex-col gap-2">
-                <Button
-                  onClick={() => onOpenModal("detail", news.id)}
-                  className="w-20"
-                  size="xxs"
-                  variant="info"
-                  startIcon={<FaEye />}
-                >
+                <Button onClick={() => onOpenModal("detail", news.id)} className="w-20" size="xxs" variant="info" startIcon={<FaEye />}>
                   Chi tiết
                 </Button>
-                <Button
-                  onClick={() => onOpenModal("restore", news.id)}
-                  className="w-20"
-                  size="xxs"
-                  variant="warning"
-                  startIcon={<RiResetLeftFill />}
-                >
+                <Button onClick={() => onOpenModal("restore", news.id)} className="w-20" size="xxs" variant="warning"startIcon={<RiResetLeftFill />}>
                   Khôi phục
                 </Button>
               </div>

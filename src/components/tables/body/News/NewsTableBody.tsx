@@ -11,7 +11,6 @@ import Button from "@/components/ui/button/Button";
 import Link from "next/link";
 import { FaWrench, FaEye } from "react-icons/fa";
 import { FaDeleteLeft } from "react-icons/fa6";
-import { useModal } from "@/hooks/useModal";
 import { NewsType } from "@/schemaValidations/news.schema";
 
 interface NewsTableBodyProps {
@@ -77,12 +76,10 @@ const NewsTableBody: React.FC<NewsTableBodyProps> = ({
                 </Link>
                 <Button className="w-20" size="xxs" variant="info" startIcon={<FaEye />}>
                   Chi tiết
-                </Button>
-               
+                </Button>              
                   <Button onClick={() => onOpenModal("delete",news.id)} className="w-20" size="xxs" variant="danger" startIcon={<FaDeleteLeft />}>
                     Xóa
-                  </Button>
-               
+                  </Button>               
               </div>
             </TableCell>
           </TableRow>

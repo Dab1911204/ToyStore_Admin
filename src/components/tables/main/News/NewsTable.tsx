@@ -16,15 +16,7 @@ import { useModal } from "@/hooks/useModal";
 import { Modal } from "@/components/ui/modal";
 import ModalConfirm from "@/components/example/ModalExample/ModalConfirm";
 
-const title = [
-  "STT",
-  "Hình ảnh",
-  "Tiêu đề",
-  "Ngày tạo",
-  "Người tạo",
-  "Người duyệt",
-  "Hành động",
-];
+const title = ["STT","Hình ảnh","Tiêu đề","Ngày tạo","Người tạo","Người duyệt","Hành động"];
 
 export default function NewsTable() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -79,7 +71,6 @@ export default function NewsTable() {
             <Table className="w-full">
               {/* Header */}
               <TableHeaderOne title={title} />
-
               {/* Body */}
               {loading && <Loading colSpan={title.length} />}
               {!loading && tableData.length > 0 && (
@@ -87,7 +78,6 @@ export default function NewsTable() {
                   tableData={tableData}
                   onOpenModal={handleOpenModal}
                 />
-
               )}
               {!loading && tableData.length === 0 && (
                 <NoData colSpan={title.length} title="Không có dữ liệu" />
@@ -111,10 +101,9 @@ export default function NewsTable() {
       {/* ✅ Modal */}
       <Modal isOpen={isOpen} onClose={closeModal}>
         {modalType === "delete" && selectedId && (
-          <ModalConfirm
-            id={selectedId}
-            title="XÓA TIN TỨC - "
-            description="Bạn có chắc chắn muốn xóa tin tức này không?"
+          <ModalConfirm id={selectedId}
+            title="Xóa"
+            description=" tin tức"
             onHandle={NewsService.deleteNews}
             closeModal={closeModal}
             loadData={fetchDataTable}

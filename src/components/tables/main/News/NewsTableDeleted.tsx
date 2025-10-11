@@ -115,7 +115,7 @@ export default function NewsTableDelete() {
           </>
         )}
 
-        {/* {modalType === "restore" && selectedId && (
+        {modalType === "restore" && selectedId && (
           <ModalConfirm
             id={selectedId}
             title="Khôi phục"
@@ -125,7 +125,7 @@ export default function NewsTableDelete() {
             loadData={fetchDataTable}
             urlApi={urlApi}
           />
-        )} */}
+        )}
       </Modal>
     </>
   );
