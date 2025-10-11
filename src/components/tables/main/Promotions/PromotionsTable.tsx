@@ -41,8 +41,9 @@ export default function PromotionsTable() {
     openModal();
   };
   const fetchDataTable = async (urlApi: string) => {
-    try {     // bật loading
-      setTableData([]);      // reset tableData để ko hiển thị dữ liệu cũ
+    try {
+      setTableData([]);
+      setLoading(true)
       const res = await PromotionService.getListPromotion(urlApi);
       setTableData(res.result.items);
       setTotalPages(res.result.totalPages);

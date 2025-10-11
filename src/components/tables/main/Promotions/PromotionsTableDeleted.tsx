@@ -43,6 +43,7 @@ export default function PromotionsTableDelete() {
   const fetchDataTable = async (urlApi: string) => {
     try {
       setTableData([]);
+      setLoading(true)
       const res = await PromotionService.getListPromotion(urlApi);
       setTableData(res.result.items);
       setTotalPages(res.result.totalPages);

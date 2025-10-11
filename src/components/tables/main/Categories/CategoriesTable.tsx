@@ -43,10 +43,8 @@ export default function CategoriesTable() {
   const fetchDataTable = async (urlApi: string) => {
       try {     // bật loading
         setTableData([]);      // reset tableData để ko hiển thị dữ liệu cũ
+        setLoading(true)
         const res = await CategoryService.getListCategory(urlApi);
-        // const parentCategories: CategoryType[]= res.result.items.filter(
-        //   (item: CategoryType) => item.parentId === null
-        // );
         setTableData(res.result.items);
         setTotalPages(res.result.totalPages);
         setCurrentPage(res.result.currentPage);
