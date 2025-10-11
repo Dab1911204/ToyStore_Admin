@@ -19,7 +19,7 @@ type InfoSupplier = {
     Note: string | null | undefined;
 };
 
-export default function EditForm({ id, supplier }: EditFormProps & { supplier?: InfoSupplier }) {
+export default function EditForm({ id }: EditFormProps) {
     const { values, setValue, setErrors } = useFormContext();
     const { openNotification } = useNotification();
     const openNotificationRef = useRef(openNotification);
