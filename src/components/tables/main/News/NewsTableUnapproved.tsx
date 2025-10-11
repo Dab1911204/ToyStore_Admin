@@ -29,7 +29,7 @@ export default function NewsTableUnapproved() {
 
   // ✅ quản lý modal
   const { isOpen, openModal, closeModal } = useModal();
-  const [modalType, setModalType] = useState<"delete" | "detail" | null>(null);
+  const [modalType, setModalType] = useState<"delete" | "detail" | "approve" | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   // đổi trang
@@ -39,7 +39,7 @@ export default function NewsTableUnapproved() {
   };
 
   // mở modal
-  const handleOpenModal = (type: "delete" | "detail", id?: string) => {
+  const handleOpenModal = (type: "delete" | "detail" | "approve", id?: string) => {
     setModalType(type);
     if (id) setSelectedId(id);
     openModal();
