@@ -1,5 +1,5 @@
 import { NewsDeleteResType, NewsDetailResType, NewsResType } from "@/schemaValidations/news.schema";
-import { del, get, post, put } from "@/utils/request";
+import { del, get, patch, post, put } from "@/utils/request";
 
 export const NewsService = {
   getListNews: (url: string) => get<NewsResType>(url, { requireAuth: true }),
@@ -7,5 +7,6 @@ export const NewsService = {
   createNews: (data: any) => post<NewsResType>("/api/News/News", data, { requireAuth: true }),
   updateNews: (id: string, data: any) => put<NewsResType>(`/api/News/${id}`, data, { requireAuth: true }),
   deleteNews:(id:string)=>del<NewsDeleteResType>(`/api/News`,id,{requireAuth:true}),
+  
 };
 

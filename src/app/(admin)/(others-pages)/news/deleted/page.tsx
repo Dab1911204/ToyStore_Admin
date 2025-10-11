@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function DeletedNewsPage() {
   return (
     <div>
-      <TableContextProvider initialUrl="api/News/deleted?PageSize=15">
+      <TableContextProvider initialUrl="api/News/Delete?PageSize=15">
       <PageBreadcrumb pageTitle="Tin tức đã xóa" pageParent="Quản lý tin tức" urlPageParent="/news" itemSearch={true}/>
       <div className="space-y-6">
         <ComponentCard title="Danh sách tin tức" linkBtn="news" titleBtn="Tin Tức" isDelete={true}>
