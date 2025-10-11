@@ -13,6 +13,7 @@ import { FaWrench, FaEye } from "react-icons/fa";
 import { FaDeleteLeft } from "react-icons/fa6";
 import { useModal } from "@/hooks/useModal";
 import { NewsType } from "@/schemaValidations/news.schema";
+import { getFirstImageFromString } from "@/utils/format";
 
 interface NewsTableBodyProps {
   tableData: NewsType[];
@@ -40,7 +41,7 @@ const NewsTableBody: React.FC<NewsTableBodyProps> = ({
                   <Image
                     width={100}
                     height={100}
-                    src={news.thumbnail || "/default-news.jpg"} // fallback nếu chưa có ảnh
+                    src={getFirstImageFromString(news.image) || "/default-news.jpg"} // fallback nếu chưa có ảnh
                     alt={news.title}
                   />
                 </div>
