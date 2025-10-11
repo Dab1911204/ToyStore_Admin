@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Modal } from "@/components/ui/modal";
 import Button from "@/components/ui/button/Button";
 import { formatDateTime } from "@/utils/format";
+import Image from "next/image";
 
 interface NewsDetailProps {
   id: string;
@@ -134,11 +135,10 @@ export default function ModelDetailNews({
                   Trạng thái
                 </p>
                 <span
-                  className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${
-                    news.isApproved
+                  className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${news.isApproved
                       ? "bg-green-100 text-green-700 dark:bg-green-700/30 dark:text-green-300"
                       : "bg-yellow-100 text-yellow-700 dark:bg-yellow-700/30 dark:text-yellow-300"
-                  }`}
+                    }`}
                 >
                   {news.isApproved ? "Đã duyệt" : "Chưa duyệt"}
                 </span>
@@ -154,12 +154,14 @@ export default function ModelDetailNews({
 
             {news.imageUrl && (
               <div className="flex justify-center mb-4">
-                <img
+                <Image
                   src={news.imageUrl}
                   alt={news.title}
+                  width={500}
+                  height={300}
                   onError={(e) =>
-                    ((e.target as HTMLImageElement).src =
-                      "/images/default-news.jpg")
+                  ((e.target as HTMLImageElement).src =
+                    "/images/default-news.jpg")
                   }
                   className="rounded-xl max-h-[350px] w-auto object-cover shadow"
                 />
