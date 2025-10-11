@@ -17,7 +17,7 @@ import Pagination from "../../Pagination";
 import ModalConfirm from "@/components/example/ModalExample/ModalConfirm";
 import ModelDetailPromotion from "@/components/example/ModalExample/ModelDetailPromotion";
 
-const title = ["STT", 'Tiêu đề', "Giảm", "Ngày bắt đầu", "Ngày kết thúc","Trạng thái", "Người xóa", "Hàng động"]
+const title = ["STT", 'Tiêu đề', "Giảm", "Ngày bắt đầu", "Ngày kết thúc","Trạng thái", "Người xóa", "Hành động"]
 
 export default function PromotionsTableDelete() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -69,7 +69,7 @@ export default function PromotionsTableDelete() {
               {/* Table Body */}
               {/* Table Body */}
               {loading && (
-                <Loading colSpan={title.length} />
+                <Loading colSpan={title.length} /> 
               )}
 
               {!loading && tableData.length > 0 && (
