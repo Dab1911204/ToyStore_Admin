@@ -14,16 +14,7 @@ import { Modal } from "@/components/ui/modal";
 import ModalConfirm from "@/components/example/ModalExample/ModalConfirm";
 
 // kiểu dữ liệu supplier
-interface SupplierType {
-  id: string;
-  supplierName: string;   // đúng với API trả về
-  phone: string;
-  email: string;
-  address: string;
-  note?: string | null;
-}
-
-
+import { SupplierType } from "@/schemaValidations/supplier.shema";
 
 const title = [
   "STT",
