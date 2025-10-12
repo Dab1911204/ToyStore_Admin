@@ -12,6 +12,8 @@ import { FaEye } from "react-icons/fa6";
 import Button from "@/components/ui/button/Button";
 import Badge from "@/components/ui/badge/Badge";
 import { NewsType } from "@/schemaValidations/news.schema";
+import Image from "next/image";
+import { getFirstImageFromString } from "@/utils/format";
 
 interface NewsTableBodyDeleteProps {
   tableData: NewsType[];
@@ -30,11 +32,18 @@ const NewsTableBodyDelete: React.FC<NewsTableBodyDeleteProps> = ({
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
               {index + 1}
             </TableCell>
-            <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-              {news.title}
-            </TableCell>
-            <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-              {news.author}
+            <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400 align-middle">
+              <div className="flex justify-center items-center">
+                <div className="w-[280px] h-[180px] overflow-hidden rounded-lg bg-gray-50 flex justify-center items-center">
+                  <Image
+                    width={100}
+                    height={70}
+                    src={getFirstImageFromString(news.image) || "/default-news.jpg"}
+                    alt={news.title}
+                    className="object-cover w-full h-full"
+                  />
+                </div>
+              </div>
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
               {news.title}
@@ -58,7 +67,7 @@ const NewsTableBodyDelete: React.FC<NewsTableBodyDeleteProps> = ({
                 <Button onClick={() => onOpenModal("detail", news.id)} className="w-20" size="xxs" variant="info" startIcon={<FaEye />}>
                   Chi tiết
                 </Button>
-                <Button onClick={() => onOpenModal("restore", news.id)} className="w-20" size="xxs" variant="warning"startIcon={<RiResetLeftFill />}>
+                <Button onClick={() => onOpenModal("restore", news.id)} className="w-20" size="xxs" variant="warning" startIcon={<RiResetLeftFill />}>
                   Khôi phục
                 </Button>
               </div>
