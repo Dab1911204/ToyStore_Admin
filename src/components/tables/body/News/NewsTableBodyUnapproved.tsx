@@ -57,7 +57,7 @@ const NewsTableBodyUnapproved: React.FC<NewsTableBodyProps> = ({
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
               <Badge color="warning" size="sm">
-                {news.status === "published" ? "Đã đăng" : news.status === "draft" ? "Nháp" : "Lưu trữ"}
+                {news.isApproved ? "Đã duyệt" : "Chưa duyệt"}
               </Badge>
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">

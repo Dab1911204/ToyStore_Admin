@@ -7,7 +7,8 @@ export const NewsService = {
   createNews: (data: any) => post<NewsResType>("/api/News/News", data, { requireAuth: true }),
   updateNews: (id: string, data: any) => put<NewsResType>(`/api/News/${id}`, data, { requireAuth: true }),
   deleteNews:(id:string)=>del<NewsDeleteResType>(`/api/News`,id,{requireAuth:true}),
-  restoreNews:(id:string)=>patch<NewsDeleteResType>(`/api/News/restore/${id}`,undefined,{requireAuth:true}),
+  restoreNews:(id:string)=>put<NewsDeleteResType>(`/api/News/restore?idnews=${id}`,undefined,{requireAuth:true}),
+  approveNews:(id:string)=>put<NewsResType>(`/api/News/Approve?idnews=${id}`,undefined,{requireAuth:true}),
 
 };
 

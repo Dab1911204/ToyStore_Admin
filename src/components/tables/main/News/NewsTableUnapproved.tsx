@@ -15,8 +15,8 @@ import { NoData } from "@/components/common/NoData";
 import { useModal } from "@/hooks/useModal";
 import { Modal } from "@/components/ui/modal";
 import ModalConfirm from "@/components/example/ModalExample/ModalConfirm";
-import ModalDetailNews from "@/components/example/ModalExample/ModelDetailNews";
 import NewsTableBodyUnapproved from "../../body/News/NewsTableBodyUnapproved";
+import ModelDetailNews from "@/components/example/ModalExample/ModelDetailNews";
 
 const title = ["STT", "Hình ảnh", "Tiêu đề", "Ngày tạo", "Người tạo", "Trạng thái", "Hành động"];
 
@@ -29,7 +29,7 @@ export default function NewsTableUnapproved() {
 
   // ✅ quản lý modal
   const { isOpen, openModal, closeModal } = useModal();
-  const [modalType, setModalType] = useState<"delete" | "detail" | null>(null);
+  const [modalType, setModalType] = useState<"delete" | "detail" | "approve" | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   // đổi trang
@@ -39,7 +39,7 @@ export default function NewsTableUnapproved() {
   };
 
   // mở modal
-  const handleOpenModal = (type: "delete" | "detail", id?: string) => {
+  const handleOpenModal = (type: "delete" | "detail" | "approve", id?: string) => {
     setModalType(type);
     if (id) setSelectedId(id);
     openModal();
@@ -79,7 +79,7 @@ export default function NewsTableUnapproved() {
                 <NewsTableBodyUnapproved
                   tableData={tableData}
                   onOpenModal={handleOpenModal}
-                /> 
+                />
               )}
               {!loading && tableData.length === 0 && (
                 <NoData colSpan={title.length} title="Không có dữ liệu" />
@@ -102,6 +102,15 @@ export default function NewsTableUnapproved() {
 
       {/* ✅ Modal */}
       <Modal isOpen={isOpen} onClose={closeModal}>
+        {modalType === "detail" && selectedId && (
+          <>
+            <ModelDetailNews
+              id={selectedId}
+              onHandle={NewsService.infoNews}
+              closeModal={closeModal}
+            />
+          </>
+        )}
         {modalType === "delete" && selectedId && (
           <ModalConfirm id={selectedId}
             title="Xóa"
@@ -112,14 +121,16 @@ export default function NewsTableUnapproved() {
             urlApi={urlApi}
           />
         )}
-        {modalType === "detail" && selectedId && (
-          <>
-            <ModalDetailNews
-              id={selectedId}
-              onHandle={NewsService.infoNews}
-              closeModal={closeModal}
-            />
-          </>
+        {modalType === "approve" && selectedId && (
+          <ModalConfirm
+            id={selectedId}
+            title="Duyệt"
+            description="tin tức"
+            onHandle={NewsService.approveNews}
+            closeModal={closeModal}
+            loadData={fetchDataTable}
+            urlApi={urlApi}
+          />
         )}
       </Modal>
     </>

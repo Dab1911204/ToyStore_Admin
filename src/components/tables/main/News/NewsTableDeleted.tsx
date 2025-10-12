@@ -13,8 +13,9 @@ import { Loading } from "@/components/common/Loading";
 import { NoData } from "@/components/common/NoData";
 import Pagination from "../../Pagination";
 import ModalConfirm from "@/components/example/ModalExample/ModalConfirm";
+import ModelDetailNews from "@/components/example/ModalExample/ModelDetailNews";
 
-const title = ["STT", "Tiêu đề", "Tác giả", "Ngày xóa", "Người xóa", "Hành động"];
+const title = ["STT", "Hình ảnh", "Tiêu đề", "Người xóa", "Trạng thái", "Hành động"];
 
 export default function NewsTableDelete() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -107,11 +108,11 @@ export default function NewsTableDelete() {
       <Modal isOpen={isOpen} onClose={closeModal}>
         {modalType === "detail" && selectedId && (
           <>
-            {/* 👉 chỗ này bạn có thể thêm component chi tiết tin tức */}
-            <div className="p-6">
-              <h3 className="text-xl font-semibold mb-3">Chi tiết tin tức</h3>
-              <p>Hiển thị nội dung chi tiết của tin có ID: {selectedId}</p>
-            </div>
+            <ModelDetailNews
+              id={selectedId}
+              onHandle={NewsService.infoNews}
+              closeModal={closeModal}
+            />
           </>
         )}
 
