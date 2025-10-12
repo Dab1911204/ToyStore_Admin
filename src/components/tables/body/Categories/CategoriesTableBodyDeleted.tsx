@@ -8,47 +8,50 @@ import {
 
 import Button from "@/components/ui/button/Button";
 import { RiResetLeftFill } from "react-icons/ri";
+import { CategoryType } from "@/schemaValidations/category.schema";
+import Image from "next/image";
 
-interface User {
-  image: string;
-  name: string;
+interface CategoriesTableBodyDeleteProps {
+  tableData: CategoryType[];
+  onOpenModal: (type: "delete" | "detail" | "restore",id?:string) => void;
 }
 
-interface NewsTableRow {
-  id: string | number;
-  user: User;
-  projectName: string;
-  // Add other fields if needed
-}
-
-interface NewsTableBodyProps {
-  tableData: NewsTableRow[];
-}
-
-const CategoriesTableBodyDelete: React.FC<NewsTableBodyProps> = ({
+const CategoriesTableBodyDelete: React.FC<CategoriesTableBodyDeleteProps> = ({
   tableData,
+  onOpenModal,
 }) => {
   return (
     <>
       <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-        {tableData.map((order) => (
-          <TableRow key={order.id}>
+        {tableData.map((item,index) => (
+          <TableRow key={item.id}>
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-              {order.id}
+              {index + 1}
             </TableCell>
-            
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-              Mặt lạ
+              <div className="flex -space-x-2">
+                <div className="w-15 h-15 overflow-hidden rounded-full">
+                  <Image
+                    width={100}
+                    height={100}
+                    src={"/images/cards/card-03.png"}
+                    alt={item.categoryName}
+                  />
+                </div>
+              </div>
+            </TableCell>
+            <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+              {item.categoryName}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-              Trung thu
+              {item.parentName}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-              Nguyễn Văn A
+              {item.updatedBy}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
               <div className="flex flex-col gap-2">
-                <Button className="w-20" size="xxs" variant="warning" startIcon={<RiResetLeftFill />}>
+                <Button onClick={()=>onOpenModal("restore",item.id)} className="w-20" size="xxs" variant="warning" startIcon={<RiResetLeftFill />}>
                   Khôi phục
                 </Button>
               </div>

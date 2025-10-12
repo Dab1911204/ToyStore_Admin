@@ -9,10 +9,12 @@ import { useNotification } from "@/context/NotificationContext";
 import { FaRegSmileBeam } from "react-icons/fa";
 import { NewsService } from "@/services/newsService";  // ✅ import service
 import { useRouter } from "next/navigation";     // ✅ import router
+import { useState } from "react";
 
 export default function AddForm() {
   const { values, setErrors } = useFormContext();
   const { openNotification } = useNotification();
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (data: Record<string, any> | FormData) => {
@@ -26,6 +28,7 @@ export default function AddForm() {
     setErrors(newErrors);
 
     if (newErrors.length === 0) {
+      setIsLoading(true);
       try {
         // ✅ Gọi API thêm tin tức
         const res = await NewsService.createNews(data);
@@ -50,6 +53,7 @@ export default function AddForm() {
             duration: 3,
             style: { borderLeft: "5px solid red" },
           });
+          setIsLoading(false);
         }
       } catch (error) {
         console.error("❌ Lỗi khi thêm tin tức:", error);
@@ -60,9 +64,11 @@ export default function AddForm() {
           duration: 3,
           style: { borderLeft: "5px solid red" },
         });
+        setIsLoading(false);
       }
     } else {
       console.log("❌ Errors:", newErrors);
+      setIsLoading(false);
     }
   };
 
@@ -72,8 +78,15 @@ export default function AddForm() {
       <ImageInputForm label="Hình ảnh" name="image" />
       <TextAreaForm label="Nội dung" name="content" placeholder="Nhập nội dung" />
       <div className="flex justify-center">
-        <Button type="submit" variant="primary" className="mt-4" size="md">
-          Thêm Tin Tức
+        <Button type="submit" variant="primary" className="mt-4" size="md" disabled={isLoading}>
+          {isLoading ? (
+            <>
+              <span className="animate-spin mr-2 border-2 border-white border-t-transparent rounded-full w-4 h-4"></span>
+              Đang thêm...
+            </>
+          ) : (
+            "Thêm tin tức"
+          )}
         </Button>
       </div>
     </Form>

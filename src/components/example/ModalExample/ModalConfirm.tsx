@@ -25,6 +25,7 @@ export default function ModalConfirm({ id, title, description, onHandle, closeMo
     try {
       setLoading(true);
       const res = await onHandle(id);
+      console.log(res);
       if (res.success) {
         if (loadData && urlApi) loadData(urlApi);
         closeModal();
@@ -37,6 +38,7 @@ export default function ModalConfirm({ id, title, description, onHandle, closeMo
           style: { borderLeft: "5px solid green" },
         });
       } else {
+        closeModal();
         openNotification({
           message: `${title} thất bại`,
           description: `${description1} không được ${title1} được.`,

@@ -8,9 +8,10 @@ import TextAreaForm from "../form-elements/TextAreaForm";
 import ImageInputForm from "../form-elements/ImageInputForm";
 import { useNotification } from "@/context/NotificationContext";
 import { FaRegSmileBeam } from "react-icons/fa";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { NewsService } from "@/services/newsService"; // ✅ service news
 import { useRouter } from "next/navigation";
+import { getFirstImageFromString } from "@/utils/format";
 
 type EditFormProps = {
   id: string;
@@ -19,7 +20,7 @@ type EditFormProps = {
 type InfoNews = {
   Title: string;
   Content: string;
-  Image: string;
+  Image: string|null;
 };
 
 export default function EditForm({ id }: EditFormProps) {
@@ -27,6 +28,7 @@ export default function EditForm({ id }: EditFormProps) {
   const { openNotification } = useNotification();
   const openNotificationRef = useRef(openNotification);
   const setValueRef = useRef(setValue);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   // fetch dữ liệu tin tức
@@ -36,7 +38,7 @@ export default function EditForm({ id }: EditFormProps) {
       const infoNews: InfoNews = {
         Title: res.result.title,
         Content: res.result.content,
-        Image: res.result.image,
+        Image: getFirstImageFromString(res.result.image),
       };
       renderData(infoNews, setValueRef.current);
     } else {
@@ -66,6 +68,7 @@ export default function EditForm({ id }: EditFormProps) {
     setErrors(newErrors);
 
     if (newErrors.length === 0) {
+      setIsLoading(true);
       const res = await NewsService.updateNews(id, data);
       console.log(res);
       if (res.success) {
@@ -88,9 +91,11 @@ export default function EditForm({ id }: EditFormProps) {
           icon: <FaRegSmileBeam style={{ color: "red" }} />,
           style: { borderLeft: "5px solid red" },
         });
+        setIsLoading(false);
       }
     } else {
       console.log("❌ Errors:", newErrors);
+      setIsLoading(false);
     }
   };
 
@@ -100,8 +105,15 @@ export default function EditForm({ id }: EditFormProps) {
       <ImageInputForm label="Hình ảnh" name="Image" />
       <TextAreaForm label="Nội dung" name="Content" placeholder="Nhập nội dung" />
       <div className="flex justify-center">
-        <Button type="submit" variant="primary" className="mt-4" size="md">
-          Sửa Tin Tức
+        <Button type="submit" variant="primary" className="mt-4" size="md" disabled={isLoading}>
+          {isLoading ? (
+            <>
+              <span className="animate-spin mr-2 border-2 border-white border-t-transparent rounded-full w-4 h-4"></span>
+              Đang sửa...
+            </>
+          ) : (
+            "Sửa tin tức"
+          )}
         </Button>
       </div>
     </Form>

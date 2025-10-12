@@ -9,12 +9,11 @@ import {
 import { RiResetLeftFill } from "react-icons/ri";
 
 import Button from "@/components/ui/button/Button";
-import { FaEye } from "react-icons/fa6";
 import { SupplierType } from "@/schemaValidations/supplier.shema";
 
 interface SupplierTableBodyProps {
   tableData: SupplierType[];
-  onOpenModal: (type: "delete" | "detail", id?: string) => void;
+  onOpenModal: (type: "delete" | "detail" | "restore", id?: string) => void;
 }
 
 const SupplierTableBodyDelete: React.FC<SupplierTableBodyProps> = ({
@@ -45,11 +44,11 @@ const SupplierTableBodyDelete: React.FC<SupplierTableBodyProps> = ({
               {supplier.note} 
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
+              {supplier.approvedBy || "Chưa rõ"} 
+            </TableCell>
+            <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
               <div className="flex flex-col gap-2">
-                <Button onClick={()=>onOpenModal("detail", supplier.id)} className="w-20" size="xxs" variant="info" startIcon={<FaEye />}>
-                  Chi tiết
-                </Button>
-                <Button className="w-20" size="xxs" variant="danger" startIcon={<RiResetLeftFill />}>
+                <Button onClick={() => onOpenModal("restore", supplier.id)}className="w-20" size="xxs" variant="warning" startIcon={<RiResetLeftFill />}>
                   Khôi phục
                 </Button>
               </div>

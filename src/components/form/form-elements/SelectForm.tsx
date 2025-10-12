@@ -14,6 +14,7 @@ export default function SelectForm({
   disabled = false,
   className = "",
   hint,
+  required = true,
 }: SelectFieldProps) {
   const { values, setValue, errors, setErrors, clearError, submitted } =
     useFormContext();
@@ -32,10 +33,11 @@ export default function SelectForm({
   const handleChange = (val: string[] | string) => {
     setValue(name, val);
 
-    if (touched) {
+    // ✅ chỉ validate nếu required = true
+    if (required && touched) {
       if (!val || (Array.isArray(val) && val.length === 0)) {
         setErrors((prev) => [
-          ...prev,
+          ...prev.filter((e) => e.name !== name),
           { name, message: "Vui lòng chọn ít nhất một giá trị" },
         ]);
       } else {
@@ -46,13 +48,17 @@ export default function SelectForm({
 
   const handleBlur = () => {
     setTouched(true);
-    if (!currentValue || (Array.isArray(currentValue) && currentValue.length === 0)) {
-      setErrors((prev) => [
-        ...prev,
-        { name, message: "Vui lòng chọn ít nhất một giá trị" },
-      ]);
-    } else {
-      clearError(name);
+
+    // ✅ chỉ validate nếu required = true
+    if (required) {
+      if (!currentValue || (Array.isArray(currentValue) && currentValue.length === 0)) {
+        setErrors((prev) => [
+          ...prev.filter((e) => e.name !== name),
+          { name, message: "Vui lòng chọn ít nhất một giá trị" },
+        ]);
+      } else {
+        clearError(name);
+      }
     }
   };
 

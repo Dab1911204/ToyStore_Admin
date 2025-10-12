@@ -12,4 +12,6 @@ export const SupplierService = {
   updateSupplier: (id: string, data: any) => put<SupplierResType>(`/api/Supplier/${id}`, data, { requireAuth: true }),
   //Xóa supplier
   deleteSupplier: (id: string) => del<SupplierDRResType>(`/api/Supplier`, id, { requireAuth: true }),
+  // Khôi phục supplier
+  restoreSupplier: (id: string) => put<SupplierDRResType>(`/api/Supplier/restore?idsupplier=${id}`, undefined, { requireAuth: true }),
 };

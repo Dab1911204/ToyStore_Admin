@@ -14,6 +14,7 @@ import { Loading } from "@/components/common/Loading";
 import { NoData } from "@/components/common/NoData";
 import { Modal } from "@/components/ui/modal";
 import { CategoryService } from "@/services/categoryService";
+import ModalConfirm from "@/components/example/ModalExample/ModalConfirm";
 
 const title = ["STT",'Hình ảnh','Tên danh mục',"Danh mục cha","Người tạo","Người sửa","Hàng động"]
 
@@ -84,26 +85,30 @@ export default function CategoriesTable() {
                 )}
             </Table>
             {/* Pagination */}
-              {!loading && Array.isArray(tableData) && tableData.length > 0 && (
-                <div className="w-full flex justify-center mt-4 mb-4">
-                  <Pagination
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    onPageChange={onPageChange}
-                  />
-                </div>
-              )}
+            {!loading && Array.isArray(tableData) && tableData.length > 0 && (
+              <div className="w-full flex justify-center mt-4 mb-4">
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={onPageChange}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>
       <Modal isOpen={isOpen} onClose={closeModal}>
         {modalType === "delete" && selectedId && (
           <>
-          </>
-        )}
-        {modalType === "detail" && selectedId && (
-          <>
-            
+            <ModalConfirm
+              id={selectedId}
+              title="Xóa"
+              description="danh mục"
+              onHandle={CategoryService.deleteCategory}
+              closeModal={closeModal}
+              loadData={fetchDataTable}
+              urlApi={urlApi}
+            />
           </>
         )}
       </Modal>

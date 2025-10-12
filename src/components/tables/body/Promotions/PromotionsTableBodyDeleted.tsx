@@ -9,7 +9,6 @@ import {
 import { RiResetLeftFill } from "react-icons/ri";
 
 import Button from "@/components/ui/button/Button";
-import { FaEye } from "react-icons/fa6";
 import { PromotionType } from "@/schemaValidations/promotion.schema";
 import { formatDateTime } from "@/utils/format";
 import Badge from "@/components/ui/badge/Badge";
@@ -34,7 +33,7 @@ const NewsTableBodyDelete: React.FC<PromotionsTableBodyProps> = ({
               {item.title}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-              {item.discountPercent}
+              {item.discountPercent} %
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
               {formatDateTime(item.startDate)}
@@ -58,9 +57,6 @@ const NewsTableBodyDelete: React.FC<PromotionsTableBodyProps> = ({
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
               <div className="flex flex-col gap-2">
-                <Button onClick={()=>onOpenModal("detail",item.id)} className="w-20" size="xxs" variant="info" startIcon={<FaEye />}>
-                  Chi tiết
-                </Button>
                 <Button onClick={()=>onOpenModal("restore",item.id)} className="w-20" size="xxs" variant="warning" startIcon={<RiResetLeftFill />}>
                   Khôi phục
                 </Button>

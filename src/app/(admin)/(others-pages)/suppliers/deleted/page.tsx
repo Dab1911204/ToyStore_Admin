@@ -16,7 +16,7 @@ export default function DeletedNewsPage() {
       <TableContextProvider initialUrl="api/Supplier/Delete?PageSize=15">
         <PageBreadcrumb pageTitle="Nhà cung cấp đã xóa" pageParent="Quản lý nhà cung cấp" urlPageParent="/suppliers" itemSearch={true} />
         <div className="space-y-6">
-          <ComponentCard title="Danh sách nhà cung cấp" linkBtn="suppliers" titleBtn="Nhà Cung Cấp" isDelete={false}>
+          <ComponentCard title="Danh sách nhà cung cấp đã xóa" linkBtn="suppliers" titleBtn="Nhà Cung Cấp" isDelete={true}>
             <SupplierTableDelete />
           </ComponentCard>
         </div>
