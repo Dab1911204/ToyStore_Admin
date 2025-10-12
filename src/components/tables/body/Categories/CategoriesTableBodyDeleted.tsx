@@ -5,7 +5,7 @@ import {
 } from "../../../ui/table";
 
 import { CategoryType } from "@/schemaValidations/category.schema";
-import CategoryRow from "./CategoryRow";
+import CategoryRowDelete from "./CategoryRowDelete";
 
 interface CategoriesTableBodyDeleteProps {
   tableData: CategoryType[];
@@ -20,7 +20,7 @@ const CategoriesTableBodyDelete: React.FC<CategoriesTableBodyDeleteProps> = ({
     <>
       <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
         {tableData.map((item) => (
-          <CategoryRow
+          <CategoryRowDelete
             key={item.id}
             item={item}
             level={0}
