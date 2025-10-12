@@ -12,6 +12,7 @@ import { Loading } from "@/components/common/Loading";
 import { NoData } from "@/components/common/NoData";
 import Pagination from "../../Pagination";
 import { SupplierService } from "@/services/supplierService";
+import ModalConfirm from "@/components/example/ModalExample/ModalConfirm";
 
 const title = ["STT","Tên nhà cung cấp","SĐT","Email","Địa chỉ","Ghi chú","Người xóa","Hành động"];
 
@@ -100,12 +101,7 @@ export default function SupplierTableDelete() {
 
       {/* Modal */}
       <Modal isOpen={isOpen} onClose={closeModal}>
-        {modalType === "detail" && selectedId && (
-          <>
-            {/* Ở đây bạn có thể thêm modal chi tiết nếu muốn */}
-          </>
-        )}
-        {/* {modalType === "restore" && selectedId && (
+        {modalType === "restore" && selectedId && (
           <ModalConfirm
             id={selectedId}
             title="Khôi phục"
@@ -115,7 +111,7 @@ export default function SupplierTableDelete() {
             loadData={fetchDataTable}
             urlApi={urlApi}
           />
-        )} */}
+        )}
       </Modal>
     </>
   );

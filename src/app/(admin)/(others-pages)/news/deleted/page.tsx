@@ -15,7 +15,7 @@ export default function DeletedNewsPage() {
       <TableContextProvider initialUrl="api/News/Delete?PageSize=15">
       <PageBreadcrumb pageTitle="Tin tức đã xóa" pageParent="Quản lý tin tức" urlPageParent="/news" itemSearch={true}/>
       <div className="space-y-6">
-        <ComponentCard title="Danh sách tin tức" linkBtn="news" titleBtn="Tin Tức" isDelete={true}>
+        <ComponentCard title="Danh sách tin tức đã xóa" linkBtn="news" titleBtn="Tin Tức" isDelete={true}>
           <NewsTableDelete />
         </ComponentCard>
       </div>
