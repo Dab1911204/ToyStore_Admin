@@ -16,7 +16,7 @@ import Pagination from "../../Pagination";
 import { Modal } from "@/components/ui/modal";
 import ModalConfirm from "@/components/example/ModalExample/ModalConfirm";
 
-const title = ["STT","Hình ảnh",'Tên danh mục','Danh mục cha',"Người xóa","Hàng động"]
+const title = ["STT","Hình ảnh",'Tên danh mục',"Người xóa","Hàng động"]
 
 export default function CategoriesTableDelete() {
   const [currentPage, setCurrentPage] = useState(1);

@@ -31,7 +31,7 @@ const filter: { label: string; value: string }[]= [
 export default function ProductPage() {
   return (
     <div>
-      <TableContextProvider initialUrl="/api/Product/admin">
+      <TableContextProvider initialUrl="/api/Product/admin?PageSize=15">
         <PageBreadcrumb pageTitle="Quản lý sản phẩm" itemSearch={true}/>
         <div className="space-y-6">
           <ComponentCard title="Danh sách sản phẩm" filter={filter} isDelete={false} linkBtn="products" titleBtn="Sản Phẩm" isAdd={true}>

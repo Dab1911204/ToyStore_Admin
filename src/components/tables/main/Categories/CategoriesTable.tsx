@@ -16,7 +16,7 @@ import { Modal } from "@/components/ui/modal";
 import { CategoryService } from "@/services/categoryService";
 import ModalConfirm from "@/components/example/ModalExample/ModalConfirm";
 
-const title = ["STT",'Hình ảnh','Tên danh mục',"Danh mục cha","Người tạo","Người sửa","Hàng động"]
+const title = ["STT", "Hình ảnh", "Tên danh mục", "Người tạo", "Người sửa", "Hành động"];
 
 export default function CategoriesTable() {
   const [currentPage, setCurrentPage] = useState(1);

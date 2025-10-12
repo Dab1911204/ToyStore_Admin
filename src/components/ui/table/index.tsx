@@ -17,8 +17,8 @@ const TableBody: React.FC<TableBodyProps> = ({ children, className }) => {
 };
 
 // TableRow Component
-const TableRow: React.FC<TableRowProps> = ({ children, className,id }) => {
-  return <tr id={id} className={className}>{children}</tr>;
+const TableRow: React.FC<TableRowProps> = ({ children, className,id,style }) => {
+  return <tr id={id} className={className} style={style}>{children}</tr>;
 };
 
 // TableCell Component
