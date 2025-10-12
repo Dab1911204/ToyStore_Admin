@@ -234,6 +234,7 @@ interface TableRowProps {
   children: ReactNode; // Cells (th or td)
   className?: string; // Optional className for styling
   id?:string;
+  style?: React.CSSProperties;
 }
 
 // Props for TableCell
