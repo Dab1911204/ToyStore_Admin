@@ -13,7 +13,7 @@ import { FaWrench, FaEye } from "react-icons/fa";
 import { FaDeleteLeft } from "react-icons/fa6";
 import { NewsType } from "@/schemaValidations/news.schema";
 import { getFirstImageFromString } from "@/utils/format";
-import { Badge } from "antd";
+import Badge from "@/components/ui/badge/Badge";
 
 interface NewsTableBodyProps {
   tableData: NewsType[];
@@ -64,7 +64,7 @@ const NewsTableBody: React.FC<NewsTableBodyProps> = ({
 
             {/* Trạng thái */}
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-              <Badge color={news.isApproved ? "success" : "warning"} >
+              <Badge color={news.isApproved ? "success" : "warning"} size="sm">
                 {news.isApproved ? "Đã duyệt" : "Chưa duyệt"}
               </Badge>
             </TableCell>

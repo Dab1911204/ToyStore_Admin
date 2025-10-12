@@ -8,25 +8,16 @@ import {
 
 import Button from "@/components/ui/button/Button";
 import { RiResetLeftFill } from "react-icons/ri";
+import { CategoryType } from "@/schemaValidations/category.schema";
 
-interface User {
-  image: string;
-  name: string;
+interface CategoriesTableBodyDeleteProps {
+  tableData: CategoryType[];
+  onOpenModal: (type: "delete" | "detail" | "restore",id?:string) => void;
 }
 
-interface NewsTableRow {
-  id: string | number;
-  user: User;
-  projectName: string;
-  // Add other fields if needed
-}
-
-interface NewsTableBodyProps {
-  tableData: NewsTableRow[];
-}
-
-const CategoriesTableBodyDelete: React.FC<NewsTableBodyProps> = ({
+const CategoriesTableBodyDelete: React.FC<CategoriesTableBodyDeleteProps> = ({
   tableData,
+  onOpenModal,
 }) => {
   return (
     <>
@@ -48,7 +39,7 @@ const CategoriesTableBodyDelete: React.FC<NewsTableBodyProps> = ({
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
               <div className="flex flex-col gap-2">
-                <Button className="w-20" size="xxs" variant="warning" startIcon={<RiResetLeftFill />}>
+                <Button onClick={()=>onOpenModal("restore",order.id)} className="w-20" size="xxs" variant="warning" startIcon={<RiResetLeftFill />}>
                   Khôi phục
                 </Button>
               </div>

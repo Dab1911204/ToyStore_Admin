@@ -36,6 +36,7 @@ export default function EditForm({ id }: EditFormProps) {
   const openNotificationRef = useRef(openNotification);
   const setValueRef = useRef(setValue);
   const [optionSelect, setOptionSelect] = useState<Option[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const fetchDataProducts = async () => {
     // Lấy danh sách sản phẩm
@@ -102,6 +103,7 @@ export default function EditForm({ id }: EditFormProps) {
     setErrors(newErrors);
 
     if (newErrors.length === 0) {
+      setIsLoading(true);
       const res = await PromotionService.updatePromotion(id, data)
       if (res.success){
         openNotification({
@@ -123,9 +125,11 @@ export default function EditForm({ id }: EditFormProps) {
           icon: <FaRegSmileBeam style={{ color: "red" }} />,
           style: { borderLeft: "5px solid red" },
         })
+        setIsLoading(false);
       }
     } else {
       console.log("❌ Errors:", newErrors);
+      setIsLoading(false);
     }
   };
 
@@ -158,8 +162,15 @@ export default function EditForm({ id }: EditFormProps) {
           options={optionSelect}
         />
       <div className="flex justify-center">
-        <Button type="submit" variant="primary" className="mt-4" size="md">
-          Sửa khuyến mãi
+        <Button type="submit" variant="primary" className="mt-4" size="md" disabled={isLoading}>
+          {isLoading ? (
+            <>
+              <span className="animate-spin mr-2 border-2 border-white border-t-transparent rounded-full w-4 h-4"></span>
+              Đang sửa...
+            </>
+          ) : (
+            "Sửa khuyến mãi"
+          )}
         </Button>
       </div>
     </Form>

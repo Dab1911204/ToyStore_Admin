@@ -22,13 +22,13 @@ export default function AddForm() {
   const { values, setErrors } = useFormContext();
   const { openNotification } = useNotification();
   const [optionSelect, setOptionSelect] = useState<Option[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         const resOption = await ProductService.getListProduct("/api/Product/admin");
-        console.log(resOption);
         const options: Option[] = resOption.result.items.map((item: any) => ({
           value: item.id,
           label: item.productName,
@@ -44,7 +44,6 @@ export default function AddForm() {
   const handleSubmit = async (data: Record<string, any> | FormData) => {
     const newErrors: { name: string; message: string }[] = [];
 
-    // validate text fields
     if (!values.Title) newErrors.push({ name: "Title", message: "Tiêu đề không được để trống" });
     if (!values.StartDate) newErrors.push({ name: "StartDate", message: "Ngày bắt đầu không được để trống" });
     if (!values.EndDate) newErrors.push({ name: "EndDate", message: "Ngày kết thúc không được để trống" });
@@ -54,9 +53,10 @@ export default function AddForm() {
     setErrors(newErrors);
 
     if (newErrors.length === 0) {
+      setIsLoading(true); // 🔹 Bắt đầu loading
       try {
         const res = await PromotionService.createPromotion(data);
-        if(res.success){
+        if (res.success) {
           openNotification({
             message: "Thêm khuyến mãi thành công",
             description: "Khuyến mãi đã được thêm vào hệ thống.",
@@ -67,7 +67,7 @@ export default function AddForm() {
           });
           router.push("/promotions");
           router.refresh();
-        }else{
+        } else {
           openNotification({
             message: "Thêm khuyến mãi lỗi",
             description: "Khuyến mãi không được thêm vào hệ thống",
@@ -79,13 +79,15 @@ export default function AddForm() {
         }
       } catch (error) {
         openNotification({
-            message: "Thêm khuyến mãi lỗi",
-            description: "Khuyến mãi không được thêm vào hệ thống: "+error,
-            placement: "top",
-            duration: 3,
-            icon: <FaRegSmileBeam style={{ color: "red" }} />,
-            style: { borderLeft: "5px solid red" },
-          });
+          message: "Thêm khuyến mãi lỗi",
+          description: "Khuyến mãi không được thêm vào hệ thống: " + error,
+          placement: "top",
+          duration: 3,
+          icon: <FaRegSmileBeam style={{ color: "red" }} />,
+          style: { borderLeft: "5px solid red" },
+        });
+      } finally {
+        setIsLoading(false); // 🔹 Tắt loading
       }
     } else {
       console.log("❌ Errors:", newErrors);
@@ -121,8 +123,21 @@ export default function AddForm() {
         options={optionSelect}
       />
       <div className="flex justify-center">
-        <Button type="submit" variant="primary" className="mt-4" size="md">
-          Thêm khuyến mãi
+        <Button
+          type="submit"
+          variant="primary"
+          className="mt-4"
+          size="md"
+          disabled={isLoading} // 🔹 Khi đang loading thì disable
+        >
+          {isLoading ? (
+            <>
+              <span className="animate-spin mr-2 border-2 border-white border-t-transparent rounded-full w-4 h-4"></span>
+              Đang thêm...
+            </>
+          ) : (
+            "Thêm khuyến mãi"
+          )}
         </Button>
       </div>
     </Form>

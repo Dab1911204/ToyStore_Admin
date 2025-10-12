@@ -49,5 +49,11 @@ export const CategoryListResponseSchema = z.object({
   errors: z.array(z.any()),
 });
 
+export const CategoryResponseSchema = z.object({
+  success: z.boolean(),
+  result: CategorySchema,
+  errors: z.array(z.any()),
+});
 export type CategoryType = z.infer<typeof CategorySchema>;
+export type CategoryResType = z.infer<typeof CategoryResponseSchema>;
 export type CategoriesResType = z.infer<typeof CategoryListResponseSchema>;
