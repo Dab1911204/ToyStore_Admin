@@ -14,6 +14,7 @@ import { Loading } from "@/components/common/Loading";
 import { NoData } from "@/components/common/NoData";
 import { Modal } from "@/components/ui/modal";
 import { CategoryService } from "@/services/categoryService";
+import ModalConfirm from "@/components/example/ModalExample/ModalConfirm";
 
 const title = ["STT",'Hình ảnh','Tên danh mục',"Danh mục cha","Người tạo","Người sửa","Hàng động"]
 
@@ -99,11 +100,15 @@ export default function CategoriesTable() {
       <Modal isOpen={isOpen} onClose={closeModal}>
         {modalType === "delete" && selectedId && (
           <>
-          </>
-        )}
-        {modalType === "detail" && selectedId && (
-          <>
-            
+            <ModalConfirm
+              id={selectedId}
+              title="Xóa"
+              description="danh mục"
+              onHandle={CategoryService.deleteCategory}
+              closeModal={closeModal}
+              loadData={fetchDataTable}
+              urlApi={urlApi}
+            />
           </>
         )}
       </Modal>

@@ -1,3 +1,4 @@
+"use client"
 import React, { useEffect, useState } from "react";
 import {
   Table,
@@ -13,8 +14,9 @@ import { NoData } from "@/components/common/NoData";
 import { Loading } from "@/components/common/Loading";
 import Pagination from "../../Pagination";
 import { Modal } from "@/components/ui/modal";
+import ModalConfirm from "@/components/example/ModalExample/ModalConfirm";
 
-const title = ["STT",'Tên danh mục','Danh mục cha',"Người xóa","Hàng động"]
+const title = ["STT","Hình ảnh",'Tên danh mục','Danh mục cha',"Người xóa","Hàng động"]
 
 export default function CategoriesTableDelete() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -94,13 +96,17 @@ export default function CategoriesTableDelete() {
         </div>
       </div>
       <Modal isOpen={isOpen} onClose={closeModal}>
-        {modalType === "delete" && selectedId && (
+        {modalType === "restore" && selectedId && (
           <>
-          </>
-        )}
-        {modalType === "detail" && selectedId && (
-          <>
-            
+            <ModalConfirm
+              id={selectedId}
+              title="Khôi phục"
+              description="danh mục"
+              onHandle={CategoryService.restoreCategory}
+              closeModal={closeModal}
+              loadData={fetchDataTable}
+              urlApi={urlApi}
+            />
           </>
         )}
       </Modal>

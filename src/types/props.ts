@@ -89,6 +89,7 @@ interface SelectFieldProps {
   disabled?: boolean;
   className?: string;
   hint?: string;
+  required?: boolean;
 }
 
 interface RadioOption {

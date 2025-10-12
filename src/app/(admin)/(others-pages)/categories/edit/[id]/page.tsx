@@ -8,12 +8,17 @@ export const metadata: Metadata = {
   title: "Sửa danh mục"
 };
 
-export default function EditCategoriesPage() {
+export default async function EditCategoriesPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;  
+}) {
+  const { id } = await params;
   return (
     <div>
       <PageBreadcrumb pageTitle="Sửa danh mục" pageParent="Quản lý danh mục" urlPageParent="/categories" />
       <FormProvider >
-        <EditForm />
+        <EditForm id={id} />
       </FormProvider>
     </div>
   );

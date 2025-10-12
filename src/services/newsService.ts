@@ -1,5 +1,5 @@
 import { NewsDeleteResType, NewsDetailResType, NewsResType } from "@/schemaValidations/news.schema";
-import { del, get, patch, post, put } from "@/utils/request";
+import { del, get, post, put } from "@/utils/request";
 
 export const NewsService = {
   getListNews: (url: string) => get<NewsResType>(url, { requireAuth: true }),
