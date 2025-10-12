@@ -12,6 +12,9 @@ import { NoData } from "@/components/common/NoData";
 import { WarehouseService } from "@/services/warehouseService";
 import { WarehouseType } from "@/schemaValidations/warehouse.schema";
 import { Loading } from "@/components/common/Loading";
+import { useModal } from "@/hooks/useModal";
+import ModalConfirm from "@/components/example/ModalExample/ModalConfirm";
+import { Modal } from "@/components/ui/modal";
 
 const title = ["STT", 'Tên sản phẩm', "Tên nhà cung cấp", "Giá nhập", "Số lượng", "Tổng giá", "Trạng thái", "Người tạo", "Người sửa", "Hành động"]
 
@@ -23,9 +26,19 @@ export default function WarehouseTable() {
   const [tableData, setTableData] = useState<WarehouseType[]>([]);
   const [loading, setLoading] = useState(true);
   const { urlApi, setParam } = useTableContext();
+
+  // ✅ quản lý modal ở đây
+  const { isOpen, openModal, closeModal } = useModal();
+  const [modalType, setModalType] = useState<"delete" | "detail" | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const onPageChange = async (page: number) => {
     setCurrentPage(page);
     setParam("PageNumber", page);
+  };
+  const handleOpenModal = (type: "delete" | "detail", id?: string) => {
+    setModalType(type);
+    if (id) setSelectedId(id);
+    openModal();
   };
   const fetchDataTable = async (urlApi: string) => {
     try {
@@ -46,27 +59,30 @@ export default function WarehouseTable() {
   }, [urlApi]);
 
   return (
-    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
-      <div className="max-w-full overflow-x-auto">
-        <div className="min-w-[1102px]">
-          <Table className="w-full">
-            {/* Table Header */}
-            <TableHeaderOne title={title} />
-            {/* Loading */}
-            {loading && (
-              <Loading colSpan={title.length} />
-            )}
-            {/* Có dữ liệu */}
-            {!loading && tableData.length > 0 && (
-              <WarehouseTableBody tableData={tableData} />
-            )}
-            {/* Không có dữ liệu */}
-            {!loading && tableData.length === 0 && (
-              <NoData colSpan={title.length} title="Không có dữ liệu" />
-            )}
-            
-          </Table>
-          {/* Phân trang */}
+    <>
+      <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
+        <div className="max-w-full overflow-x-auto">
+          <div className="min-w-[1102px]">
+            <Table className="w-full">
+              {/* Table Header */}
+              <TableHeaderOne title={title} />
+              {/* Loading */}
+              {loading && (
+                <Loading colSpan={title.length} />
+              )}
+              {/* Có dữ liệu */}
+              {!loading && tableData.length > 0 && (
+                <WarehouseTableBody tableData={tableData}
+                  onOpenModal={handleOpenModal}
+                />
+              )}
+              {/* Không có dữ liệu */}
+              {!loading && tableData.length === 0 && (
+                <NoData colSpan={title.length} title="Không có dữ liệu" />
+              )}
+
+            </Table>
+            {/* Phân trang */}
             {!loading && Array.isArray(tableData) && tableData.length > 0 && (
               <div className="w-full flex justify-center mt-4 mb-4">
                 <Pagination
@@ -76,9 +92,23 @@ export default function WarehouseTable() {
                 />
               </div>
             )}
+          </div>
         </div>
       </div>
-    </div>
-
+      {/* ✅ Modal nằm ngoài table */}
+      <Modal isOpen={isOpen} onClose={closeModal}>
+        {modalType === "delete" && selectedId && (
+          <ModalConfirm
+            id={selectedId}
+            title="Xóa"
+            description="sản phẩm"
+            onHandle={WarehouseService.deleteWarehouse}
+            closeModal={closeModal}
+            loadData={fetchDataTable}
+            urlApi={urlApi}
+          />
+        )}
+      </Modal>
+    </>
   );
 }

@@ -7,7 +7,7 @@ import {
 } from "../../../ui/table";
 import Button from "@/components/ui/button/Button";
 import Link from "next/link";
-import { FaWrench, FaEye } from "react-icons/fa";
+import { FaWrench } from "react-icons/fa";
 import { FaDeleteLeft } from "react-icons/fa6";
 import Badge from "@/components/ui/badge/Badge";
 import { WarehouseType } from "@/schemaValidations/warehouse.schema";
@@ -15,10 +15,13 @@ import { formatCurrency } from "@/utils/format";
 
 interface WarehousesTableBodyProps {
   tableData: WarehouseType[];
+  onOpenModal: (type: "delete" | "detail", id?: string) => void;
 }
 
 const WarehouseTableBody: React.FC<WarehousesTableBodyProps> = ({
   tableData,
+  onOpenModal,
+
 }) => {
   return (
     <>
@@ -60,11 +63,9 @@ const WarehouseTableBody: React.FC<WarehousesTableBodyProps> = ({
                     Sửa
                   </Button>
                 </Link>
-                <Link href={"/products/" + warehouses.id}>
-                  <Button className="w-20" size="xxs" variant="danger" startIcon={<FaDeleteLeft />}>
+                  <Button onClick={() => onOpenModal("delete", warehouses.id)} className="w-20" size="xxs" variant="danger" startIcon={<FaDeleteLeft />}>
                     Xóa
                   </Button>
-                </Link>
               </div>
             </TableCell>
           </TableRow>
