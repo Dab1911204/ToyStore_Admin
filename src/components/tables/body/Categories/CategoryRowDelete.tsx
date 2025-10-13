@@ -3,19 +3,17 @@ import React, { useState } from "react";
 import { TableCell, TableRow } from "../../../ui/table";
 import Button from "@/components/ui/button/Button";
 import Image from "next/image";
-import Link from "next/link";
 import {
-  FaWrench,
   FaChevronRight,
   FaChevronDown,
-  FaTrashAlt,
 } from "react-icons/fa";
+import { RiResetLeftFill } from "react-icons/ri";
 import { CategoryType } from "@/schemaValidations/category.schema";
 
 const CategoryRowDelete: React.FC<{
   item: CategoryType;
   level: number;
-  onOpenModal: (type: "delete" | "detail", id?: string) => void;
+  onOpenModal: (type: "delete" | "detail" | "restore", id?: string) => void;
 }> = ({ item, level, onOpenModal }) => {
   const [expanded, setExpanded] = useState(false);
   const hasChildren = item.children && item.children.length > 0;
@@ -89,24 +87,14 @@ const CategoryRowDelete: React.FC<{
         {/* Nút hành động */}
         <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
           <div className="flex flex-col gap-2">
-            <Link href={`/categories/edit/${item.id}`}>
-              <Button
-                className="w-20"
-                size="xxs"
-                variant="warning"
-                startIcon={<FaWrench />}
-              >
-                Sửa
-              </Button>
-            </Link>
             <Button
               className="w-20"
-              onClick={() => onOpenModal("delete", item.id)}
               size="xxs"
-              variant="danger"
-              startIcon={<FaTrashAlt />}
+              variant="warning"
+              startIcon={<RiResetLeftFill />}
+              onClick={() => onOpenModal("restore", item.id)}
             >
-              Xóa
+              Khôi phục
             </Button>
           </div>
         </TableCell>

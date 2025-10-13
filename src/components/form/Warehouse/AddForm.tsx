@@ -50,7 +50,7 @@ export default function AddForm() {
 
     return (
         <Form onSubmit={handleSubmit} mode="multipart">
-            <InputForm label="Tên sản phẩm" name="name" placeholder="Nhập tên sản phẩm" />
+            <SelectForm className="w-full" label="Sản phẩm" name="product" placeholder="Chọn sản phẩm" options={[{ value: '1', label: 'Sản phẩm 1' }, { value: '2', label: 'Sản phẩm 2' }]}  />
             <SelectForm className="w-full" label="Thương hiệu" name="brand" placeholder="Chọn thương hiệu" options={[{ value: '1', label: 'Brand 1' }, { value: '2', label: 'Brand 2' }]} />
             <DatePickerForm
                 id="publishDate"

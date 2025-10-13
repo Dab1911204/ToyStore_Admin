@@ -27,7 +27,7 @@ export default function EditForm() {
         const newErrors: { name: string; message: string }[] = [];
 
         // validate text fields
-        if (!values.name) newErrors.push({ name: "name", message: "Tiêu đề không được để trống" });
+        if (!values.product) newErrors.push({ name: "product", message: "Tiêu đề không được để trống" });
         if (!values.description) newErrors.push({ name: "description", message: "Nội dung không được để trống" });
         if (!values.images) newErrors.push({ name: "images", message: "Vui lòng chọn ảnh" });
 
@@ -60,7 +60,7 @@ export default function EditForm() {
 
     return (
         <Form onSubmit={handleSubmit} mode="multipart">
-            <InputForm label="Tên sản phẩm" name="name" placeholder="Nhập tên sản phẩm" />
+            <SelectForm className="w-full" label="Sản phẩm" name="product" placeholder="Chọn sản phẩm" options={[{ value: '1', label: 'Sản phẩm 1' }, { value: '2', label: 'Sản phẩm 2' }]}  />
             <SelectForm className="w-full" label="Thương hiệu" name="brand" placeholder="Chọn thương hiệu" options={[{ value: '1', label: 'Brand 1' }, { value: '2', label: 'Brand 2' }]} />
             <DatePickerForm
                 id="publishDate"
