@@ -44,3 +44,19 @@ export const ProductRes = z.object({
 }).strict() 
 
 export type ProductResType = z.infer<typeof ProductRes>
+
+export const ProductDRResponseSchema = z.object({
+  success: z.boolean(),
+  result: z.string(),
+  errors: z.array(z.string()),
+});
+
+export type ProductDRResType = z.infer<typeof ProductDRResponseSchema>;
+
+export const ProductDetailResponseSchema = z.object({
+  success: z.boolean(),
+  result: ProductSchema,
+  errors: z.array(z.string()),
+})
+
+export type ProductDetailResType = z.infer<typeof ProductDetailResponseSchema>

@@ -12,38 +12,52 @@ import { useTableContext } from "@/context/TableContext";
 import { ProductService } from "@/services/productService";
 import { NoData } from "@/components/common/NoData";
 import { Loading } from "@/components/common/Loading";
+import { Modal } from "@/components/ui/modal";
+import { useModal } from "@/hooks/useModal";
+import ModalConfirm from "@/components/example/ModalExample/ModalConfirm";
 
 
 const title = ["STT",'Hình ảnh','Tên sản phẩm',"Giá","Số lượng","Trạng thái","Tình trạng","Người tạo","Người sửa","Hành động"]
 
 export default function ProductTable() {
-  const [currentPage,setCurrentPage] = useState(1)
-  const [totalPages,setTotalPages] = useState(1)
-  const [tableData,setTableData] = useState<ProductType[]>([])
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [tableData, setTableData] = useState<ProductType[]>([]);
   const [loading, setLoading] = useState(true); // trạng thái đang load
   const { urlApi, setParam } = useTableContext();
+
+  // ✅ quản lý modal ở đây
+  const { isOpen, openModal, closeModal } = useModal();
+  const [modalType, setModalType] = useState<"delete" | "detail" | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const onPageChange = async (page: number) => {
     setCurrentPage(page)
     setParam("PageNumber",page)
   }
-  useEffect(() => {
-    console.log(urlApi)
-    const fetchDataTable = async () => {
-      try {
-        setTableData([])
-        const res = await ProductService.getListProduct(urlApi)
-        console.log(res)
-        setTableData(res.result.items)
-        setTotalPages(res.result.totalPages)
-        setCurrentPage(res.result.currentPage)
-      }
-      catch (error) {
-        console.log(error)
-      }finally{
-        setLoading(false)
-      }
+  const handleOpenModal = (type: "delete" | "detail", id?: string) => {
+    setModalType(type);
+    if (id) setSelectedId(id);
+    openModal();
+  };
+
+  const fetchDataTable = async (urlApi: string) => {
+    try {
+      setTableData([])
+      const res = await ProductService.getListProduct(urlApi)
+      console.log(res)
+      setTableData(res.result.items)
+      setTotalPages(res.result.totalPages)
+      setCurrentPage(res.result.currentPage)
     }
-    fetchDataTable()
+    catch (error) {
+      console.log(error)
+    }finally{
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchDataTable(urlApi)
   }, [urlApi])
 
   return (
@@ -58,7 +72,7 @@ export default function ProductTable() {
             )}
             {/* Table Body */}
             {!loading && tableData.length > 0 && (
-              <ProductTableBody tableData={tableData} />
+              <ProductTableBody onOpenModal={handleOpenModal} tableData={tableData} />
             )}
             {!loading && tableData.length === 0 && (
               <NoData colSpan={title.length} title="Không có dữ liệu" />
@@ -71,6 +85,24 @@ export default function ProductTable() {
           )}
         </div>
       </div>
+      {/* ✅ Modal nằm ngoài table */}
+      <Modal isOpen={isOpen} onClose={closeModal}>
+        {modalType === "delete" && selectedId && (
+          <ModalConfirm
+            id={selectedId}
+            title="Xóa"
+            description="sản phẩm"
+            onHandle={ProductService.deleteProduct}
+            closeModal={closeModal}
+            loadData={fetchDataTable}
+            urlApi={urlApi}
+          />
+        )}
+        {modalType === "detail" && selectedId && (
+          <>
+          </>
+        )}
+      </Modal>
     </div>   
   );
 }
