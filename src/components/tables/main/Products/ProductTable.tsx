@@ -15,6 +15,7 @@ import { Loading } from "@/components/common/Loading";
 import { Modal } from "@/components/ui/modal";
 import { useModal } from "@/hooks/useModal";
 import ModalConfirm from "@/components/example/ModalExample/ModalConfirm";
+import ProductDetailModal from "@/components/example/ModalExample/ProductDetailModal";
 
 
 const title = ["STT",'Hình ảnh','Tên sản phẩm',"Giá","Số lượng","Trạng thái","Tình trạng","Người tạo","Người sửa","Hành động"]
@@ -100,6 +101,7 @@ export default function ProductTable() {
         )}
         {modalType === "detail" && selectedId && (
           <>
+            <ProductDetailModal id={selectedId} onHandle={ProductService.infoProduct} onClose={closeModal}/>
           </>
         )}
       </Modal>

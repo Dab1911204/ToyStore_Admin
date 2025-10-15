@@ -7,6 +7,7 @@ export const ProductSchema = z.object({
   price: z.number().nonnegative(),
   quantity: z.number().int().nonnegative(),
   supplier: z.object({
+    id: z.string().uuid(),
     name: z.string().nullable()
   }),
   category: z.object({
