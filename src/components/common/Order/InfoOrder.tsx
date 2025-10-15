@@ -1,6 +1,6 @@
 "use client";
 
-import Button from "../ui/button/Button";
+import Button from "../../ui/button/Button";
 import { OrderItem } from "./OrderItem";
 
 export const InfoOrder = () => {

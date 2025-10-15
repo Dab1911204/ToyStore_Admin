@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 
-export const ProductItem = () => {
+export const ProductItemOrder = () => {
   const [quantity, setQuantity] = useState(1);
   const discountPercent = 20;
   const inStock = true;
