@@ -57,6 +57,7 @@ export default function EditForm({ id }: EditFormProps) {
     const fetchDataSupplier = async () => {
         try {
             const resOption = await SupplierService.getListSupplier("/api/Supplier/Admin");
+            console.log(resOption);
             const options: Option[] = resOption.result.items.map((item: any) => ({
                 value: item.id,
                 label: item.supplierName,
@@ -78,31 +79,38 @@ export default function EditForm({ id }: EditFormProps) {
             console.log(error);
         }
     }
-    // const fetchDataProduct = async (id: string) => {
-    //     // Lấy thông tin infoProduct khuyến mãi
-    //       const res = await ProductService.infoProduct(id);
-    //       if (res.success) {
-    //         const infoProduct: InfoProduct = {
-    //             ProductName:res.result.productName,
-    //             IdCategory:res.result.category.id
-    //         };
-    //         renderData(infoProduct, setValueRef.current);
-    //       } else {
-    //         openNotificationRef.current({
-    //           message: "Lỗi",
-    //           description: "Không lấy được thông tin khuyến mãi",
-    //           placement: "top",
-    //           duration: 3,
-    //           icon: <FaRegSmileBeam style={{ color: "red" }} />,
-    //           style: { borderLeft: "5px solid red" },
-    //         });
-    //       }
-    //   }
+    const fetchDataProduct = async (id: string) => {
+        // Lấy thông tin infoProduct khuyến mãi
+          const res = await ProductService.infoProduct(id);
+          console.log(res);
+          if (res.success) {
+            const infoProduct: InfoProduct = {
+                ProductName:res.result.productName,
+                IdCategory:res.result.category.id,
+                IdSupplier:res.result.supplier.id,
+                Price:res.result.price,
+                IdPromotion:res.result.promotion?.id,
+                Description:res.result.description,
+                Images:res.result.image
+            };
+            renderData(infoProduct, setValueRef.current);
+          } else {
+            openNotificationRef.current({
+              message: "Lỗi",
+              description: "Không lấy được thông tin khuyến mãi",
+              placement: "top",
+              duration: 3,
+              icon: <FaRegSmileBeam style={{ color: "red" }} />,
+              style: { borderLeft: "5px solid red" },
+            });
+          }
+      }
     useEffect(() => {
         fetchDataCategory();
         fetchDataSupplier();
         fetchDataPromotion();
-    }, []);
+        fetchDataProduct(id)
+    }, [id]);
 
     const handleSubmit = async (data: Record<string, any> | FormData) => {
         const newErrors: { name: string; message: string }[] = [];
@@ -124,7 +132,7 @@ export default function EditForm({ id }: EditFormProps) {
                 if (res.success) {
                     openNotification({
                         message: "Thành công",
-                        description: "Thêm sản phẩm thành công!",
+                        description: "Sửa sản phẩm thành công!",
                         placement: "top",
                         duration: 3,
                         icon: <FaRegSmileBeam style={{ color: "green" }} />,
@@ -135,7 +143,7 @@ export default function EditForm({ id }: EditFormProps) {
                 } else {
                     openNotification({
                         message: "Thất bại",
-                        description: "Thêm sản phẩm thất bại!",
+                        description: "Sửa sản phẩm thất bại!",
                         placement: "top",
                         duration: 3,
                         icon: <FaRegSmileBeam style={{ color: "red" }} />,
@@ -146,7 +154,7 @@ export default function EditForm({ id }: EditFormProps) {
             } catch (error) {
                 openNotification({
                     message: "Thất bại",
-                    description: "Thêm sản phẩm thất bại: " + error,
+                    description: "Sửa sản phẩm thất bại: " + error,
                     placement: "top",
                     duration: 3,
                     icon: <FaRegSmileBeam style={{ color: "red" }} />,

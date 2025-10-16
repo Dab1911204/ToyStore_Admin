@@ -11,7 +11,11 @@ export const ProductSchema = z.object({
     name: z.string().nullable()
   }),
   category: z.object({
+    id: z.string().uuid(),
+    categoryName: z.string().nullable(),
+    parentId: z.string().uuid().nullable(),
     parentName: z.string().nullable(),
+    childId: z.string().uuid().nullable(),
     childName: z.string().nullable()
   }),
   promotion: z.any().nullable(),

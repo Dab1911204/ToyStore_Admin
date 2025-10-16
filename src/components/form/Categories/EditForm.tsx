@@ -53,6 +53,7 @@ export default function EditForm({ id }: EditFormProps) {
         ParentId: res.result.parentId,
       };
       renderData(infoCategory, setValueRef.current);
+      console.log(infoCategory);
     } else {
       openNotificationRef.current({
         message: "Lỗi",

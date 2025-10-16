@@ -75,7 +75,7 @@ const ProductTableBody: React.FC<ProductsTableBodyProps> = ({
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
               <div className="flex flex-col gap-2">
-                <Link href={"/products/edit/"+product.slug}>
+                <Link href={"/products/edit/"+product.id}>
                   <Button className="w-20" size="xxs" variant="warning" startIcon={<FaWrench />}>
                     Sửa
                   </Button>

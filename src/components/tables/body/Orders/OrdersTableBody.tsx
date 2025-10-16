@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import {
   TableBody,
   TableCell,
@@ -8,57 +8,40 @@ import {
 
 import Button from "@/components/ui/button/Button";
 import { FaWrench } from "react-icons/fa";
-import { Modal } from "@/components/ui/modal";
-import { useModal } from "@/hooks/useModal";
 import Badge from "@/components/ui/badge/Badge";
 import { FaEye } from "react-icons/fa6";
+import { OrderType } from "@/schemaValidations/order.schema";
 
-interface User {
-  image: string;
-  name: string;
-}
-
-interface NewsTableRow {
-  id: string | number;
-  user: User;
-  projectName: string;
-}
 
 interface NewsTableBodyProps {
-  tableData: NewsTableRow[];
+  tableData: OrderType[];
+  onOpenModal: (type: "update" | "detail", id?: string) => void;
 }
 
-const OrdersTableBody: React.FC<NewsTableBodyProps> = ({ tableData }) => {
-  const { isOpen, openModal, closeModal } = useModal();
-  const [modalType, setModalType] = useState<"update" | "detail" | null>(null);
-
-  const handleOpen = (type: "update" | "detail") => {
-    setModalType(type);
-    openModal();
-  };
+const OrdersTableBody: React.FC<NewsTableBodyProps> = ({ tableData, onOpenModal}: NewsTableBodyProps) => {
 
   return (
     <>
       <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-        {tableData.map((order) => (
+        {tableData.map((order,index) => (
           <TableRow key={order.id}>
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-              {order.id}
+              {index+ 1}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-              Nguyễn Văn A
+              Email
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-              0912345678
+              {order.phone}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-              Hà Nội
+              {order.address}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-              10/10/2025
+              {order.orderDate}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-              500.000đ
+              {order.totalPrice}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
               Nguyễn Văn B
@@ -72,7 +55,7 @@ const OrdersTableBody: React.FC<NewsTableBodyProps> = ({ tableData }) => {
                 <Button
                   className="w-20"
                   size="xxs"
-                  onClick={() => handleOpen("update")}
+                  onClick={() => onOpenModal("update", order.id)}
                   variant="warning"
                   startIcon={<FaWrench />}
                 >
@@ -81,7 +64,7 @@ const OrdersTableBody: React.FC<NewsTableBodyProps> = ({ tableData }) => {
                 <Button
                   className="w-20"
                   size="xxs"
-                  onClick={() => handleOpen("detail")}
+                  onClick={() => onOpenModal("detail", order.id)}
                   variant="info"
                   startIcon={<FaEye />}
                 >
@@ -92,35 +75,6 @@ const OrdersTableBody: React.FC<NewsTableBodyProps> = ({ tableData }) => {
           </TableRow>
         ))}
       </TableBody>
-
-      {/* Dùng 1 modal duy nhất */}
-      <Modal isOpen={isOpen} onClose={closeModal} className="max-w-[700px] m-4">
-        <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
-          <div className="px-2 pr-14">
-            {modalType === "update" && (
-              <>
-                <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
-                  Cập nhật trạng thái đơn hàng
-                </h4>
-                <p className="mb-6 text-sm text-gray-500 dark:text-gray-400 lg:mb-7">
-                  Update your details to keep your profile up-to-date.
-                </p>
-              </>
-            )}
-
-            {modalType === "detail" && (
-              <>
-                <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
-                  Chi tiết đơn hàng
-                </h4>
-                <p className="mb-6 text-sm text-gray-500 dark:text-gray-400 lg:mb-7">
-                  Đây là nội dung chi tiết đơn hàng...
-                </p>
-              </>
-            )}
-          </div>
-        </div>
-      </Modal>
     </>
   );
 };
