@@ -2,11 +2,13 @@
 
 import Image from "next/image";
 type WarehouseItemProps = {
+  id: string;
   image?: string;
   productName: string;
   supplierName: string;
   quantity: number;
   price: number;
+  removeFromWarehouse: () => void;
 }
 export const WarehouseItem = (item:WarehouseItemProps) => {
   const total = item.price * item.quantity;
@@ -52,6 +54,7 @@ export const WarehouseItem = (item:WarehouseItemProps) => {
         </p>
         <button
           className="mt-2 w-6 h-6 flex items-center justify-center rounded-full bg-red-600 text-[11px] text-white hover:bg-red-700 transition"
+          onClick={item.removeFromWarehouse}
         >
           ✕
         </button>

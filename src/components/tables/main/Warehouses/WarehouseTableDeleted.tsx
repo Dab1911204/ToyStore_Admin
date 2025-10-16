@@ -12,9 +12,8 @@ import { WarehouseService } from "@/services/warehouseService";
 import { Loading } from "@/components/common/Loading";
 import { NoData } from "@/components/common/NoData";
 import Pagination from "../../Pagination";
-import { WarehouseType } from "@/schemaValidations/warehouse.schema";
+import { WarehouseItemType } from "@/schemaValidations/warehouse.schema";
 import { Modal } from "@/components/ui/modal";
-import ModalConfirm from "@/components/example/ModalExample/ModalConfirm";
 
 
 const title = ["STT", 'Tên sản phẩm', "Tên nhà cung cấp", "Giá nhập", "Số lượng", "Tổng giá", "Trạng thái", "Người xóa", "Hành động"]
@@ -24,7 +23,7 @@ const title = ["STT", 'Tên sản phẩm', "Tên nhà cung cấp", "Giá nhập"
 export default function WarehouseTableDelete() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [tableData, setTableData] = useState<WarehouseType[]>([]);
+  const [tableData, setTableData] = useState<WarehouseItemType[]>([]);
   const [loading, setLoading] = useState(true);
   const { urlApi, setParam } = useTableContext();
 
@@ -97,7 +96,7 @@ export default function WarehouseTableDelete() {
        
         {modalType === "restore" && selectedId && (
           <>
-            <ModalConfirm
+            {/* <ModalConfirm
               id={selectedId}
               title="Khôi phục"
               description="sản phẩm"
@@ -105,7 +104,7 @@ export default function WarehouseTableDelete() {
               closeModal={closeModal}
               loadData={fetchDataTable}
               urlApi={urlApi}
-            />
+            /> */}
           </>
         )}
       </Modal>
