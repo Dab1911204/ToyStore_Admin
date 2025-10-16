@@ -1,12 +1,17 @@
 "use client";
 
 import Image from "next/image";
-
-export const OrderItem = () => {
-  const quantity = 2;
-  const price = 300000;
-  const discountPrice = 250000;
-  const total = discountPrice * quantity;
+type WarehouseItemProps = {
+  id: string;
+  image?: string;
+  productName: string;
+  supplierName: string;
+  quantity: number;
+  price: number;
+  removeFromWarehouse: () => void;
+}
+export const WarehouseItem = (item:WarehouseItemProps) => {
+  const total = item.price * item.quantity;
 
   return (
     <div className="flex items-center justify-between w-full border-b border-gray-200 dark:border-gray-700 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition">
@@ -16,7 +21,7 @@ export const OrderItem = () => {
           <Image
             width={56}
             height={56}
-            src="/images/user/owner.jpg"
+            src={item.image ? item.image : "/images/user/owner.jpg"}
             alt="Sản phẩm 1"
             className="object-cover w-full h-full"
           />
@@ -26,21 +31,18 @@ export const OrderItem = () => {
       {/* --- Cột 2: Thông tin sản phẩm --- */}
       <div className="flex flex-col flex-1 mx-3">
         <h3 className="text-sm font-medium text-gray-800 dark:text-white/90 truncate">
-          Sản phẩm 1
+          {item.productName}
         </h3>
         <p className="text-xs text-gray-500 dark:text-gray-400">
-          Nhà cung cấp: <span className="font-medium">Nhà cung cấp 1</span>
+          Nhà cung cấp: <span className="font-medium">{item.supplierName}</span>
         </p>
 
         <div className="flex items-center space-x-2 mt-1">
-          <p className="text-xs line-through text-gray-400">
-            {price.toLocaleString()}đ
-          </p>
-          <p className="text-xs font-semibold text-red-600">
-            {discountPrice.toLocaleString()}đ
+          <p className="text-xs text-gray-400">
+            {item.price.toLocaleString()}đ
           </p>
           <p className="text-xs text-gray-500 dark:text-gray-300">
-            ×{quantity}
+            ×{item.quantity}
           </p>
         </div>
       </div>
@@ -52,6 +54,7 @@ export const OrderItem = () => {
         </p>
         <button
           className="mt-2 w-6 h-6 flex items-center justify-center rounded-full bg-red-600 text-[11px] text-white hover:bg-red-700 transition"
+          onClick={item.removeFromWarehouse}
         >
           ✕
         </button>

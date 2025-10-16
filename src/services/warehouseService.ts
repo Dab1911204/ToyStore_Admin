@@ -1,9 +1,9 @@
 
-import { WarehousesResType } from "@/schemaValidations/warehouse.schema";
-import {del, get} from "@/utils/request";
+import {WarehouseResType} from "@/schemaValidations/warehouse.schema";
+import {get, post} from "@/utils/request";
 
 export const WarehouseService = {
-  getListWarehouse:(url:string)=>get<WarehousesResType>(url,{requireAuth:true}),
-  deleteWarehouse:(id:string)=>del<WarehousesResType>(`/api/Warehouse`,`${id}?force=true`,{requireAuth:true}),
-};
+  getListWarehouse:(url:string)=>get<WarehouseResType>(url,{requireAuth:true}),
+  createWarehouse:(data:any)=>post<WarehouseResType>('/api/Warehouse',data,{requireAuth:true}),
+}
 

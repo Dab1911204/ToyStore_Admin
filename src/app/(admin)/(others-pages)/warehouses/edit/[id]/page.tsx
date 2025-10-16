@@ -1,5 +1,4 @@
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
-import EditForm from "@/components/form/Warehouse/EditForm";
 import { FormProvider } from "@/context/FormContext";
 import { Metadata } from "next";
 import React from "react";
@@ -13,7 +12,8 @@ export default function EditProductPage() {
     <div>
       <PageBreadcrumb pageTitle="Sửa sản phẩm trong kho" pageParent="Quản lý kho hàng" urlPageParent="/warehouses" />
       <FormProvider >
-        <EditForm />
+        <></>
+        {/* <EditForm /> */}
       </FormProvider>
     </div>
   );

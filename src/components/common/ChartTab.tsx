@@ -2,10 +2,10 @@ import React, { useState } from "react";
 
 const ChartTab: React.FC = () => {
   const [selected, setSelected] = useState<
-    "optionOne" | "optionTwo" | "optionThree"
+    "optionOne" | "optionTwo"
   >("optionOne");
 
-  const getButtonClass = (option: "optionOne" | "optionTwo" | "optionThree") =>
+  const getButtonClass = (option: "optionOne" | "optionTwo") =>
     selected === option
       ? "shadow-theme-xs text-gray-900 dark:text-white bg-white dark:bg-gray-800"
       : "text-gray-500 dark:text-gray-400";
@@ -18,7 +18,7 @@ const ChartTab: React.FC = () => {
           "optionOne"
         )}`}
       >
-        Monthly
+        Tháng
       </button>
 
       <button
@@ -27,16 +27,7 @@ const ChartTab: React.FC = () => {
           "optionTwo"
         )}`}
       >
-        Quarterly
-      </button>
-
-      <button
-        onClick={() => setSelected("optionThree")}
-        className={`px-3 py-2 font-medium w-full rounded-md text-theme-sm hover:text-gray-900   dark:hover:text-white ${getButtonClass(
-          "optionThree"
-        )}`}
-      >
-        Annually
+        Năm
       </button>
     </div>
   );

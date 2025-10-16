@@ -7,10 +7,15 @@ export const ProductSchema = z.object({
   price: z.number().nonnegative(),
   quantity: z.number().int().nonnegative(),
   supplier: z.object({
+    id: z.string().uuid(),
     name: z.string().nullable()
   }),
   category: z.object({
+    id: z.string().uuid(),
+    categoryName: z.string().nullable(),
+    parentId: z.string().uuid().nullable(),
     parentName: z.string().nullable(),
+    childId: z.string().uuid().nullable(),
     childName: z.string().nullable()
   }),
   promotion: z.any().nullable(),
@@ -44,3 +49,19 @@ export const ProductRes = z.object({
 }).strict() 
 
 export type ProductResType = z.infer<typeof ProductRes>
+
+export const ProductDRResponseSchema = z.object({
+  success: z.boolean(),
+  result: z.string(),
+  errors: z.array(z.string()),
+});
+
+export type ProductDRResType = z.infer<typeof ProductDRResponseSchema>;
+
+export const ProductDetailResponseSchema = z.object({
+  success: z.boolean(),
+  result: ProductSchema,
+  errors: z.array(z.string()),
+})
+
+export type ProductDetailResType = z.infer<typeof ProductDetailResponseSchema>
