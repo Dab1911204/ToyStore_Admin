@@ -1,11 +1,13 @@
 "use client";
 
+import { useOrder } from "@/context/OrderContext";
 import { ProductType } from "@/schemaValidations/product.schema";
 import Image from "next/image";
 import { useState } from "react";
 
 export const ProductItemOrder = ({ item }: { item: ProductType }) => {
   const [quantity, setQuantity] = useState(1);
+  const { addToCart } = useOrder();
 
   // ✅ Tính giảm giá (nếu có khuyến mãi)
   const discountPercent = item.promotion?.discountPercent ?? 0;
@@ -40,7 +42,7 @@ export const ProductItemOrder = ({ item }: { item: ProductType }) => {
 
   // ✅ Thêm vào giỏ hàng
   const handleAddToCart = () => {
-    alert(`Đã thêm ${quantity} sản phẩm "${item.productName}" vào giỏ hàng!`);
+    addToCart(item, quantity); // ✅ Gọi context thay vì alert
   };
 
   return (

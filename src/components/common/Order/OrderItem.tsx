@@ -1,11 +1,27 @@
 "use client";
 
 import Image from "next/image";
+import React from "react";
 
-export const OrderItem = () => {
-  const quantity = 2;
-  const price = 300000;
-  const discountPrice = 250000;
+interface OrderItemProps {
+  name: string;
+  supplier: string;
+  image: string;
+  price: number;
+  discountPrice: number;
+  quantity: number;
+  onRemove: () => void;
+}
+
+export const OrderItem: React.FC<OrderItemProps> = ({
+  name,
+  supplier,
+  image,
+  price,
+  discountPrice,
+  quantity,
+  onRemove,
+}) => {
   const total = discountPrice * quantity;
 
   return (
@@ -16,8 +32,8 @@ export const OrderItem = () => {
           <Image
             width={56}
             height={56}
-            src="/images/user/owner.jpg"
-            alt="Sản phẩm 1"
+            src={image || "/images/no-image.png"}
+            alt={name}
             className="object-cover w-full h-full"
           />
         </div>
@@ -26,31 +42,33 @@ export const OrderItem = () => {
       {/* --- Cột 2: Thông tin sản phẩm --- */}
       <div className="flex flex-col flex-1 mx-3">
         <h3 className="text-sm font-medium text-gray-800 dark:text-white/90 truncate">
-          Sản phẩm 1
+          {name}
         </h3>
         <p className="text-xs text-gray-500 dark:text-gray-400">
-          Nhà cung cấp: <span className="font-medium">Nhà cung cấp 1</span>
+          Nhà cung cấp: <span className="font-medium">{supplier}</span>
         </p>
 
         <div className="flex items-center space-x-2 mt-1">
-          <p className="text-xs line-through text-gray-400">
-            {price.toLocaleString()}đ
-          </p>
+          {discountPrice < price && (
+            <p className="text-xs line-through text-gray-400">
+              {price.toLocaleString("vi-VN")}₫
+            </p>
+          )}
           <p className="text-xs font-semibold text-red-600">
-            {discountPrice.toLocaleString()}đ
+            {discountPrice.toLocaleString("vi-VN")}₫
           </p>
-          <p className="text-xs text-gray-500 dark:text-gray-300">
-            ×{quantity}
-          </p>
+          <p className="text-xs text-gray-500 dark:text-gray-300">×{quantity}</p>
         </div>
       </div>
 
       {/* --- Cột 3: Tổng tiền + nút xoá --- */}
       <div className="flex flex-col items-end">
         <p className="text-sm font-semibold text-gray-800 dark:text-white/90">
-          {total.toLocaleString()}đ
+          {total.toLocaleString("vi-VN")}₫
         </p>
         <button
+          onClick={onRemove}
+          title="Xóa sản phẩm"
           className="mt-2 w-6 h-6 flex items-center justify-center rounded-full bg-red-600 text-[11px] text-white hover:bg-red-700 transition"
         >
           ✕
