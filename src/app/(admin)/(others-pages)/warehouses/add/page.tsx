@@ -1,7 +1,6 @@
 import ComponentCard from "@/components/common/ComponentCard";
 import { InfoWarehouse } from "@/components/common/Warehouse/InfoWarehouse";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
-import { ProductItemWarehouse } from "@/components/common/Warehouse/ProductItemWarehouse";
 import { Metadata } from "next";
 import React from "react";
 import { ProductListWarehouse } from "@/components/common/Warehouse/ProductListWarehouse";

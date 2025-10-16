@@ -8,8 +8,6 @@ export const ProductItemWarehouse = ({ item }: { item: ProductType }) => {
   const [price, setPrice] = useState<number>(0);
   const inStock = true;
 
-  const handleIncrease = () => setQuantity(quantity + 1);
-
   const handleChangeQuantity = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = Number(e.target.value);
     if (val >= 0) setQuantity(val);
