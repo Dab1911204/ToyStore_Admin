@@ -7,21 +7,72 @@ import { useNotification } from "@/context/NotificationContext";
 import { FaRegSmileBeam } from "react-icons/fa";
 import SelectForm from "../form-elements/SelectForm";
 import SwitchForm from "../form-elements/SwitchForm";
-import { usePrefill } from "@/hooks/usePrefill";
 import DatePickerForm from "../form-elements/DatePickerForm";
+import { EditFormProps } from "@/types/props";
+import { ProductService } from "@/services/productService";
+import { useRef, useState } from "react";
+import { SupplierService } from "@/services/supplierService";
 
-export default function EditForm() {
-    const { values, setErrors } = useFormContext();
+type Option = {
+    value: string;
+    label: string;
+};
+
+type InfoWarehouse ={
+    IdProduct: string[];
+    IdSupplier: string[];
+    Price: number;
+    Quantity: number;
+}
+export default function EditForm({ id }: EditFormProps) {
+    const { values, setErrors, setValue } = useFormContext();
     const { openNotification } = useNotification();
+    const [optionSelectProduct, setOptionSelectProduct] = useState<Option[]>([]);
+    const [optionSelectSupplier, setOptionSelectSupplier] = useState<Option[]>([]);
+    const setValueRef = useRef(setValue);
+    const openNotificationRef = useRef(openNotification);
+    const [isLoading, setIsLoading] = useState(false);
 
-    usePrefill({
-        name: "Tên Sản Phẩm",
-        images: ["https://tse1.mm.bing.net/th/id/OIP.CFG1RgZ9gTRtNgk_wWxG8QHaEO?rs=1&pid=ImgDetMain&o=7&rm=3"],
-        category: ["1"],
-        brand: ["1"],
-        price: 100000,
-        description: "Mô tả sản phẩm",
-    });
+    const fetchDataProducts = async (id: string) => {
+        // Lấy thông tin kho hàng
+        const resOption = await ProductService.getListProduct("/api/Product/admin");
+        const options: Option[] = resOption.result.items.map((item: any) => ({
+          value: item.id,
+          label: item.productName,
+        }));
+        setOptionSelectProduct(options);
+    }
+
+    const fetchDataSuppliers = async (id: string) => {
+        const resOption = await SupplierService.getListSupplier("/api/Supplier/Admin");
+        const options: Option[] = resOption.result.items.map((item: any) => ({
+          value: item.id,
+          label: item.supplierName,
+        }));
+        setOptionSelectSupplier(options);
+    }
+
+    // const fetchDataWarehouse = async (id: string) => {
+    //     const res = await WarehouseService.infoWarehouse(id);
+    //     if (res.success) {
+    //         const infoWarehouse: InfoWarehouse = {
+    //             IdProduct: [res.result.product.id],
+    //             IdSupplier: [res.result.product.supplierId],
+    //             Price: res.result.price,
+    //             Quantity: res.result.quantity,
+    //         };
+    //         renderData(infoWarehouse, setValueRef.current);
+    //     }else {
+    //         openNotificationRef.current({
+    //             message: "Lấy thông tin sản phẩm trong kho lỗi",
+    //             description: "Không lấy được thông tin sản phẩm trong kho",
+    //             placement: "top",
+    //             duration: 3,
+    //             icon: <FaRegSmileBeam style={{ color: "red" }} />,
+    //             style: { borderLeft: "5px solid red" },
+    //         });
+    //     }
+    // }
 
     const handleSubmit = (data: Record<string, any> | FormData) => {
         const newErrors: { name: string; message: string }[] = [];
@@ -61,7 +112,6 @@ export default function EditForm() {
     return (
         <Form onSubmit={handleSubmit} mode="multipart">
             <SelectForm className="w-full" label="Sản phẩm" name="product" placeholder="Chọn sản phẩm" options={[{ value: '1', label: 'Sản phẩm 1' }, { value: '2', label: 'Sản phẩm 2' }]}  />
-            <SelectForm className="w-full" label="Thương hiệu" name="brand" placeholder="Chọn thương hiệu" options={[{ value: '1', label: 'Brand 1' }, { value: '2', label: 'Brand 2' }]} />
             <DatePickerForm
                 id="publishDate"
                 name="publishDate"
