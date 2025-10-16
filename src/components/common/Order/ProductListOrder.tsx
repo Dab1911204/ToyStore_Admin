@@ -42,7 +42,7 @@ export const ProductListOrder = () => {
   return (
     <>
       {loading && (
-        <Loading  />
+        <Loading />
       )}
       <div className="grid grid-cols-3 gap-3 justify-items-center">
         {!loading && tableData.length > 0 &&
@@ -54,9 +54,11 @@ export const ProductListOrder = () => {
           <NoData title="Không có dữ liệu" />
         )}
       </div>
-      <div className="w-full flex justify-center mt-4 mb-4">
-        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={onPageChange} />
-      </div>
+      {Array.isArray(tableData) && tableData.length > 0 && (
+        <div className="w-full flex justify-center mt-4 mb-4">
+          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={onPageChange} />
+        </div>
+      )}
     </>
   )
 };

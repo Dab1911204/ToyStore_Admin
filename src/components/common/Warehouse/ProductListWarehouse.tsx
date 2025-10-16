@@ -6,15 +6,17 @@ import { ProductItemWarehouse } from "./ProductItemWarehouse";
 import { ProductType } from "@/schemaValidations/product.schema";
 import { ProductService } from "@/services/productService";
 import { useTableContext } from "@/context/TableContext";
+import { Loading } from "../Loading";
+import { NoData } from "../NoData";
 
 export const ProductListWarehouse = () => {
-    const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
-    const [tableData, setTableData] = useState<ProductType[]>([]);
-    const [loading, setLoading] = useState(true); // trạng thái đang load
-    const { urlApi, setParam } = useTableContext();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [tableData, setTableData] = useState<ProductType[]>([]);
+  const [loading, setLoading] = useState(true); // trạng thái đang load
+  const { urlApi, setParam } = useTableContext();
 
-    const onPageChange = async (page: number) => {
+  const onPageChange = async (page: number) => {
     setCurrentPage(page);
     setParam("PageNumber", page);
   };
@@ -42,24 +44,24 @@ export const ProductListWarehouse = () => {
 
   return (
     <>
+      {loading && (
+        <Loading />
+      )}
       <div className="grid grid-cols-3 gap-3 justify-items-center">
-        {tableData.length > 0 ? (
-          tableData.map((item) => (
-            <ProductItemWarehouse key={item.id} item={item} />
+        {!loading && tableData.length > 0 &&
+          tableData.map((item, index) => (
+            <ProductItemWarehouse key={index} item={item} />
           ))
-        ) : (
-          <>
-            <p>Vui lòng chọn sản phẩm</p>
-          </>
+        }
+        {!loading && tableData.length === 0 && (
+          <NoData title="Không có dữ liệu" />
         )}
       </div>
-      <div className="w-full flex justify-center mt-4 mb-4">
-        <Pagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  onPageChange={onPageChange}
-                />
-      </div>
+      {Array.isArray(tableData) && tableData.length > 0 && (
+        <div className="w-full flex justify-center mt-4 mb-4">
+          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={onPageChange} />
+        </div>
+      )}
     </>
   )
 };
