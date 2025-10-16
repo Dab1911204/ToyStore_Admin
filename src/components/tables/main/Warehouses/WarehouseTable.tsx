@@ -10,20 +10,19 @@ import { useTableContext } from "@/context/TableContext";
 import Pagination from "../../Pagination";
 import { NoData } from "@/components/common/NoData";
 import { WarehouseService } from "@/services/warehouseService";
-import { WarehouseType } from "@/schemaValidations/warehouse.schema";
+import { WarehouseItemType } from "@/schemaValidations/warehouse.schema";
 import { Loading } from "@/components/common/Loading";
 import { useModal } from "@/hooks/useModal";
-import ModalConfirm from "@/components/example/ModalExample/ModalConfirm";
 import { Modal } from "@/components/ui/modal";
 
-const title = ["STT", 'Tên sản phẩm', "Tên nhà cung cấp", "Giá nhập", "Số lượng", "Tổng giá", "Trạng thái", "Người tạo", "Người sửa", "Hành động"]
+const title = ["STT", "Tổng tiền nhập", "Ngày nhập", "Người nhập", "Hành động"]
 
 // Define the table data using the interface
 
 export default function WarehouseTable() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [tableData, setTableData] = useState<WarehouseType[]>([]);
+  const [tableData, setTableData] = useState<WarehouseItemType[]>([]);
   const [loading, setLoading] = useState(true);
   const { urlApi, setParam } = useTableContext();
 
@@ -38,6 +37,7 @@ export default function WarehouseTable() {
   const handleOpenModal = (type: "delete" | "detail", id?: string) => {
     setModalType(type);
     if (id) setSelectedId(id);
+    console.log(selectedId);
     openModal();
   };
   const fetchDataTable = async (urlApi: string) => {
@@ -45,6 +45,7 @@ export default function WarehouseTable() {
       setTableData([]);
       setLoading(true);
       const res = await WarehouseService.getListWarehouse(urlApi);
+      console.log(res);
       setTableData(res.result.items);
       setTotalPages(res.result.totalPages);
       setCurrentPage(res.result.currentPage);
@@ -97,16 +98,8 @@ export default function WarehouseTable() {
       </div>
       {/* ✅ Modal nằm ngoài table */}
       <Modal isOpen={isOpen} onClose={closeModal}>
-        {modalType === "delete" && selectedId && (
-          <ModalConfirm
-            id={selectedId}
-            title="Xóa"
-            description="sản phẩm"
-            onHandle={WarehouseService.deleteWarehouse}
-            closeModal={closeModal}
-            loadData={fetchDataTable}
-            urlApi={urlApi}
-          />
+        {modalType === "delete" && (
+          <></>
         )}
       </Modal>
     </>

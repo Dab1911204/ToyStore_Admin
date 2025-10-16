@@ -28,7 +28,7 @@ const filter: { label: string; value: string }[]= [
 export default function WarehousePage() {
   return (
     <div>
-      <TableContextProvider initialUrl="api/Warehouse/Admin?PageSize=15">
+      <TableContextProvider initialUrl="api/Warehouse?PageSize=15">
       <PageBreadcrumb pageTitle="Quản lý kho hàng" itemSearch={true}/>
       <div className="space-y-6">
         <ComponentCard title="Danh sách sản phẩm" filter={filter} isDelete={false} linkBtn="warehouses" titleBtn="Sản Phẩm" isAdd={true}>

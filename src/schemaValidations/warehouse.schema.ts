@@ -1,76 +1,60 @@
 import { z } from "zod";
 
-// Schema cho sản phẩm trong phiếu nhập kho
-export const WarehouseProductSchema = z.object({
-  id: z.string().uuid(),
-  name: z.string(),
-  price: z.number().nonnegative(),
-  promotion: z
-    .object({
-      title: z.string(),
-      discountPercent: z.number().nonnegative(),
-      endDate: z.string().datetime(),
-    })
-    .nullable()
-    .optional(),
-  discountedPrice: z.number().nonnegative(),
-});
-
-// Schema cho 1 phiếu nhập kho (warehouse item)
-export const WarehouseSchema = z.object({
-  id: z.string().uuid(),
+/**
+ * Chi tiết 1 dòng trong `details`
+ */
+const WarehouseDetailSchema = z.object({
+  productId: z.string().uuid(),
   productName: z.string(),
-  supplierName: z.string(),
-  dateEntered: z.string().datetime(),
-  quantity: z.number().nonnegative(),
-  price: z.number().nonnegative(),
-  totalPrice: z.number().nonnegative(),
-  status: z.number().int(), // Có thể đổi thành enum nếu bạn có quy ước trạng thái cụ thể
-  product: WarehouseProductSchema,
-  isDeleted: z.boolean(),
+  warehouseId: z.string().uuid(),
+  quantity: z.number().int(),
+  importPrice: z.number(),
+  totalPrice: z.number(),
+  status: z.number().int(),
   createdBy: z.string(),
-  createdOn: z.string().datetime(),
-  updatedBy: z.string(),
-  updatedOn: z.string().datetime(),
-  createdbyStr: z.string(),
-}).strict();
-
-export type WarehouseType = z.infer<typeof WarehouseSchema>;
-
-// Schema cho response có phân trang (danh sách phiếu nhập)
-export const WarehousesResponseSchema = z.object({
-  success: z.boolean(),
-  result: z.object({
-    currentPage: z.number().int(),
-    totalPages: z.number().int(),
-    pageSize: z.number().int(),
-    totalCount: z.number().int(),
-    hasPrevious: z.boolean(),
-    hasNext: z.boolean(),
-    items: z.array(WarehouseSchema),
-    hasFileList: z.boolean().optional(),
-    checkList: z.number().optional(),
-    fileIds: z.array(z.string().uuid()).optional(),
-  }),
-  errors: z.array(z.string()),
+  createdOn: z.string().datetime(),          // ISO datetime (e.g. "2025-10-16T14:17:32.498103Z")
+  updatedBy: z.string().nullable(),
+  updatedOn: z.string().datetime().nullable()
 });
 
-export type WarehousesResType = z.infer<typeof WarehousesResponseSchema>;
-
-// Schema cho response chi tiết 1 phiếu nhập kho
-export const WarehouseResponseSchema = z.object({
-  success: z.boolean(),
-  result: WarehouseSchema,
-  errors: z.array(z.string()),
+/**
+ * 1 item trong mảng items (một bản ghi kho)
+ */
+const WarehouseItemSchema = z.object({
+  id: z.string().uuid(),
+  dateEntered: z.string().datetime(),
+  totalPrice: z.number(),
+  details: z.array(WarehouseDetailSchema)
 });
 
-export type WarehouseResType = z.infer<typeof WarehouseResponseSchema>;
-
-// Schema cho delete/restore (DR)
-export const WarehouseDRResponseSchema = z.object({
-  success: z.boolean(),
-  result: z.boolean(),
-  errors: z.array(z.string()),
+/**
+ * Phần result chính
+ */
+const ResultSchema = z.object({
+  currentPage: z.number().int(),
+  totalPages: z.number().int(),
+  pageSize: z.number().int(),
+  totalCount: z.number().int(),
+  hasPrevious: z.boolean(),
+  hasNext: z.boolean(),
+  items: z.array(WarehouseItemSchema),
+  hasFileList: z.boolean(),
+  checkList: z.number().int(),
+  // sample shows null; nếu thực tế có thể là mảng id thì đổi thành z.array(z.string()).nullable()
+  fileIds: z.array(z.string()).nullable()
 });
 
-export type WarehouseDRResType = z.infer<typeof WarehouseDRResponseSchema>;
+/**
+ * Toàn bộ response
+ */
+export const WarehouseResSchema = z.object({
+  success: z.boolean(),
+  result: ResultSchema,
+  errors: z.array(z.unknown())
+});
+
+/** TypeScript types inferred */
+export type WarehouseDetailType = z.infer<typeof WarehouseDetailSchema>;
+export type WarehouseItemType = z.infer<typeof WarehouseItemSchema>;
+export type WarehouseType = z.infer<typeof ResultSchema>;
+export type WarehouseResType = z.infer<typeof WarehouseResSchema>;

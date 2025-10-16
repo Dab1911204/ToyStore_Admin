@@ -1,14 +1,14 @@
 "use client";
+import { useWarehouse } from "@/context/WarehouseContext";
 import { ProductType } from "@/schemaValidations/product.schema";
 import Image from "next/image";
 import { useState } from "react";
 
 export const ProductItemWarehouse = ({ item }: { item: ProductType }) => {
   const [quantity, setQuantity] = useState(1);
-  const [price, setPrice] = useState<number>(0);
+  const [priceImport, setPriceImport] = useState<number>();
   const inStock = true;
-
-  const handleIncrease = () => setQuantity(quantity + 1);
+  const { addToWarehouse } = useWarehouse();
 
   const handleChangeQuantity = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = Number(e.target.value);
@@ -17,19 +17,29 @@ export const ProductItemWarehouse = ({ item }: { item: ProductType }) => {
 
   const handleChangePrice = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = Number(e.target.value);
-    if (val >= 0) setPrice(val);
+    if (val >= 0) setPriceImport(val);
   };
 
+
+  // ✅ Thêm vào giỏ hàng
   const handleAddToCart = () => {
-    alert(`Đã thêm ${quantity} sản phẩm, giá nhập ${price.toLocaleString()}đ`);
+    if (priceImport && priceImport > 0 && quantity > 0)
+      // ✅ Thêm vào giỏ hàng
+    {
+      addToWarehouse(item, quantity, priceImport);
+      setQuantity(1);
+    } else {
+      alert("Vui lòng nhập số lượng và giá nhập hợp lệ!");
+    }
   };
+
 
   return (
     <div className="w-44 rounded-xl shadow-md bg-white dark:bg-gray-800 overflow-hidden flex flex-col transition-transform hover:scale-[1.02] duration-200">
       {/* Ảnh sản phẩm */}
       <div className="relative h-40">
         <Image
-          src="/images/grid-image/image-03.png"
+          src={item.image?.[0] ? item.image?.[0] : "/images/user/owner.jpg"}
           alt="Sản phẩm"
           width={180}
           height={200}
@@ -55,7 +65,7 @@ export const ProductItemWarehouse = ({ item }: { item: ProductType }) => {
             <div className="flex items-center gap-1">
               <input
                 type="number"
-                value={price}
+                value={priceImport}
                 onChange={handleChangePrice}
                 className="w-25 border border-gray-300 rounded-md text-center text-[11px] py-0.5 dark:bg-gray-700 dark:text-white"
               />
@@ -83,11 +93,10 @@ export const ProductItemWarehouse = ({ item }: { item: ProductType }) => {
           <button
             onClick={handleAddToCart}
             disabled={!inStock}
-            className={`text-[11px] px-2 py-1 rounded-md ${
-              inStock
-                ? "bg-blue-500 hover:bg-blue-600 text-white"
-                : "bg-gray-400 text-gray-200 cursor-not-allowed"
-            }`}
+            className={`text-[11px] px-2 py-1 rounded-md ${inStock
+              ? "bg-blue-500 hover:bg-blue-600 text-white"
+              : "bg-gray-400 text-gray-200 cursor-not-allowed"
+              }`}
           >
             🛒 Thêm
           </button>
