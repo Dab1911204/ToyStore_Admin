@@ -83,13 +83,14 @@ interface SelectFieldProps {
   name: string;
   label?: string;
   size?:string;
-  options: { value: string; label: string }[];
+  options: { value: string | number; label: string }[];
   mode?: "multiple" | "tags" | undefined;
   placeholder?: string;
   disabled?: boolean;
   className?: string;
   hint?: string;
   required?: boolean;
+  isModel?:boolean;
 }
 
 interface RadioOption {
@@ -123,7 +124,7 @@ interface BaseSelectProps {
   name: string;
   label?: string;
   size?:string;
-  options: { label: string; value: string }[];
+  options: { label: string ; value: string | number }[];
   value?: string | string[] | undefined;
   mode?: "multiple" | "tags";
   placeholder?: string;
@@ -135,6 +136,7 @@ interface BaseSelectProps {
   onBlur?: () => void;
   onSearch?: (val: string) => void;
   searchValue?: string;
+  isModel?: boolean;
 }
 
 // Cho từng option trong CheckboxGroup

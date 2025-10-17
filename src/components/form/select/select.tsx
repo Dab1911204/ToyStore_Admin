@@ -23,13 +23,12 @@ const BaseSelect: React.FC<BaseSelectProps> = ({
   onSearch,
   searchValue = "",
   size = "md", // default
+  isModel = false, // ✅ nếu true -> trong modal
 }) => {
-  // Filter Option theo label search
   const filteredOptions = options.filter((opt) =>
     opt.label.toLowerCase().includes(searchValue.toLowerCase())
   );
 
-  // Map size custom sang AntD + Tailwind
   const sizeMap: Record<string, { antSize: "small" | "middle" | "large"; cls: string }> = {
     xxs: { antSize: "small", cls: "h-6 text-xs px-2 py-0.5" },
     xs: { antSize: "small", cls: "h-8 text-xs px-2 py-1" },
@@ -54,11 +53,18 @@ const BaseSelect: React.FC<BaseSelectProps> = ({
         placeholder={placeholder}
         disabled={disabled}
         onSearch={onSearch}
-        filterOption={false} // tắt filter mặc định
+        filterOption={false}
         className={`rounded-md border ${cls} ${
           error ? "border-red-500" : "border-gray-300"
         }`}
         size={antSize}
+        // 👇 chỉ thêm khi isModel = true
+        {...(isModel
+          ? {
+              styles: { popup: { root: { zIndex: 99999 } } },
+              getPopupContainer: () => document.body,
+            }
+          : {})}
         popupRender={(menu) =>
           mode === "multiple" && options.length > 0 ? (
             <div className="rounded-md shadow-lg">

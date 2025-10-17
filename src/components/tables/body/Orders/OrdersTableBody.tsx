@@ -11,14 +11,27 @@ import { FaWrench } from "react-icons/fa";
 import Badge from "@/components/ui/badge/Badge";
 import { FaEye } from "react-icons/fa6";
 import { OrderType } from "@/schemaValidations/order.schema";
+import { formatDateTime,formatCurrency } from "@/utils/format";
 
+type BadgeColor =
+  | "primary"
+  | "success"
+  | "error"
+  | "warning"
+  | "info"
+  | "light"
+  | "dark";
 
 interface NewsTableBodyProps {
   tableData: OrderType[];
-  onOpenModal: (type: "update" | "detail", id?: string) => void;
+  onOpenModalUpdate: (type: "update", id?: string, status?: number) => void;
+  onOpenModalDetail: (type: "detail", detailOrder: OrderType) => void;
 }
 
-const OrdersTableBody: React.FC<NewsTableBodyProps> = ({ tableData, onOpenModal}: NewsTableBodyProps) => {
+const OrdersTableBody: React.FC<NewsTableBodyProps> = ({ tableData, onOpenModalUpdate, onOpenModalDetail }: NewsTableBodyProps) => {
+
+  const status = [ "Chờ xác nhận","Đã xác nhận","Đang giao","Hoàn thành","Đã hủy"]
+  const statusColor:BadgeColor[] = ["warning","info","primary","success","error"]
 
   return (
     <>
@@ -29,7 +42,7 @@ const OrdersTableBody: React.FC<NewsTableBodyProps> = ({ tableData, onOpenModal}
               {index+ 1}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-              Email
+              {order.user.fullName}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
               {order.phone}
@@ -38,24 +51,27 @@ const OrdersTableBody: React.FC<NewsTableBodyProps> = ({ tableData, onOpenModal}
               {order.address}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-              {order.orderDate}
+              {formatDateTime(order.orderDate)}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-              {order.totalPrice}
+              {formatCurrency(order.totalPrice)}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-              Nguyễn Văn B
+              {order.createdBy}
+            </TableCell>
+            <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+              {order.updatedBy || "Chưa cập nhật"}
             </TableCell>
             {/* Các cột khác */}
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-              <Badge color="info" size="sm">Chờ xác nhận</Badge>
+              <Badge color={statusColor[order.orderStatus]} size="sm">{status[order.orderStatus]}</Badge>
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
               <div className="flex flex-col gap-2">
                 <Button
                   className="w-20"
                   size="xxs"
-                  onClick={() => onOpenModal("update", order.id)}
+                  onClick={() => onOpenModalUpdate("update", order.id, order.orderStatus)}
                   variant="warning"
                   startIcon={<FaWrench />}
                 >
@@ -64,7 +80,7 @@ const OrdersTableBody: React.FC<NewsTableBodyProps> = ({ tableData, onOpenModal}
                 <Button
                   className="w-20"
                   size="xxs"
-                  onClick={() => onOpenModal("detail", order.id)}
+                  onClick={() => onOpenModalDetail("detail", order)}
                   variant="info"
                   startIcon={<FaEye />}
                 >

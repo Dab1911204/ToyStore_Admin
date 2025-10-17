@@ -23,11 +23,19 @@ export const OrderDetailSchema = z.object({
 
 export const OrderItemSchema = z.object({
   id: z.string(),
+  user: z.object({
+    id: z.string(),
+    fullName: z.string(),
+  }),
   orderDate: z.string(), // ISO date string
   phone: z.string(),
   address: z.string(),
   totalPrice: z.number(),
   orderStatus: z.number(), // 0,1,2,3,4,...
+  createdBy: z.string(),
+  createdOn: z.string(), // ISO date string
+  updatedBy: z.string().nullable(),
+  updatedOn: z.string().nullable(),
   orderDetails: z.array(OrderDetailSchema),
 });
 export type OrderType = z.infer<typeof OrderItemSchema>;
@@ -49,6 +57,12 @@ export const OrdersResponseSchema = z.object({
   result: ResultSchema,
   errors: z.array(z.unknown()), // mảng lỗi có thể trống
 });
+export const OrderResponseSchema = z.object({
+  success: z.boolean(),
+  result: OrderItemSchema,
+  errors: z.array(z.unknown()), // mảng lỗi có thể trống
+});
 
 // ✅ Xuất type tương ứng (nếu bạn dùng TypeScript)
 export type OrdersResType = z.infer<typeof OrdersResponseSchema>;
+export type OrderResType = z.infer<typeof OrderResponseSchema>;
