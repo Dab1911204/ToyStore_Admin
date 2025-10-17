@@ -15,6 +15,7 @@ export default function SelectForm({
   className = "",
   hint,
   required = true,
+  isModel = false,
 }: SelectFieldProps) {
   const { values, setValue, errors, setErrors, clearError, submitted } =
     useFormContext();
@@ -30,7 +31,7 @@ export default function SelectForm({
 
   const currentValue = values[name] ?? (mode === "multiple" ? [] : undefined);
 
-  const handleChange = (val: string[] | string) => {
+  const handleChange = (val: string | number | (string | number)[]) => {
     setValue(name, val);
 
     // ✅ chỉ validate nếu required = true
@@ -80,6 +81,7 @@ export default function SelectForm({
       onSearch={setSearchValue}
       searchValue={searchValue}
       className={className}
+      isModel={isModel}
     />
   );
 }

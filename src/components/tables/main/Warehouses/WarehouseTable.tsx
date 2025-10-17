@@ -14,8 +14,10 @@ import { WarehouseItemType } from "@/schemaValidations/warehouse.schema";
 import { Loading } from "@/components/common/Loading";
 import { useModal } from "@/hooks/useModal";
 import { Modal } from "@/components/ui/modal";
+import { ModalDetailWarehouse } from "@/components/example/ModalExample/ModalDetailWarehouse";
+import ModalConfirm from "@/components/example/ModalExample/ModalConfirm";
 
-const title = ["STT", "Tổng tiền nhập", "Ngày nhập", "Người nhập", "Hành động"]
+const title = ["STT", "Tổng tiền nhập", "Ngày nhập", "Người nhập", "Người sửa", "Hành động"]
 
 // Define the table data using the interface
 
@@ -30,14 +32,15 @@ export default function WarehouseTable() {
   const { isOpen, openModal, closeModal } = useModal();
   const [modalType, setModalType] = useState<"delete" | "detail" | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [itemWarehouse, setItemWarehouse] = useState<WarehouseItemType | null>(null);
   const onPageChange = async (page: number) => {
     setCurrentPage(page);
     setParam("PageNumber", page);
   };
-  const handleOpenModal = (type: "delete" | "detail", id?: string) => {
+  const handleOpenModal = (type: "delete" | "detail", id?: string, itemWarehouse?: WarehouseItemType) => {
     setModalType(type);
     if (id) setSelectedId(id);
-    console.log(selectedId);
+    if (itemWarehouse) setItemWarehouse(itemWarehouse);
     openModal();
   };
   const fetchDataTable = async (urlApi: string) => {
@@ -98,8 +101,23 @@ export default function WarehouseTable() {
       </div>
       {/* ✅ Modal nằm ngoài table */}
       <Modal isOpen={isOpen} onClose={closeModal}>
-        {modalType === "delete" && (
-          <></>
+        {modalType === "delete" && selectedId && (
+          <>
+            <ModalConfirm
+              id={selectedId}
+              title="Xóa"
+              description="Kho hàng"
+              onHandle={WarehouseService.deleteWarehouse}
+              closeModal={closeModal}
+              loadData={fetchDataTable}
+              urlApi={urlApi}
+            />
+          </>
+        )}
+        {modalType === "detail" && selectedId && itemWarehouse && (
+          <>
+            <ModalDetailWarehouse warehouse={itemWarehouse} />
+          </>
         )}
       </Modal>
     </>

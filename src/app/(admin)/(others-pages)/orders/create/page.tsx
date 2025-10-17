@@ -6,6 +6,7 @@ import { Metadata } from "next";
 import React from "react";
 import { TableContextProvider } from "@/context/TableContext";
 import { OrderProvider } from "@/context/OrderContext";
+import { FormProvider } from "@/context/FormContext";
 
 export const metadata: Metadata = {
   title: "Thêm đơn hàng"
@@ -47,7 +48,9 @@ export default function CreateOrdersPage() {
               </div>
             </ComponentCard>
             <ComponentCard title="Toys-World" isOrder={true} isAdd={false}>
-              <InfoOrder />
+              <FormProvider >
+                <InfoOrder />
+              </FormProvider>
             </ComponentCard>
           </div>
         </OrderProvider>

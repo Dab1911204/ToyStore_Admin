@@ -4,8 +4,14 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { Dropdown } from "../ui/dropdown/Dropdown";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
+import { InfoUserType } from "@/schemaValidations/user.schema";
 
-export default function UserDropdown() {
+type NotificationDropdownProps = {
+  userInfo: InfoUserType | null;
+};
+
+
+export default function UserDropdown({ userInfo }: NotificationDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
 
 function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
@@ -31,7 +37,7 @@ function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
           />
         </span>
 
-        <span className="block mr-1 font-medium text-theme-sm">Musharof</span>
+        <span className="block mr-1 font-medium text-theme-sm">{userInfo?.fullName ? userInfo?.fullName : "Musharof Chowdhury"}</span>
 
         <svg
           className={`stroke-gray-500 dark:stroke-gray-400 transition-transform duration-200 ${
@@ -60,10 +66,10 @@ function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
       >
         <div>
           <span className="block font-medium text-gray-700 text-theme-sm dark:text-gray-400">
-            Musharof Chowdhury
+            {userInfo?.fullName ? userInfo?.fullName : "không có dữ liệu"}
           </span>
           <span className="mt-0.5 block text-theme-xs text-gray-500 dark:text-gray-400">
-            randomuser@pimjo.com
+            {userInfo?.email ? userInfo?.email : "không có dữ liệu"}
           </span>
         </div>
 

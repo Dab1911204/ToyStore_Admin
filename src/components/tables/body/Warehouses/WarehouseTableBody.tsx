@@ -7,21 +7,26 @@ import {
 } from "../../../ui/table";
 import Button from "@/components/ui/button/Button";
 import Link from "next/link";
-import { FaWrench } from "react-icons/fa";
+import { FaEye, FaWrench } from "react-icons/fa";
 import { FaDeleteLeft } from "react-icons/fa6";
 import { WarehouseItemType } from "@/schemaValidations/warehouse.schema";
 import { formatCurrency, formatDateTime } from "@/utils/format";
 
 interface WarehousesTableBodyProps {
   tableData: WarehouseItemType[];
-  onOpenModal: (type: "delete" | "detail", id?: string) => void;
+  onOpenModal: (type: "delete" | "detail", id?: string, itemWarehouse?: WarehouseItemType) => void;
 }
 
 const WarehouseTableBody: React.FC<WarehousesTableBodyProps> = ({
   tableData,
   onOpenModal,
-
 }) => {
+  tableData.map(warehouses => {
+    warehouses.totalPrice = warehouses.details.reduce(
+      (sum,item) => sum + item.importPrice * item.quantity,
+      0
+    )
+  })
   return (
     <>
       <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
@@ -37,7 +42,10 @@ const WarehouseTableBody: React.FC<WarehousesTableBodyProps> = ({
               {formatDateTime(warehouses.dateEntered)}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-              nguyễn văn a
+              {warehouses.createdBy}
+            </TableCell>
+            <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
+              {warehouses.updatedBy}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
               <div className="flex flex-col gap-2">
@@ -46,11 +54,9 @@ const WarehouseTableBody: React.FC<WarehousesTableBodyProps> = ({
                     Sửa
                   </Button>
                 </Link>
-                <Link href={"/warehouses/edit/" + warehouses.id}>
-                  <Button className="w-20" size="xxs" variant="success" startIcon={<FaWrench />}>
-                    Chi tiết
-                  </Button>
-                </Link>
+                <Button onClick={() => onOpenModal("detail", warehouses.id, warehouses)}className="w-20" size="xxs" variant="info" startIcon={<FaEye />}>
+                  Chi tiết
+                </Button>
                 <Button onClick={() => onOpenModal("delete", warehouses.id)} className="w-20" size="xxs" variant="danger" startIcon={<FaDeleteLeft />}>
                   Xóa
                 </Button>

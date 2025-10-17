@@ -16,6 +16,8 @@ const PageBreadcrumb: React.FC<BreadcrumbProps> = ({ pageTitle,pageParent="",url
     const searchValue = inputRef.current?.value;
     if (searchValue && itemSearch) {
       setParam("Search", searchValue);
+    }else{
+      setParam("Search", "");
     }
   };
   const inputRef = useRef<HTMLInputElement>(null);
@@ -28,7 +30,7 @@ const PageBreadcrumb: React.FC<BreadcrumbProps> = ({ pageTitle,pageParent="",url
               className="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400"
               href="/"
             >
-              Home
+              Trang chủ
               <svg
                 className="stroke-current"
                 width="17"

@@ -48,6 +48,14 @@ export default function InputForm({
           { name, message: "Vui lòng nhập địa chỉ email hợp lệ" },
         ]);
       } else clearError(name);
+    } else if (type === "phone"){
+      const phoneRegex = /^\d{10}$/;
+      if (!phoneRegex.test(currentValue)) {
+        setErrors((prev) => [
+          ...prev,
+          { name, message: "Vui lòng nhập số điện thoại hợp lệ" },
+        ]);
+      } else clearError(name);
     } else if (type === "number") {
       if (isNaN(Number(currentValue))) {
         setErrors((prev) => [

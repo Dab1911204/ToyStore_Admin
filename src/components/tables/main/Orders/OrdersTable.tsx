@@ -14,8 +14,11 @@ import { NoData } from "@/components/common/NoData";
 import Pagination from "../../Pagination";
 import { Modal } from "@/components/ui/modal";
 import { OrderType } from "@/schemaValidations/order.schema";
+import ModalUpdateOrder from "@/components/example/ModalExample/ModalUpdateOrder";
+import { FormProvider } from "@/context/FormContext";
+import { OrderDetailModal } from "@/components/example/ModalExample/ModalDetailOrder";
 
-const title = ["STT", 'Khách hàng', 'Số điện thoại', "Địa chỉ", "Thời gian đặt", "Tổng tiền", "Người cập nhật", "Trạng thái", "Hàng động"]
+const title = ["STT", 'Khách hàng', 'Số điện thoại', "Địa chỉ", "Thời gian đặt", "Tổng tiền", "Người tạo","Người cập nhật", "Trạng thái", "Hàng động"]
 
 
 export default function OrdersTable() {
@@ -29,6 +32,9 @@ export default function OrdersTable() {
   const { isOpen, openModal, closeModal } = useModal();
   const [modalType, setModalType] = useState<"update" | "detail" | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [status, setStatus] = useState<number | null>(null);
+  const [itemDetail, setItemDetail] = useState<OrderType | null>(null);
+
 
   // đổi trang
   const onPageChange = (page: number) => {
@@ -37,11 +43,18 @@ export default function OrdersTable() {
   };
 
   // mở modal
-  const handleOpenModal = (type: "update" | "detail", id?: string) => {
+  const handleOpenModalUpdate = (type: "update", id?: string , status?: number) => {
     setModalType(type);
     if (id) setSelectedId(id);
+    if (status) setStatus(status);
     openModal();
   };
+  const handleOpenModalDetail = (type: "detail", detailOrder: OrderType) => {
+    setModalType(type);
+    if (detailOrder) setItemDetail(detailOrder);
+    openModal();
+  };
+
 
   // load data
   const fetchDataTable = async (urlApi: string) => {
@@ -74,7 +87,7 @@ export default function OrdersTable() {
             {/* Table Body */}
             {loading && <Loading colSpan={title.length} />}
             {!loading && tableData.length > 0 && (
-              <OrdersTableBody tableData={tableData} onOpenModal={handleOpenModal}/>
+              <OrdersTableBody tableData={tableData} onOpenModalUpdate={handleOpenModalUpdate} onOpenModalDetail={handleOpenModalDetail} />
             )}
             {!loading && tableData.length === 0 && (
               <NoData colSpan={title.length} title="Không có dữ liệu" />
@@ -95,11 +108,22 @@ export default function OrdersTable() {
       {/* ✅ Modal */}
       <Modal isOpen={isOpen} onClose={closeModal}>
         {modalType === "update" && selectedId && (
-          <></>
-        )}
-        {modalType === "detail" && selectedId && (
           <>
-            
+            <FormProvider >
+              <ModalUpdateOrder
+                status={status}
+                id={selectedId}
+                urlApi={urlApi}
+                loadData={fetchDataTable}
+                title="Cập nhật"
+                description="đơn hàng"
+                closeModal={closeModal} />
+            </FormProvider>
+          </>
+        )}
+        {modalType === "detail" && itemDetail && (
+          <>
+            <OrderDetailModal order={itemDetail} />
           </>
         )}
       </Modal>
