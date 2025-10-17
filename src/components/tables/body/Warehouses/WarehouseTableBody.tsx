@@ -7,7 +7,7 @@ import {
 } from "../../../ui/table";
 import Button from "@/components/ui/button/Button";
 import Link from "next/link";
-import { FaWrench } from "react-icons/fa";
+import { FaEye, FaWrench } from "react-icons/fa";
 import { FaDeleteLeft } from "react-icons/fa6";
 import { WarehouseItemType } from "@/schemaValidations/warehouse.schema";
 import { formatCurrency, formatDateTime } from "@/utils/format";
@@ -22,6 +22,12 @@ const WarehouseTableBody: React.FC<WarehousesTableBodyProps> = ({
   onOpenModal,
 
 }) => {
+  tableData.map(warehouses => {
+    warehouses.totalPrice = warehouses.details.reduce(
+      (sum,item) => sum + item.importPrice * item.quantity,
+      0
+    )
+  })
   return (
     <>
       <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
@@ -47,7 +53,7 @@ const WarehouseTableBody: React.FC<WarehousesTableBodyProps> = ({
                   </Button>
                 </Link>
                 <Link href={"/warehouses/edit/" + warehouses.id}>
-                  <Button className="w-20" size="xxs" variant="success" startIcon={<FaWrench />}>
+                  <Button className="w-20" size="xxs" variant="info" startIcon={<FaEye />}>
                     Chi tiết
                   </Button>
                 </Link>

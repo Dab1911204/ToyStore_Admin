@@ -2,6 +2,8 @@
 import NotificationDropdown from "@/components/header/NotificationDropdown";
 import UserDropdown from "@/components/header/UserDropdown";
 import { useSidebar } from "@/context/SidebarContext";
+import { InfoUserType } from "@/schemaValidations/user.schema";
+import { AuthService } from "@/services/authService";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState ,useEffect,useRef} from "react";
@@ -11,11 +13,25 @@ const AppHeader: React.FC = () => {
 
   const { isMobileOpen, toggleSidebar, toggleMobileSidebar } = useSidebar();
 
+  const [userInfo, setUserInfo] = useState<InfoUserType | null>(null)
+
   const handleToggle = () => {
     if (window.innerWidth >= 1024) {
       toggleSidebar();
     } else {
       toggleMobileSidebar();
+    }
+  };
+
+  const getInfoUser = async () => {
+    try {
+      const res = await AuthService.getProfile();
+      console.log(res);
+      if (res.success) {
+        setUserInfo(res.result);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -30,8 +46,9 @@ const AppHeader: React.FC = () => {
         event.preventDefault();
         inputRef.current?.focus();
       }
+    
     };
-
+    getInfoUser();
     document.addEventListener("keydown", handleKeyDown);
 
     return () => {
@@ -130,7 +147,7 @@ const AppHeader: React.FC = () => {
             {/* <!-- Notification Menu Area --> */}
           </div>
           {/* <!-- User Area --> */}
-          <UserDropdown /> 
+          <UserDropdown userInfo={userInfo}/> 
     
         </div>
       </div>

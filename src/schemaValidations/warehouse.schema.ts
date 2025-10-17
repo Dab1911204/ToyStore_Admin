@@ -6,6 +6,7 @@ import { z } from "zod";
 const WarehouseDetailSchema = z.object({
   productId: z.string().uuid(),
   productName: z.string(),
+  supplierName: z.string(),
   warehouseId: z.string().uuid(),
   quantity: z.number().int(),
   importPrice: z.number(),
@@ -24,6 +25,10 @@ const WarehouseItemSchema = z.object({
   id: z.string().uuid(),
   dateEntered: z.string().datetime(),
   totalPrice: z.number(),
+  createdBy: z.string(),
+  createdOn: z.string().datetime(),          // ISO datetime (e.g. "2025-10-16T14:17:32.498103Z")
+  updatedBy: z.string().nullable(),
+  updatedOn: z.string().datetime().nullable(),
   details: z.array(WarehouseDetailSchema)
 });
 
@@ -47,6 +52,11 @@ const ResultSchema = z.object({
 /**
  * Toàn bộ response
  */
+export const WarehouseDetailResSchema = z.object({
+  success: z.boolean(),
+  result: WarehouseItemSchema,
+  errors: z.array(z.unknown())
+});
 export const WarehouseResSchema = z.object({
   success: z.boolean(),
   result: ResultSchema,
@@ -54,7 +64,7 @@ export const WarehouseResSchema = z.object({
 });
 
 /** TypeScript types inferred */
-export type WarehouseDetailType = z.infer<typeof WarehouseDetailSchema>;
+export type WarehouseDetailResType = z.infer<typeof WarehouseDetailResSchema>;
 export type WarehouseItemType = z.infer<typeof WarehouseItemSchema>;
 export type WarehouseType = z.infer<typeof ResultSchema>;
 export type WarehouseResType = z.infer<typeof WarehouseResSchema>;

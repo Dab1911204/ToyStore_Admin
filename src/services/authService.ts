@@ -1,5 +1,6 @@
 import { LoginBodyType, LoginResType } from "@/schemaValidations/auth.schema";
-import {post} from "@/utils/request";
+import { UserResType } from "@/schemaValidations/user.schema";
+import {get, post} from "@/utils/request";
 
 export const AuthService = {
   login: (data: LoginBodyType) =>
@@ -20,5 +21,6 @@ export const AuthService = {
       console.warn("Logout API failed:", err);
       return false;
     }
-  }
+  },
+  getProfile:() => get<UserResType>("/api/Auth/get-profile",{requireAuth:true})
 };

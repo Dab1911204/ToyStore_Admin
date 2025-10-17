@@ -27,4 +27,3 @@ export const LoginRes = z.object({
 
 // Type suy ra từ schema
 export type LoginResType = z.infer<typeof LoginRes>;
-
