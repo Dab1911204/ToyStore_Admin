@@ -132,7 +132,7 @@ interface BaseSelectProps {
   className?: string;
   error?: boolean;
   message?: string;
-  onChange: (val: string | string[]) => void;
+  onChange: (val: string | number | (string | number)[]) => void; // ✅ khớp với value
   onBlur?: () => void;
   onSearch?: (val: string) => void;
   searchValue?: string;
