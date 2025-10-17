@@ -14,9 +14,11 @@ import { NoData } from "@/components/common/NoData";
 import Pagination from "../../Pagination";
 import { WarehouseItemType } from "@/schemaValidations/warehouse.schema";
 import { Modal } from "@/components/ui/modal";
+import { ModalDetailWarehouse } from "@/components/example/ModalExample/ModalDetailWarehouse";
+import ModalConfirm from "@/components/example/ModalExample/ModalConfirm";
 
 
-const title = ["STT", 'Tên sản phẩm', "Tên nhà cung cấp", "Giá nhập", "Số lượng", "Tổng giá", "Trạng thái", "Người xóa", "Hành động"]
+const title = ["STT", "Tổng tiền nhập", "Ngày nhập", "Người nhập", "Người xóa", "Hành động"]
 
 // Define the table data using the interface
 
@@ -29,15 +31,17 @@ export default function WarehouseTableDelete() {
 
   // ✅ quản lý modal ở đây
   const { isOpen, openModal, closeModal } = useModal();
-  const [modalType, setModalType] = useState<"delete" | "detail" | "restore" | null>(null);
+  const [modalType, setModalType] = useState<"restore" | "detail" | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [itemWarehouse, setItemWarehouse] = useState<WarehouseItemType | null>(null);
   const onPageChange = async (page: number) => {
     setCurrentPage(page);
     setParam("PageNumber", page);
   };
-  const handleOpenModal = (type: "delete" | "detail" | "restore", id?: string) => {
+  const handleOpenModal = (type: "restore" | "detail", id?: string, itemWarehouse?: WarehouseItemType) => {
     setModalType(type);
     if (id) setSelectedId(id);
+    if (itemWarehouse) setItemWarehouse(itemWarehouse);
     openModal();
   };
   const fetchDataTable = async (urlApi: string) => {
@@ -93,18 +97,23 @@ export default function WarehouseTableDelete() {
         </div>
       </div>
       <Modal isOpen={isOpen} onClose={closeModal}>
-       
+
         {modalType === "restore" && selectedId && (
           <>
-            {/* <ModalConfirm
+            <ModalConfirm
               id={selectedId}
               title="Khôi phục"
-              description="sản phẩm"
+              description="Kho hàng"
               onHandle={WarehouseService.restoreWarehouse}
               closeModal={closeModal}
               loadData={fetchDataTable}
               urlApi={urlApi}
-            /> */}
+            />
+          </>
+        )}
+        {modalType === "detail" && selectedId && itemWarehouse && (
+          <>
+            <ModalDetailWarehouse warehouse={itemWarehouse} />
           </>
         )}
       </Modal>

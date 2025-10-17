@@ -16,13 +16,19 @@ import { formatCurrency, formatDateTime } from "@/utils/format";
 
 interface WarehousesTableBodyProps {
   tableData: WarehouseItemType[];
-  onOpenModal: (type: "delete" | "detail" | "restore", id?: string) => void;
+  onOpenModal: (type: "detail" | "restore", id?: string, itemWarehouse?: WarehouseItemType) => void;
 }
 
 const WarehouseTableBodyDelete: React.FC<WarehousesTableBodyProps> = ({
   tableData,
   onOpenModal,
 }) => {
+  tableData.map(warehouses => {
+    warehouses.totalPrice = warehouses.details.reduce(
+      (sum, item) => sum + item.importPrice * item.quantity,
+      0
+    )
+  })
   return (
     <>
       <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
@@ -38,11 +44,14 @@ const WarehouseTableBodyDelete: React.FC<WarehousesTableBodyProps> = ({
               {formatDateTime(warehouses.dateEntered)}
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-              nguyễn văn a
+              {warehouses.createdBy}
+            </TableCell>
+            <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
+              Nguyễn Văn A
             </TableCell>
             <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
               <div className="flex flex-col gap-2">
-                <Button onClick={() => onOpenModal("delete", warehouses.id)} className="w-20" size="xxs" variant="info" startIcon={<FaEye />}>
+                <Button onClick={() => onOpenModal("detail", warehouses.id, warehouses)} className="w-20" size="xxs" variant="info" startIcon={<FaEye />}>
                   Chi tiết
                 </Button>
                 <Button onClick={() => onOpenModal("restore", warehouses.id)} className="w-20" size="xxs" variant="warning" startIcon={<RiResetLeftFill />}>
