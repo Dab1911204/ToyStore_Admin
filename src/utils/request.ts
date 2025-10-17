@@ -110,6 +110,7 @@ const request = async <T>(
   // ❗ Nếu là GET hoặc DELETE => bỏ Content-Type
   if (method === "GET" || method === "DELETE") {
     delete (fetchOptions.headers as any)["Content-Type"];
+    delete (fetchOptions as any).body;
   }
   console.log(fetchOptions)
 
