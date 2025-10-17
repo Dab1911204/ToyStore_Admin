@@ -125,7 +125,7 @@ interface BaseSelectProps {
   label?: string;
   size?:string;
   options: { label: string ; value: string | number }[];
-  value?: string | string[] | undefined;
+  value?: string | number | (string | number)[] | undefined;
   mode?: "multiple" | "tags";
   placeholder?: string;
   disabled?: boolean;
