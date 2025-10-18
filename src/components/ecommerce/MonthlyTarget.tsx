@@ -2,54 +2,107 @@
 import { ApexOptions } from "apexcharts";
 import dynamic from "next/dynamic";
 import BaseDatePicker from "../form/date-picker";
+import { useTableContext } from "@/context/TableContext";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { StatisticService } from "@/services/statisticService";
+import { formatCurrency } from "@/utils/format";
 
 const ReactApexChart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
 });
 
 export default function BusinessResult() {
-  const series = [33.5]; // lợi nhuận chiếm 33.5% doanh thu
-const options: ApexOptions = {
-  colors: ["#465FFF"],
-  chart: {
-    fontFamily: "Outfit, sans-serif",
-    type: "radialBar",
-    height: 330,
-    sparkline: { enabled: true },
-  },
-  plotOptions: {
-    radialBar: {
-      startAngle: -85,
-      endAngle: 85,
-      hollow: {
-        size: "80%",
-      },
-      track: {
-        background: "#E4E7EC",
-        strokeWidth: "100%",
-        margin: 5,
-      },
-      dataLabels: {
-        name: { show: false },
-        value: {
-          fontSize: "36px",
-          fontWeight: "600",
-          offsetY: -40,
-          color: "#1D2939",
-          formatter: (val) => val.toFixed(1) + "%",
+  const [value, setValue] = useState<any>();
+  const { urlApi, setParam } = useTableContext();
+  const setParamRef = useRef(setParam);
+
+  const today = new Date();
+  const localDate =
+    today.getFullYear() +
+    "-" +
+    String(today.getMonth() + 1).padStart(2, "0") +
+    "-" +
+    String(today.getDate()).padStart(2, "0");
+
+  const getValue = useCallback(async (url: string) => {
+    try {
+      const res = await StatisticService.statistic(url);
+      if (res) {
+        setValue(res);
+      }
+    } catch (error) {
+      console.error("Error fetching statistic:", error);
+    }
+  }, []);
+
+  const handleChangeDatePicker = (value: string | string[]) => {
+    setParam("day", new Date(value as string).toISOString());
+  };
+
+  useEffect(() => {
+    if (localDate) {
+      setParamRef.current("day", new Date(localDate as string).toISOString());
+    }
+  }, [localDate]);
+
+  useEffect(() => {
+    if (urlApi) {
+      getValue(urlApi);
+    }
+  }, [urlApi, getValue]);
+
+  // Tính toán dữ liệu động
+  const doanhThu = value?.tongDoanhThu || 0;
+  const chiPhi = value?.tongChiPhi || 0;
+  const loiNhuan = value?.loiNhuan || 0;
+
+  // Tính tỷ suất lợi nhuận (%)
+  const tySuat =
+    doanhThu > 0 ? ((loiNhuan / doanhThu) * 100).toFixed(1) : "0.0";
+
+  const series = [Number(tySuat)];
+
+  const options: ApexOptions = {
+    colors: ["#465FFF"],
+    chart: {
+      fontFamily: "Outfit, sans-serif",
+      type: "radialBar",
+      height: 330,
+      sparkline: { enabled: true },
+    },
+    plotOptions: {
+      radialBar: {
+        startAngle: -85,
+        endAngle: 85,
+        hollow: {
+          size: "80%",
+        },
+        track: {
+          background: "#E4E7EC",
+          strokeWidth: "100%",
+          margin: 5,
+        },
+        dataLabels: {
+          name: { show: false },
+          value: {
+            fontSize: "36px",
+            fontWeight: "600",
+            offsetY: -40,
+            color: "#1D2939",
+            formatter: (val) => val.toFixed(1) + "%",
+          },
         },
       },
     },
-  },
-  fill: {
-    type: "solid",
-    colors: ["#465FFF"],
-  },
-  stroke: {
-    lineCap: "round",
-  },
-  labels: ["Tỷ suất lợi nhuận"],
-};
+    fill: {
+      type: "solid",
+      colors: ["#465FFF"],
+    },
+    stroke: {
+      lineCap: "round",
+    },
+    labels: ["Tỷ suất lợi nhuận"],
+  };
 
   return (
     <div className="rounded-2xl border border-gray-200 bg-gray-100 dark:border-gray-800 dark:bg-white/[0.03]">
@@ -61,11 +114,17 @@ const options: ApexOptions = {
               Kết quả kinh doanh
             </h3>
             <p className="mt-1 font-normal text-gray-500 text-theme-sm dark:text-gray-400">
-              Tổng hợp thu nhập, chi tiêu và lợi nhuận hôm này
+              Tổng hợp thu nhập, chi tiêu và lợi nhuận hôm nay
             </p>
           </div>
           <div className="relative inline-block">
-            <BaseDatePicker id="date" name="date" placeholder="Chọn ngày"/>
+            <BaseDatePicker
+              onChange={handleChangeDatePicker}
+              id="date"
+              name="date"
+              placeholder="Chọn ngày"
+              value={localDate}
+            />
           </div>
         </div>
 
@@ -79,17 +138,14 @@ const options: ApexOptions = {
               height={330}
             />
           </div>
-
-          <span className="absolute left-1/2 top-full -translate-x-1/2 -translate-y-[95%] rounded-full bg-success-50 px-3 py-1 text-xs font-medium text-success-600 dark:bg-success-500/15 dark:text-success-500">
-            +12%
-          </span>
         </div>
 
         {/* Summary */}
         <p className="mx-auto mt-10 w-full max-w-[380px] text-center text-sm text-gray-500 sm:text-base">
-          Tổng thu nhập tháng này đạt <strong>24.500.000 ₫</strong>, trong khi chi tiêu ở mức 
-          <strong>16.300.000 ₫</strong>. Sau khi trừ chi phí, lợi nhuận ước tính đạt 
-          <strong>8.200.000 ₫</strong>, phản ánh hiệu quả kinh doanh ổn định.
+          Tổng thu nhập đạt{" "}
+          <strong className="text-indigo-600 dark:text-indigo-400 sm:text-md">{formatCurrency(doanhThu)}</strong>, trong khi chi tiêu ở mức{" "}
+          <strong className="text-rose-600 dark:text-rose-400 sm:text-md">{formatCurrency(chiPhi)}</strong>. Trừ chi phí, lợi
+          nhuận ước tính đạt <strong className="text-success-600 dark:text-success-400 sm:text-md">{formatCurrency(loiNhuan)}</strong>
         </p>
       </div>
 
@@ -100,22 +156,8 @@ const options: ApexOptions = {
           <p className="mb-1 text-center text-gray-500 text-theme-xs dark:text-gray-400 sm:text-sm">
             Thu nhập
           </p>
-          <p className="flex items-center justify-center gap-1 text-base font-semibold text-success-600 dark:text-success-400 sm:text-lg">
-            $24K
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M7.60141 2.33683C7.73885 2.18084 7.9401 2.08243 8.16435 2.08243C8.35773 2.08219 8.54998 2.15535 8.69664 2.30191L12.6968 6.29924C12.9898 6.59203 12.9899 7.0669 12.6971 7.3599C12.4044 7.6529 11.9295 7.65306 11.6365 7.36027L8.91435 4.64004V13.5C8.91435 13.9142 8.57856 14.25 8.16435 14.25C7.75013 14.25 7.41435 13.9142 7.41435 13.5V4.64442L4.69679 7.36025C4.4038 7.65305 3.92893 7.6529 3.63613 7.35992C3.34333 7.06693 3.34348 6.59206 3.63646 6.29926L7.60141 2.33683Z"
-                fill="#039855"
-              />
-            </svg>
+          <p className="flex items-center justify-center gap-1 text-base font-semibold  text-indigo-600 dark:text-indigo-400 sm:text-lg">
+            {formatCurrency(doanhThu)}
           </p>
         </div>
 
@@ -127,21 +169,7 @@ const options: ApexOptions = {
             Chi tiêu
           </p>
           <p className="flex items-center justify-center gap-1 text-base font-semibold text-rose-600 dark:text-rose-400 sm:text-lg">
-            $16K
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M7.26816 13.6632C7.4056 13.8192 7.60686 13.9176 7.8311 13.9176C8.02445 13.9178 8.21671 13.8447 8.36339 13.6981L12.3635 9.70076C12.6565 9.40797 12.6567 8.9331 12.3639 8.6401C12.0711 8.34711 11.5962 8.34694 11.3032 8.63973L8.5811 11.36V2.5C8.5811 2.08579 8.24531 1.75 7.8311 1.75C7.41688 1.75 7.0811 2.08579 7.0811 2.5V11.3556L4.36354 8.63975C4.07055 8.34695 3.59568 8.3471 3.30288 8.64009C3.01008 8.93307 3.01023 9.40794 3.30321 9.70075L7.26816 13.6632Z"
-                fill="#D92D20"
-              />
-            </svg>
+            {formatCurrency(chiPhi)}
           </p>
         </div>
 
@@ -152,22 +180,8 @@ const options: ApexOptions = {
           <p className="mb-1 text-center text-gray-500 text-theme-xs dark:text-gray-400 sm:text-sm">
             Lợi nhuận
           </p>
-          <p className="flex items-center justify-center gap-1 text-base font-semibold text-indigo-600 dark:text-indigo-400 sm:text-lg">
-            $8K
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M7.60141 2.33683C7.73885 2.18084 7.9401 2.08243 8.16435 2.08243C8.35773 2.08219 8.54998 2.15535 8.69664 2.30191L12.6968 6.29924C12.9898 6.59203 12.9899 7.0669 12.6971 7.3599C12.4044 7.6529 11.9295 7.65306 11.6365 7.36027L8.91435 4.64004V13.5C8.91435 13.9142 8.57856 14.25 8.16435 14.25C7.75013 14.25 7.41435 13.9142 7.41435 13.5V4.64442L4.69679 7.36025C4.4038 7.65305 3.92893 7.6529 3.63613 7.35992C3.34333 7.06693 3.34348 6.59206 3.63646 6.29926L7.60141 2.33683Z"
-                fill="#465FFF"
-              />
-            </svg>
+          <p className="flex items-center justify-center gap-1 text-base font-semibold text-success-600 dark:text-success-400 sm:text-lg">
+            {formatCurrency(loiNhuan)}
           </p>
         </div>
       </div>

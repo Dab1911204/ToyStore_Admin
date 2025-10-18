@@ -71,7 +71,7 @@ const OrderMetric = () => {
             </div>
 
             {/* Metric Info */}
-            <div className="flex items-end justify-between mt-5">
+            <div className="flex items-end justify-between mt-2">
                 <div>
                     <span className="text-sm text-gray-500 dark:text-gray-400">Đơn hàng</span>
                     <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">{value}</h4>
