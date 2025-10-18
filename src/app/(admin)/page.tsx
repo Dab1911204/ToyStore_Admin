@@ -5,9 +5,10 @@ import MonthlyTarget from "@/components/ecommerce/MonthlyTarget";
 import MonthlySalesChart from "@/components/ecommerce/MonthlySalesChart";
 import StatisticsChart from "@/components/ecommerce/StatisticsChart";
 import RecentOrders from "@/components/ecommerce/RecentOrders";
+import { TableContextProvider } from "@/context/TableContext";
 
 export const metadata: Metadata = {
-  title:"Trang chủ",
+  title: "Trang chủ",
 };
 
 export default function Ecommerce() {
@@ -20,11 +21,16 @@ export default function Ecommerce() {
       </div>
 
       <div className="col-span-12 xl:col-span-5">
-        <MonthlyTarget />
+        <TableContextProvider initialUrl="/api/Statistic/Profit">
+          <MonthlyTarget />
+        </TableContextProvider>
+
       </div>
 
       <div className="col-span-12">
-        <StatisticsChart />
+        <TableContextProvider initialUrl="/api/Statistic/monthly">
+          <StatisticsChart />
+        </TableContextProvider>
       </div>
 
       <div className="col-span-12">

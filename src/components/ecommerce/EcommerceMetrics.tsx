@@ -1,86 +1,38 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { CiBoxes } from "react-icons/ci";
 import { BsPeople } from "react-icons/bs";
-import { RiBillLine } from "react-icons/ri";
-import BaseDatePicker from "../form/date-picker";
-import BaseSelect from "../form/select/select";
+import MetricItem from "./MetricItem";
+import OrderMetric from "./OrderMetric";
+import { StatisticService } from "@/services/statisticService";
+import { TableContextProvider } from "@/context/TableContext";
 
 export const EcommerceMetrics = () => {
+  const [dataCW, setDataCW] = useState<any>()
+  useEffect(() => {
+    const getdataStatistic = async () => {
+      try {
+        const res = await StatisticService.statistic("/api/Statistic/warehouse");
+        setDataCW(res);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getdataStatistic();
+  }, [])
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 md:gap-6">
-      {/* <!-- Metric Item Start --> */}
-      <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
-        <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
-          <BsPeople className="text-gray-800 size-6 dark:text-white/90" />
-        </div>
+      {/* Khách hàng */}
+      <MetricItem icon={<BsPeople className="text-gray-800 size-6 dark:text-white/90" size={20} />} title="Khách hàng" value={dataCW?.userCountStats ? dataCW?.userCountStats?.totalUsers : 0} />
 
-        <div className="flex items-end justify-between mt-5">
-          <div>
-            <span className="text-sm text-gray-500 dark:text-gray-400">
-              Khách hàng
-            </span>
-            <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
-              3,782
-            </h4>
-          </div>
-        </div>
-      </div>
-      {/* <!-- Metric Item End --> */}
+      {/* Đơn hàng */}
+      <TableContextProvider initialUrl="/api/Statistic/order">
+        <OrderMetric />
+      </TableContextProvider>
 
-      {/* <!-- Metric Item Start --> */}
-      <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
-        <div>
-            <BaseDatePicker size="xxs" id="date" name="date" placeholder="Lọc theo ngày"className=""/>
-            <BaseSelect name="status" className="" placeholder="Lọc theo trạng thái" options={[
-              {
-                label:"Hoàn thành",
-                value:"Hoàn thành"
-              },
-              {
-                label:"Đang giao",
-                value:"Đang giao"
-              },
-              {
-                label:"Đã hủy",
-                value:"Đã hủy"
-              },
-              {
-                label:"Đang chờ",
-                value:"Đang chờ"
-              },
-            ]} size="xxs" onChange={(val) => console.log(val)}/>
-        </div>
-        <div className="flex items-end justify-between mt-5">
-          <div>
-            <span className="text-sm text-gray-500 dark:text-gray-400">
-              Đơn hàng
-            </span>
-            <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
-              5,359
-            </h4>
-          </div>
-          <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
-            <RiBillLine size={20} className="text-gray-800 dark:text-white/90" />
-          </div>
-        </div>
-      </div>
-      {/* <!-- Metric Item End --> */}
-      <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
-        <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
-          <CiBoxes className="text-gray-800 dark:text-white/90" />
-        </div>
-        <div className="flex items-end justify-between mt-5">
-          <div>
-            <span className="text-sm text-gray-500 dark:text-gray-400">
-              Tồn kho
-            </span>
-            <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
-              5,359
-            </h4>
-          </div>
-        </div>
-      </div>
+
+      {/* Tồn kho */}
+      <MetricItem icon={<CiBoxes className="text-gray-800 dark:text-white/90" size={20} />} title="Tồn kho" value={dataCW?.inventoryStats ? dataCW?.inventoryStats?.newQuantity + dataCW?.inventoryStats?.existingQuantity : 0} />
     </div>
   );
 };

@@ -29,10 +29,18 @@ export default function BaseDatePicker({
       dateFormat: "Y-m-d",
       defaultDate,
       onChange: (selectedDates) => {
+        const formatDate = (d: Date) => {
+          const year = d.getFullYear();
+          const month = String(d.getMonth() + 1).padStart(2, "0");
+          const day = String(d.getDate()).padStart(2, "0");
+          return `${year}-${month}-${day}`;
+        };
+
         const val =
           mode === "single"
-            ? selectedDates[0]?.toISOString().split("T")[0] ?? ""
-            : selectedDates.map((d) => d.toISOString().split("T")[0]);
+            ? (selectedDates[0] ? formatDate(selectedDates[0]) : "")
+            : selectedDates.map(formatDate);
+
         onChange?.(val);
       },
     });

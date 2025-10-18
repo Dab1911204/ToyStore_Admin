@@ -4,6 +4,7 @@ import React, { createContext, useContext, useState, ReactNode } from "react";
 interface TableContextType {
   urlApi: string;  
   setParam: (name: string, value: string | number | null) => void;
+  setUrlApi: React.Dispatch<React.SetStateAction<string>>;
 }
 
 interface TableContextProviderProps {
@@ -31,8 +32,9 @@ export const TableContextProvider = ({ children, initialUrl = "" }: TableContext
     const newUrl = params.toString() ? `${path}?${params.toString()}` : path;
     setUrlApi(newUrl);
   };
+
   return (
-    <TableContext.Provider value={{ urlApi, setParam }}>
+    <TableContext.Provider value={{ urlApi, setParam, setUrlApi}}>
       {children}
     </TableContext.Provider>
   );
