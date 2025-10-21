@@ -8,97 +8,75 @@ import {
 
 import Button from "@/components/ui/button/Button";
 import Link from "next/link";
-import { FaWrench,FaEye  } from "react-icons/fa";
+import { FaWrench, FaEye } from "react-icons/fa";
 import { FaDeleteLeft } from "react-icons/fa6";
-import { Modal } from "@/components/ui/modal";
-import { useModal } from "@/hooks/useModal";
 import Badge from "@/components/ui/badge/Badge";
+import { UserPermissionType } from "@/schemaValidations/permission.schema";
 
-interface User {
-  image: string;
-  name: string;
+interface UserPermissionTableBodyProps {
+  tableData: UserPermissionType[];
+  onOpenModal: (type: "delete" | "detail", id?: string) => void;
 }
 
-interface NewsTableRow {
-  id: string | number;
-  user: User;
-  projectName: string;
-  // Add other fields if needed
-}
-
-interface NewsTableBodyProps {
-  tableData: NewsTableRow[];
-}
-
-const EmployeesBody: React.FC<NewsTableBodyProps> = ({
+const EmployeesBody: React.FC<UserPermissionTableBodyProps> = ({
   tableData,
+  onOpenModal,
 }) => {
-  const { isOpen, openModal, closeModal } = useModal();
   return (
     <>
       <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-        {tableData.map((order) => (
-          <TableRow key={order.id}>
+        {tableData.map((item, index) => (
+          <TableRow key={item.id}>
             <TableCell className="px-4 py-1 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-              {order.id}
+              {index + 1}
             </TableCell>
-            
+
             <TableCell className="px-2 py-1 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-              Nguyễn Văn A
+              {item.fullName}
             </TableCell>
             <TableCell className="px-2 py-1 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-              0912345678
+              {item.phoneNumber}
             </TableCell>
             <TableCell className="px-2 py-1 text-gray-500 text-theme-sm dark:text-gray-400">
-              vanapx2004@gmail.com
+              {item.email}
             </TableCell>
             <TableCell className="px-2 py-1 text-gray-500 text-theme-sm dark:text-gray-400">
-              Nhân viên
+              {item.roles.map((role) => (
+                <Badge key={role} variant="solid" color={role === "staff" ? "success" : "info"}>{role}</Badge>
+              ))}
             </TableCell>
             <TableCell className="px-2 py-1 text-gray-500 text-theme-sm dark:text-gray-400">
-              28/8/2025
+              {new Date(item.createdOn).toLocaleDateString()}
             </TableCell>
             <TableCell className="px-2 py-1 text-gray-500 text-theme-sm dark:text-gray-400">
-              <Badge color="success" size="sm">Hoạt động</Badge>
+              <Badge color={item.gender == 0 ? "info" : "error"} size="sm">
+                {item.gender == 0 ? "Nam" : "Nữ"}
+              </Badge>
             </TableCell>
             <TableCell className="px-2 py-1 text-gray-500 text-theme-sm dark:text-gray-400">
-              Nguyễn Văn B
+              {item.createdBy}
             </TableCell>
             <TableCell className="px-2 py-1 text-gray-500 text-theme-sm dark:text-gray-400">
-              Nguyễn Văn B
+              {item.updatedBy}
             </TableCell>
             <TableCell className="px-2 py-1 text-gray-500 text-theme-sm dark:text-gray-400">
               <div className="flex flex-col gap-2">
-                <Link href={"/news/edit/"+order.id}>
+                <Link href={"/news/edit/" + item.id}>
                   <Button className="w-20" size="xxs" variant="warning" startIcon={<FaWrench />}>
                     Sửa
                   </Button>
                 </Link>
-                <Button onClick={openModal} className="w-20" size="xxs" variant="info" startIcon={<FaEye />}>
+                <Button onClick={() => onOpenModal("detail", item.id)} className="w-20" size="xxs" variant="info" startIcon={<FaEye />}>
                   Chi tiết
                 </Button>
-                <Link href={"/news/"+order.id}>
-                  <Button className="w-20" size="xxs" variant="danger" startIcon={<FaDeleteLeft />}>
-                    Xóa
-                  </Button>
-                </Link>
+                <Button onClick={() => onOpenModal("delete", item.id)} className="w-20" size="xxs" variant="danger" startIcon={<FaDeleteLeft />}>
+                  Xóa
+                </Button>
               </div>
             </TableCell>
           </TableRow>
         ))}
       </TableBody>
-      <Modal isOpen={isOpen} onClose={closeModal} className="max-w-[700px] m-4">
-        <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
-          <div className="px-2 pr-14">
-            <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
-              Chi tiết tin tức
-            </h4>
-            <p className="mb-6 text-sm text-gray-500 dark:text-gray-400 lg:mb-7">
-              Update your details to keep your profile up-to-date.
-            </p>
-          </div>
-        </div>
-      </Modal>
     </>
   );
 }
