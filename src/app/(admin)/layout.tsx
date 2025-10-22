@@ -1,6 +1,7 @@
 "use client";
 
 import { useSidebar } from "@/context/SidebarContext";
+import { UserPermissionProvider } from "@/context/UserPermissionContext";
 import AppHeader from "@/layout/AppHeader";
 import AppSidebar from "@/layout/AppSidebar";
 import { LoadingOutlined } from '@ant-design/icons';
@@ -25,7 +26,10 @@ export default function AdminLayout({
   return (
     <div className="min-h-screen xl:flex relative">
       {/* Sidebar */}
-      <AppSidebar setHandling={setHandling} handling={handling} />
+      <UserPermissionProvider>
+        <AppSidebar setHandling={setHandling} handling={handling} />
+      </UserPermissionProvider>
+
 
       {/* Main Content Area */}
       <div

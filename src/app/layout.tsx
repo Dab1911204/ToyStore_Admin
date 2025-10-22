@@ -25,9 +25,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${outfit.className} dark:bg-gray-900`}>
         <NotificationProvider>
-          <SidebarProvider>
-            {children}
-          </SidebarProvider>
+            <SidebarProvider>
+              {children}
+            </SidebarProvider>
         </NotificationProvider>
       </body>
     </html>

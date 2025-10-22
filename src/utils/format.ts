@@ -1,3 +1,5 @@
+import { PermissionListType, PermissionType } from "@/schemaValidations/permission.schema";
+
 export function formatDateTime(
   isoString: string,
   locale: string = "vi-VN",
@@ -55,4 +57,46 @@ export function getFirstImageFromString(image?: string | null): string | null {
   }
 }
 
+export function groupPermissions(permissions: PermissionType[]): PermissionListType[] {
+  const moduleNameMap: Record<string, string> = {
+    category: 'danh mục',
+    news: 'tin tức',
+    order: 'đơn hàng',
+    product: 'sản phẩm',
+    promotion: 'khuyến mãi',
+    role: 'vai trò',
+    staff: 'nhân viên',
+    supplier: 'nhà cung cấp',
+    user: 'người dùng',
+    warehouse: 'kho hàng',
+    permission: 'quyền'
+  };
 
+  const grouped = permissions.reduce<Record<string, { key: string; name: string; role: PermissionType[] }>>(
+    (acc, perm) => {
+      const [module, action] = perm.code.split('_');
+      if (!module || !action) return acc;
+
+      const moduleKey = module.toLowerCase();
+
+      if (!acc[moduleKey]) {
+        acc[moduleKey] = {
+          key: moduleKey,
+          name: `Quản lý ${moduleNameMap[moduleKey] || moduleKey}`,
+          role: []
+        };
+      }
+
+      acc[moduleKey].role.push(perm);
+
+      return acc;
+    },
+    {}
+  );
+
+  return Object.values(grouped).map((item, index): PermissionListType => ({
+    id: index + 1,
+    name: item.name,
+    role: item.role
+  }));
+}
