@@ -11,6 +11,7 @@ import { NoData } from "@/components/common/NoData";
 import { Loading } from "@/components/common/Loading";
 import Pagination from "../../Pagination";
 import { Modal } from "@/components/ui/modal";
+import GrantPermissionModel from "@/components/example/ModalExample/GrantPermissionModel";
 
 const title = ["STT", 'Tên nhân viên', 'số điện thoại', 'Email', "Vai trò", "Ngày thuê", "Trạng thái", "Người thêm", "Người sửa", "Hành động"]
 
@@ -23,7 +24,8 @@ export default function EmployeesTable() {
 
     // ✅ quản lý modal
     const { isOpen, openModal, closeModal } = useModal();
-    const [modalType, setModalType] = useState<"delete" | "detail" | null>(null);
+    const [modalType, setModalType] = useState<"role" | "lock" | "restore" | null>(null);
+    const [modalStatus, setModalStatus] = useState<number | null>(null);
     const [selectedId, setSelectedId] = useState<string | null>(null);
 
     // đổi trang
@@ -33,9 +35,10 @@ export default function EmployeesTable() {
     };
 
     // mở modal
-    const handleOpenModal = (type: "delete" | "detail", id?: string) => {
+    const handleOpenModal = (type: "role" | "lock" | "restore", id?: string, status?: number) => {
         setModalType(type);
         if (id) setSelectedId(id);
+        if (status !== undefined) setModalStatus(status);
         openModal();
     };
 
@@ -45,6 +48,7 @@ export default function EmployeesTable() {
             setTableData([]);
             setLoading(true);
             const res = await PermissionService.getUserListPermission(urlApi);
+            console.log(res);
             setTableData(res.items);
             setTotalPages(res.totalPages);
             setCurrentPage(res.currentPage);
@@ -94,11 +98,23 @@ export default function EmployeesTable() {
             </div>
             {/* ✅ Modal */}
             <Modal isOpen={isOpen} onClose={closeModal}>
-                {modalType === "delete" && selectedId && (
-                    <></>
+                {modalType === "role" && selectedId && (
+                    <>
+                        <GrantPermissionModel
+                            id={selectedId}
+                            status={modalStatus}
+                            title="Cập nhật"
+                            description="quyền hạn"
+                            loadData={fetchDataTable}
+                            urlApi={urlApi}
+                            closeModal={closeModal}
+                        />
+                    </>
                 )}
-                {modalType === "detail" && selectedId && (
-                    <></>
+                {modalType === "lock" && selectedId && (
+                    <>
+
+                    </>
                 )}
             </Modal>
         </div>

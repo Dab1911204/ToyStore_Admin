@@ -1,120 +1,84 @@
 "use client"
 import React from "react";
-import {
-  TableBody,
-  TableCell,
-  TableRow,
-} from "../../../ui/table";
+import { TableBody, TableCell, TableRow } from "../../../ui/table";
 import Switch from "@/components/form/switch/Switch";
+import { PermissionListType, PermissionType } from "@/schemaValidations/permission.schema";
 
-interface Role {
-  id: string;
-  name: string;
-  value?: boolean;
+interface PermissionsUser {
+  sales: PermissionType[];
+  warehouse: PermissionType[];
 }
 
-interface NewsTableRow {
-  id: string | number;
-  name: string;
-  role: Role[];
-  // Add other fields if needed
+interface AuthorizationBodyProps {
+  tableData: PermissionListType[];
+  role: PermissionsUser;
+  onChange: (data: PermissionsUser) => void;
+  checkRole: (role: PermissionsUser, permission: keyof PermissionsUser, roleId: string) => boolean;
 }
 
-interface NewsTableBodyProps {
-  tableData: NewsTableRow[];
-  role:permissionsUser;
-  onChange:(data:permissionsUser) => void;
-}
+const AuthorizationBody: React.FC<AuthorizationBodyProps> = ({ tableData, role, onChange, checkRole}) => {
+  // Kiểm tra roleItem có trong role không
+  console.log("role hiện tại: " + JSON.stringify(role.sales, null, 2));
+  
+  console.log("checkRole: ", checkRole(role,"sales", "83eeadb6-9a29-4d80-a8ea-c24a5a36906b"));
 
-interface permissionsUser{
-  manager:string[],
-  salesperson:string[],
-  warehouse_staff:string[],
-  accounting:string[]
-}
+  // Toggle quyền
+  const handleSwitch = (permission: keyof PermissionsUser, roleItem: PermissionType, value: boolean) => {
+    const updatedRole: PermissionsUser = {
+      ...role,
+      [permission]: [...(role[permission] ?? [])],
+    };
 
-const AuthorizationBody: React.FC<NewsTableBodyProps> = ({
-  tableData,
-  role,
-  onChange
-}) => {
-  const checkRole = (permission:"manager"|"salesperson"|"warehouse_staff"|"accounting" ,roleid:string)=>{
-    if(role[permission]?.includes(roleid)){
-      return true
+    const index = updatedRole[permission].findIndex((p) => String(p.id) === String(roleItem.id));
+
+    if (value && index === -1) {
+      updatedRole[permission].push(roleItem);
+    } else if (!value && index !== -1) {
+      updatedRole[permission].splice(index, 1);
     }
-    return false
-  }
-  const handleSwitch = (permission:"manager"|"salesperson"|"warehouse_staff"|"accounting",roleid:string,value:boolean) => {
-    if(value){
-      role[permission]?.push(roleid)
-    }
-    onChange(role)
-  }
+    onChange(updatedRole);
+    console.log("role đã chọn: " + JSON.stringify(updatedRole.sales, null, 2));
+  };
+
   return (
-    <>
-      <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-        {tableData.map((order) => (
-          <>
-            <TableRow key={order.id} className="bg-gray-50 dark:bg-white/[0.03]">
-              <TableCell colSpan={5} className="px-4 py-3 text-gray-500 text-center text-base font-semibold dark:text-gray-400 ">
-                {order.name}
+    <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
+      {tableData.map((group) => (
+        <React.Fragment key={group.id}>
+          <TableRow className="bg-gray-50 dark:bg-white/[0.03]">
+            <TableCell colSpan={5} className="px-4 py-3 text-center text-base font-semibold dark:text-gray-400">
+              {group.name}
+            </TableCell>
+          </TableRow>
+
+          {group.role.map((r) => (
+            <TableRow key={r.id}>
+              <TableCell className="px-4 py-3 text-start text-theme-sm dark:text-gray-400">{r.name}</TableCell>
+              <TableCell className="px-4 py-3 text-start text-theme-sm dark:text-gray-400">
+                <Switch
+                  name="sales"
+                  checked={checkRole(role,"sales", "83eeadb6-9a29-4d80-a8ea-c24a5a36906b")}
+                  onChange={() => { }}
+                  onLabel="Có quyền"
+                  offLabel="Không có"
+                  size="lg"
+                />
+              </TableCell>
+              <TableCell className="px-4 py-3 text-theme-sm text-gray-500 dark:text-gray-400">
+                <Switch
+                  name="warehouse"
+                  checked={checkRole(role,"warehouse", r.id)}
+                  onChange={(value) => handleSwitch("warehouse", r, value)}
+                  onLabel="Có quyền"
+                  offLabel="Không có"
+                  size="lg"
+                />
               </TableCell>
             </TableRow>
-            {order.role.map((role) => (
-              <>
-                <TableRow key={role.id} id={role.id}>
-                  <TableCell  className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {role.name}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    <Switch
-                      name="manager"
-                      checked={checkRole("manager",role.id)}
-                      onChange={(value) => handleSwitch("manager",role.id,value)}
-                      onLabel="Có quyền"
-                      offLabel="Không có"
-                      size="lg"
-                    />
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    <Switch
-                      name="salesperson"
-                      checked={checkRole("salesperson",role.id)}
-                      onChange={(value) => handleSwitch("salesperson",role.id,value)}
-                      onLabel="Có quyền"
-                      offLabel="Không có"
-                      size="lg"
-                    />
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                    <Switch
-                      name="warehouse_staff"
-                      checked={checkRole("warehouse_staff",role.id)}
-                      onChange={(value)=>handleSwitch("warehouse_staff",role.id,value)}
-                      onLabel="Có quyền"
-                      offLabel="Không có"
-                      size="lg"
-                    />
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                    <Switch
-                      name="accounting"
-                      checked={checkRole("accounting",role.id)}
-                      onChange={(value)=>handleSwitch("accounting",role.id,value)}
-                      onLabel="Có quyền"
-                      offLabel="Không có"
-                      size="lg"
-                    />
-                  </TableCell>
-                </TableRow>
-              </>
-            ))}
-          </>
-        ))}
-        
-      </TableBody>
-    </>
+          ))}
+        </React.Fragment>
+      ))}
+    </TableBody>
   );
-}
+};
 
 export default AuthorizationBody;

@@ -34,3 +34,34 @@ export const UserPermissionListResSchema = z.object({
 // ✅ TypeScript type inference
 export type UserPermissionType = z.infer<typeof UserPermissionSchema>;
 export type UserPermissionListResType = z.infer<typeof UserPermissionListResSchema>;
+
+export const CreateUserRes = z.object({
+  success: z.boolean(),
+  result: z.object({
+    ok: z.boolean(),
+    userId: z.string().uuid(),
+    message: z.string(),
+  }),
+  errors: z.array(z.string()),
+});
+
+// 👉 Nếu muốn lấy type từ schema
+export type CreateUserResType = z.infer<typeof CreateUserRes>;
+
+export const PermissionSchema = z.object({
+  id: z.string(),
+  code: z.string(),       // ví dụ: "CATEGORY_CREATE"
+  name: z.string(),       // ví dụ: "Tạo danh mục"
+  isGranted: z.boolean(),
+  checked: z.boolean().optional(),
+});
+
+export const PermissionListSchema = z.object({
+  id: z.number(),
+  name: z.string(),               // ví dụ: "Quản lý danh mục"
+  role: z.array(PermissionSchema) // Permission[]
+});
+
+/** Inferred TS types (optional, nếu muốn dùng chung) */
+export type PermissionType = z.infer<typeof PermissionSchema>;
+export type PermissionListType = z.infer<typeof PermissionListSchema>;

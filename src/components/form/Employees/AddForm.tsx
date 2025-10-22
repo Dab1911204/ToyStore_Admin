@@ -5,43 +5,65 @@ import Button from "@/components/ui/button/Button";
 import InputForm from "../form-elements/InputForm";
 import { useNotification } from "@/context/NotificationContext";
 import { FaRegSmileBeam } from "react-icons/fa";
-import SelectForm from "../form-elements/SelectForm";
-import RadioGroup from "../form-elements/RadioButtons";
+import SwitchForm from "../form-elements/SwitchForm";
+import { PermissionService } from "@/services/permissionService";
 
 export default function AddForm() {
-  const { values, setErrors} = useFormContext();
+  const { values, setErrors } = useFormContext();
   const { openNotification } = useNotification();
 
-  const handleSubmit = (data: Record<string, any> | FormData) => {
+  const handleSubmit = async (data: Record<string, any>) => {
     const newErrors: { name: string; message: string }[] = [];
 
     // validate text fields
-    if (!values.name) newErrors.push({ name: "name", message: "Tiêu đề không được để trống" });
-    if (!values.description) newErrors.push({ name: "description", message: "Nội dung không được để trống" });
-    if (!values.images) newErrors.push({ name: "images", message: "Vui lòng chọn ảnh" });
+    if (!values.fullName) newErrors.push({ name: "fullName", message: "Tiêu đề không được để trống" });
+    if (!values.phoneNumber) newErrors.push({ name: "phoneNumber", message: "Số điện thoại không được để trống" });
+    if (!values.email) newErrors.push({ name: "email", message: "Email không được để trống" });
+    if (!values.address) newErrors.push({ name: "address", message: "Địa chỉ không được để trống" });
+    if (!values.password) newErrors.push({ name: "password", message: "Mật khẩu không được để trống" });
+    if (values.password !== values.confirmPassword)
+      newErrors.push({ name: "confirmPassword", message: "Mật khẩu xác nhận không khớp" });
 
     setErrors(newErrors);
 
     if (newErrors.length === 0) {
-      if (data instanceof FormData) {
-        // multipart submit
-        console.log("🚀 Multipart FormData submit:");
-        for (const [key, value] of data.entries()) {
-          console.log(key, value);
+      try {
+        data.gender = data.gender ? 0 : 1;
+        console.log("✅ Submitted data:", data);
+        const res = await PermissionService.createUser(data);
+        console.log("Response:", res);
+        if (res.success) {
+          openNotification({
+            message: "Thành công",
+            description: "Tạo tài khoản nhân viên thành công!",
+            placement: "top",
+            duration: 3,
+            icon: <FaRegSmileBeam style={{ color: "green" }} />,
+            style: { borderLeft: "5px solid green" },
+          })
+        } else {
+          openNotification({
+            message: "Thất bại",
+            description: "Tạo tài khoản nhân viên thất bại!",
+            placement: "top",
+            duration: 3,
+            icon: <FaRegSmileBeam style={{ color: "red" }} />,
+            style: { borderLeft: "5px solid red" },
+          })
         }
-        console.log("Categories:", data); // nếu là multi select
-      } else {
-        // json submit
-        console.log("🚀 JSON submit:", data);
       }
-      openNotification({
-          message: "Custom Notification",
-          description: "Nội dung chi tiết thông báo",
+      catch (error) {
+        openNotification({
+          message: "Thất bại",
+          description: "Tài khoản nhân viên đã tồn tại hoặc có lỗi xảy ra!",
           placement: "top",
           duration: 3,
-          icon: <FaRegSmileBeam style={{ color: "green" }} />,
-          style: { borderLeft: "5px solid green" },
+          icon: <FaRegSmileBeam style={{ color: "red" }} />,
+          style: { borderLeft: "5px solid red" },
         })
+        console.error("Error creating user:", error);
+      }
+
     } else {
       console.log("❌ Errors:", newErrors);
     }
@@ -49,28 +71,34 @@ export default function AddForm() {
 
   return (
     <Form onSubmit={handleSubmit}>
-      <InputForm label="Tên nhân viên" name="name" placeholder="Nhập tên nhân viên" />
-      <InputForm label="Số điện thoại" name="phone" placeholder="Nhập số điện thoại" />
-      <InputForm label="Email" name="email" placeholder="Nhập email" type="email"/>
-      <InputForm label="Mật khẩu" name="password" placeholder="Nhập mật khẩu" type="password"/>
-      <InputForm label="Xác nhận mật khẩu" name="confirmPassword" placeholder="Nhập lại mật khẩu" type="password"/>
-      <SelectForm className="w-full" label="Vai trò" name="role" placeholder="Chọn vai trò" options={[{value: '1', label: 'Role 1'}, {value: '2', label: 'Role 2'}]} />
-      <RadioGroup title="Trạng thái" name="status" options={
-        [
-          {
-            value: '1',
-            label: 'Hoạt động',
-          },
-          {
-            value: '2',
-            label: 'Ngừng hoạt động',
-          },
-          {
-            value: '3',
-            label: 'Chờ xác nhận',
-          }
-        ]
-      } defaultValue="1"/>
+      <InputForm label="Tên nhân viên" name="fullName" placeholder="Nhập tên nhân viên" />
+      <InputForm label="Số điện thoại" name="phoneNumber" placeholder="Nhập số điện thoại" />
+      <InputForm label="Email" name="email" placeholder="Nhập email" type="email" />
+      <InputForm label="Địa chỉ" name="address" placeholder="Nhập địa chỉ" type="text" />
+      <div className="flex flex-nowrap gap-4 w-full items-center">
+        <InputForm
+          label="Mật khẩu"
+          name="password"
+          placeholder="Nhập mật khẩu"
+          type="password"
+          className="w-full"
+        />
+        <InputForm
+          label="Xác nhận mật khẩu"
+          name="confirmPassword"
+          placeholder="Nhập lại mật khẩu"
+          type="password"
+          className="w-full"
+        />
+        <SwitchForm
+          name="gender"
+          defaultChecked={true}
+          size="xxs"
+          onLabel="Nam"
+          offLabel="Nữ"
+          label="Giới tính"
+        />
+      </div>
       <div className="flex justify-center">
         <Button type="submit" variant="primary" className="mt-4" size="md">
           Thêm nhân viên

@@ -7,15 +7,14 @@ import {
 } from "../../../ui/table";
 
 import Button from "@/components/ui/button/Button";
-import Link from "next/link";
-import { FaWrench, FaEye } from "react-icons/fa";
-import { FaDeleteLeft } from "react-icons/fa6";
+import { FaLockOpen, FaLock } from "react-icons/fa";
+import { MdPermIdentity } from "react-icons/md";
 import Badge from "@/components/ui/badge/Badge";
 import { UserPermissionType } from "@/schemaValidations/permission.schema";
 
 interface UserPermissionTableBodyProps {
   tableData: UserPermissionType[];
-  onOpenModal: (type: "delete" | "detail", id?: string) => void;
+  onOpenModal: (type: "role" | "lock" | "restore", id?: string, status?: number) => void;
 }
 
 const EmployeesBody: React.FC<UserPermissionTableBodyProps> = ({
@@ -42,7 +41,7 @@ const EmployeesBody: React.FC<UserPermissionTableBodyProps> = ({
             </TableCell>
             <TableCell className="px-2 py-1 text-gray-500 text-theme-sm dark:text-gray-400">
               {item.roles.map((role) => (
-                <Badge key={role} variant="solid" color={role === "staff" ? "success" : "info"}>{role}</Badge>
+                <Badge key={role} variant="solid" color={role === "staff" ? "success" : "info"}>{role == "staff" ? "Nhân viên" : "Quản lý"}</Badge>
               ))}
             </TableCell>
             <TableCell className="px-2 py-1 text-gray-500 text-theme-sm dark:text-gray-400">
@@ -61,17 +60,18 @@ const EmployeesBody: React.FC<UserPermissionTableBodyProps> = ({
             </TableCell>
             <TableCell className="px-2 py-1 text-gray-500 text-theme-sm dark:text-gray-400">
               <div className="flex flex-col gap-2">
-                <Link href={"/news/edit/" + item.id}>
-                  <Button className="w-20" size="xxs" variant="warning" startIcon={<FaWrench />}>
-                    Sửa
+                <Button onClick={() => onOpenModal("role", item.id, item.isDeleted ? 1 : 0)} className="w-20" size="xxs" variant="info" startIcon={<MdPermIdentity />}>
+                  Chức vụ
+                </Button>
+                {!item.isDeleted ? (
+                  <Button onClick={() => onOpenModal("lock", item.id)} className="w-20" size="xxs" variant="danger" startIcon={<FaLock />}>
+                    Khóa
                   </Button>
-                </Link>
-                <Button onClick={() => onOpenModal("detail", item.id)} className="w-20" size="xxs" variant="info" startIcon={<FaEye />}>
-                  Chi tiết
-                </Button>
-                <Button onClick={() => onOpenModal("delete", item.id)} className="w-20" size="xxs" variant="danger" startIcon={<FaDeleteLeft />}>
-                  Xóa
-                </Button>
+                ) : (
+                  <Button onClick={() => onOpenModal("restore", item.id)} className="w-20" size="xxs" variant="success" startIcon={<FaLockOpen />}>
+                    Mở khóa
+                  </Button>
+                )}
               </div>
             </TableCell>
           </TableRow>

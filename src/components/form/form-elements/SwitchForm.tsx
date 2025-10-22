@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { useFormContext } from "@/context/FormContext";
 import { SwitchFormProps } from "@/types/props";
 import Switch from "../switch/Switch";
@@ -10,13 +10,19 @@ const SwitchForm: React.FC<SwitchFormProps> = ({
   label,
   size = "lg",
   onLabel = "",
-  offLabel ="",
+  offLabel = "",
   defaultChecked = false,
   disabled,
   color = "blue",
   className = "",
 }) => {
   const { values, setValue } = useFormContext();
+  useEffect(() => {
+    // nếu form chưa có giá trị cho field này, gán defaultChecked
+    if (values[name] === undefined) {
+      setValue(name, defaultChecked);
+    }
+  }, [name, values, setValue, defaultChecked]);
 
   // nếu chưa có trong values → lấy defaultChecked
   const isChecked = values[name] ?? defaultChecked;
