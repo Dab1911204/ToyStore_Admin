@@ -4,7 +4,6 @@ import './globals.css';
 import { SidebarProvider } from '@/context/SidebarContext';
 import { Metadata } from 'next';
 import { NotificationProvider } from '@/context/NotificationContext';
-import { UserPermissionProvider } from '@/context/UserPermissionContext';
 
 export const metadata: Metadata = {
   title: {
@@ -26,11 +25,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${outfit.className} dark:bg-gray-900`}>
         <NotificationProvider>
-          <UserPermissionProvider>
             <SidebarProvider>
               {children}
             </SidebarProvider>
-          </UserPermissionProvider>
         </NotificationProvider>
       </body>
     </html>

@@ -5,7 +5,6 @@ import Link from "next/link";
 
 import { FaPlusCircle } from "react-icons/fa";
 import { RiDeleteBin5Fill } from "react-icons/ri";
-import BaseSelect from "../form/select/select";
 import { AiFillCheckCircle } from "react-icons/ai";
 
 interface ComponentCardProps {
@@ -19,7 +18,6 @@ interface ComponentCardProps {
   isDelete?: boolean; // Title for the button
   isOrder?: boolean; // Title for the button
   isApprove?: boolean; // Title for the button
-  filter?: { label: string; value: string }[];
 }
 
 const ComponentCard: React.FC<ComponentCardProps> = ({
@@ -33,7 +31,6 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
   isDelete,
   isOrder = false,
   isApprove = false,
-  filter = [],
 }) => {
   return (
     <div
@@ -51,11 +48,6 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
             </p>
           )}
         </div>
-        {filter.length > 0 && (
-          <div className="px-6 py-5">
-            <BaseSelect name="status" className="" placeholder="Lọc theo trạng thái" options={filter} size="xxs" onChange={() => { }} />
-          </div>
-        )}
         {linkBtn && titleBtn && (
           <div className="px-6 py-5">
             <Link href={"/" + linkBtn + "/create"} className="mr-3">

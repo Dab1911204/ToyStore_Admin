@@ -75,7 +75,6 @@ const request = async <T>(
     token = options?.token
     role = options?.role
   }
-
   if (requireAuth && !token) {
     if (typeof window !== "undefined") {
       redirectToLogin(false)
