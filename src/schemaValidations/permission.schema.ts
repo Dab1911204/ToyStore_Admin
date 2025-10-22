@@ -53,7 +53,8 @@ export const PermissionSchema = z.object({
   code: z.string(),       // ví dụ: "CATEGORY_CREATE"
   name: z.string(),       // ví dụ: "Tạo danh mục"
   isGranted: z.boolean(),
-  checked: z.boolean().optional(),
+  checkedSales: z.boolean().optional(),
+  checkedWarehouse: z.boolean().optional(),
 });
 
 export const PermissionListSchema = z.object({

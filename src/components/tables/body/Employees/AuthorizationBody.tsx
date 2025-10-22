@@ -13,14 +13,14 @@ interface AuthorizationBodyProps {
   tableData: PermissionListType[];
   role: PermissionsUser;
   onChange: (data: PermissionsUser) => void;
-  checkRole: (role: PermissionsUser, permission: keyof PermissionsUser, roleId: string) => boolean;
 }
 
-const AuthorizationBody: React.FC<AuthorizationBodyProps> = ({ tableData, role, onChange, checkRole}) => {
+const AuthorizationBody: React.FC<AuthorizationBodyProps> = ({ tableData, role, onChange }) => {
   // Kiểm tra roleItem có trong role không
-  console.log("role hiện tại: " + JSON.stringify(role.sales, null, 2));
-  
-  console.log("checkRole: ", checkRole(role,"sales", "83eeadb6-9a29-4d80-a8ea-c24a5a36906b"));
+  const checkRole = (permission: keyof PermissionsUser, roleId: string): boolean => {
+    const list = role[permission] ?? [];
+    return list.some((r) => String(r.id) === String(roleId));
+  };
 
   // Toggle quyền
   const handleSwitch = (permission: keyof PermissionsUser, roleItem: PermissionType, value: boolean) => {
@@ -56,7 +56,7 @@ const AuthorizationBody: React.FC<AuthorizationBodyProps> = ({ tableData, role, 
               <TableCell className="px-4 py-3 text-start text-theme-sm dark:text-gray-400">
                 <Switch
                   name="sales"
-                  checked={checkRole(role,"sales", "83eeadb6-9a29-4d80-a8ea-c24a5a36906b")}
+                  checked={checkRole("sales", r.id)}
                   onChange={() => { }}
                   onLabel="Có quyền"
                   offLabel="Không có"
@@ -66,7 +66,7 @@ const AuthorizationBody: React.FC<AuthorizationBodyProps> = ({ tableData, role, 
               <TableCell className="px-4 py-3 text-theme-sm text-gray-500 dark:text-gray-400">
                 <Switch
                   name="warehouse"
-                  checked={checkRole(role,"warehouse", r.id)}
+                  checked={checkRole("warehouse", r.id)}
                   onChange={(value) => handleSwitch("warehouse", r, value)}
                   onLabel="Có quyền"
                   offLabel="Không có"
