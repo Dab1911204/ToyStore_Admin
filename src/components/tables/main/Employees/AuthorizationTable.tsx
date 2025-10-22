@@ -9,9 +9,10 @@ import { PermissionService } from "@/services/permissionService";
 import { groupPermissions } from "@/utils/format";
 import { PermissionType } from "@/schemaValidations/permission.schema";
 import { Loading } from "@/components/common/Loading";
+import { useNotification } from "@/context/NotificationContext";
 
 interface PermissionsUser {
-  sales: PermissionType[];
+  sale: PermissionType[];
   warehouse: PermissionType[];
 }
 
@@ -20,11 +21,13 @@ const title = ["Chức năng", "Nhân viên bán hàng", "Nhân viên kho"];
 export default function BasicTables() {
   const [permissions, setPermissions] = useState<any[]>([]);
   const [roleState, setRoleState] = useState<PermissionsUser>({
-    sales: [],
+    sale: [],
     warehouse: [],
   });
+  const { openNotification } = useNotification();
 
   const [loading, setLoading] = useState(true);
+  const [loadingPermission, setLoadingPermission] = useState(false);
 
   // Lấy tất cả permissions
   const fetchDataTable = async () => {
@@ -33,9 +36,15 @@ export default function BasicTables() {
       const res = await PermissionService.getListPermission();
       const resSales = await PermissionService.getListPermissionByStaffType(1);
       const resWarehouse = await PermissionService.getListPermissionByStaffType(2);
+      const uniquePermissions = (list: PermissionType[]) => {
+        const map = new Map<string, PermissionType>();
+        list.forEach(item => map.set(item.id, item)); // id là duy nhất
+        return Array.from(map.values());
+      };
+
       setRoleState({
-        sales: resSales.result,
-        warehouse: resWarehouse.result,
+        sale: uniquePermissions(resSales.result),
+        warehouse: uniquePermissions(resWarehouse.result),
       });
       setPermissions(groupPermissions(res));
     } catch (error) {
@@ -44,26 +53,57 @@ export default function BasicTables() {
       setLoading(false);
     }
   };
-
   useEffect(() => {
     fetchDataTable();
   }, []);
 
   const handleSave = () => {
-    console.log("Sau khi phân quyền: ", JSON.stringify(roleState, null, 2));
     // Gọi API lưu phân quyền ở đây
-    const payload = {
+    const payloadSales = {
       staffType: 1, // Ví dụ: nhân viên bán hàng
-      permissionIds: roleState.sales.map((p) => p.id),
+      permissionIds: roleState.sale.map((p) => p.id),
     }
+    const payloadWarehouse = {
+      staffType: 2, // Ví dụ: nhân viên kho
+      permissionIds: roleState.warehouse.map((p) => p.id),
+    }
+
+    const savePermissions = async () => {
+      try {
+        setLoadingPermission(true);
+        const res1 = await PermissionService.addStaffTypePermission(payloadSales);
+        const res2 = await PermissionService.addStaffTypePermission(payloadWarehouse);
+        console.log("Kết quả phân quyền: ", res1, res2);
+
+        // Thông báo thành công hoặc cập nhật giao diện nếu cần
+        openNotification({
+          message: `Thành công`,
+          description: `Phân quyền thành công`,
+          placement: "top",
+          duration: 3,
+          style: { borderLeft: "5px solid green" },
+        });
+      } catch (error) {
+        openNotification({
+          message: `Thất bại`,
+          description: `Phân quyền thất bại: ` + error,
+          placement: "top",
+          duration: 3,
+          style: { borderLeft: "5px solid res" },
+        });
+      } finally {
+        setLoadingPermission(false);
+      }
+    }
+    savePermissions();
   };
 
   return (
     <div>
       <div className="flex items-center justify-between border-b border-gray-100 dark:border-gray-800">
         <div className="px-6 py-5">
-          <Button size="sm" variant="info" onClick={handleSave}>
-            Phân quyền
+          <Button size="sm" variant="info" onClick={handleSave} disabled={loadingPermission}>
+            {loadingPermission ? "Đang phân quyền..." : "Phân quyền"}
           </Button>
         </div>
       </div>

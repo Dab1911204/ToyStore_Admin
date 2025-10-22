@@ -5,7 +5,7 @@ import Switch from "@/components/form/switch/Switch";
 import { PermissionListType, PermissionType } from "@/schemaValidations/permission.schema";
 
 interface PermissionsUser {
-  sales: PermissionType[];
+  sale: PermissionType[];
   warehouse: PermissionType[];
 }
 
@@ -21,24 +21,28 @@ const AuthorizationBody: React.FC<AuthorizationBodyProps> = ({ tableData, role, 
     const list = role[permission] ?? [];
     return list.some((r) => String(r.id) === String(roleId));
   };
-
   // Toggle quyền
-  const handleSwitch = (permission: keyof PermissionsUser, roleItem: PermissionType, value: boolean) => {
-    const updatedRole: PermissionsUser = {
-      ...role,
-      [permission]: [...(role[permission] ?? [])],
-    };
+  const handleSwitch = (
+    permission: keyof PermissionsUser,
+    roleItem: PermissionType,
+    value: boolean
+  ) => {
+    const currentList = role[permission] ?? [];
+    let updatedList: PermissionType[];
 
-    const index = updatedRole[permission].findIndex((p) => String(p.id) === String(roleItem.id));
-
-    if (value && index === -1) {
-      updatedRole[permission].push(roleItem);
-    } else if (!value && index !== -1) {
-      updatedRole[permission].splice(index, 1);
+    if (value) {
+      // chỉ thêm nếu chưa có
+      updatedList = currentList.some(p => p.id === roleItem.id)
+        ? currentList
+        : [...currentList, roleItem];
+    } else {
+      // loại bỏ nếu có
+      updatedList = currentList.filter(p => p.id !== roleItem.id);
     }
-    onChange(updatedRole);
-    console.log("role đã chọn: " + JSON.stringify(updatedRole.sales, null, 2));
+
+    onChange({ ...role, [permission]: updatedList });
   };
+
 
   return (
     <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
@@ -56,8 +60,8 @@ const AuthorizationBody: React.FC<AuthorizationBodyProps> = ({ tableData, role, 
               <TableCell className="px-4 py-3 text-start text-theme-sm dark:text-gray-400">
                 <Switch
                   name="sales"
-                  checked={checkRole("sales", r.id)}
-                  onChange={() => { }}
+                  checked={checkRole("sale", r.id)}
+                  onChange={(value) => handleSwitch("sale", r, value)}
                   onLabel="Có quyền"
                   offLabel="Không có"
                   size="lg"

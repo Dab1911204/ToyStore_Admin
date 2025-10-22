@@ -66,3 +66,10 @@ export const PermissionListSchema = z.object({
 /** Inferred TS types (optional, nếu muốn dùng chung) */
 export type PermissionType = z.infer<typeof PermissionSchema>;
 export type PermissionListType = z.infer<typeof PermissionListSchema>;
+
+export const UserPermissionsSchema = z.object({
+  userId: z.string().uuid(),
+  userName: z.string(),
+  permissions: z.array(PermissionSchema),
+});
+export type UserPermissionsType = z.infer<typeof UserPermissionsSchema>;
