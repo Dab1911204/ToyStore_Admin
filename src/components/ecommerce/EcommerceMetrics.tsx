@@ -13,6 +13,7 @@ export const EcommerceMetrics = () => {
     const getdataStatistic = async () => {
       try {
         const res = await StatisticService.statistic("/api/Statistic/warehouse");
+        console.log(res);
         setDataCW(res);
       } catch (error) {
         console.log(error);
@@ -32,7 +33,7 @@ export const EcommerceMetrics = () => {
 
 
       {/* Tồn kho */}
-      <MetricItem icon={<CiBoxes className="text-gray-800 dark:text-white/90" size={20} />} title="Tồn kho" value={dataCW?.inventoryStats ? dataCW?.inventoryStats?.newQuantity + dataCW?.inventoryStats?.existingQuantity : 0} />
+      <MetricItem icon={<CiBoxes className="text-gray-800 dark:text-white/90" size={20} />} title="Tồn kho" value={dataCW?.inventoryStats ? dataCW?.inventoryStats?.newQuantity : 0} />
     </div>
   );
 };

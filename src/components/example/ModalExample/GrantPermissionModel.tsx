@@ -30,34 +30,24 @@ export default function GrantPermissionModel({
     const [loading, setLoading] = useState(false);
 
     usePrefill({
-        orderStatus: status,
+        staffType: status,
     });
     const handleUpdate = async (data: Record<string, any>) => {
         try {
+            delete data.orderStatus;
             console.log("Dữ liệu gửi đi:", data);
             setLoading(true);
             const res = await PermissionService.grantPermission(id, data);
             console.log(res);
-            if (res.success) {
-                if (loadData && urlApi) loadData(urlApi);
-                closeModal();
-                openNotification({
-                    message: `${title} ${description} thành công`,
-                    description: `${description} đã được cập nhật.`,
-                    placement: "top",
-                    duration: 3,
-                    style: { borderLeft: "5px solid green" },
-                });
-            } else {
-                closeModal();
-                openNotification({
-                    message: `${title} thất bại`,
-                    description: `${description} không được cập nhật.`,
-                    placement: "top",
-                    duration: 3,
-                    style: { borderLeft: "5px solid red" },
-                });
-            }
+            if (loadData && urlApi) loadData(urlApi);
+            closeModal();
+            openNotification({
+                message: `${title} ${description} thành công`,
+                description: `${description} đã được cập nhật.`,
+                placement: "top",
+                duration: 3,
+                style: { borderLeft: "5px solid green" },
+            });
         }
         catch (error) {
             console.error("Lỗi khi cập nhật:", error);
