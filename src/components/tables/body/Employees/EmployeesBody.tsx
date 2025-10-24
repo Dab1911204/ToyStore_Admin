@@ -60,7 +60,7 @@ const EmployeesBody: React.FC<UserPermissionTableBodyProps> = ({
             </TableCell>
             <TableCell className="px-2 py-1 text-gray-500 text-theme-sm dark:text-gray-400">
               <div className="flex flex-col gap-2">
-                <Button onClick={() => onOpenModal("role", item.id, item.isDeleted ? 1 : 0)} className="w-20" size="xxs" variant="info" startIcon={<MdPermIdentity />}>
+                <Button onClick={() => onOpenModal("role", item.id, item.staffType)} className="w-20" size="xxs" variant="info" startIcon={<MdPermIdentity />}>
                   Chức vụ
                 </Button>
                 {!item.isDeleted ? (

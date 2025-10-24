@@ -19,23 +19,49 @@ export const InfoOrder = () => {
   const route = useRouter()
   const [loading, setLoading] = useState(false);
   const { values, setErrors } = useFormContext();
-  const handleSubmit = async (data: Record<string, any> | FormData) => {
+  const handleSubmit = async (data: Record<string, any>) => {
     const newErrors: { name: string; message: string }[] = [];
 
     // validate text fields
-    if (!values.Phone) newErrors.push({ name: "Phone", message: "Không được để trống số điện thoại." });
-    if (!values.Address) newErrors.push({ name: "Address", message: "Không được để trống địa chỉ." });
+    if (!values.phone) newErrors.push({ name: "phone", message: "Không được để trống số điện thoại." });
+    if (!values.address) newErrors.push({ name: "address", message: "Không được để trống địa chỉ." });
     setErrors(newErrors);
 
-    if (newErrors.length > 0) {
-
+    if (newErrors.length <= 0) {
       try {
         setLoading(true);
-        if (data instanceof FormData && cart.length > 0) {
-          cart.forEach((item, index) => {
-            data.append(`Products[${index}].productId`, item.product.id);
-            data.append(`Products[${index}].quantity`, item.quantity.toString());
-          });
+        if (cart.length > 0) {
+          // Tạo mảng Products
+          const products = cart.map(item => ({
+            productId: item.product.id,
+            quantity: item.quantity,
+          }));
+          const finalData = {
+            ...data,
+            products,
+          };
+          const res = await OrderService.createOrder(finalData);
+          console.log(res);
+          if (res.success) {
+            openNotification({
+              message: "Thành công",
+              description: "Đơn hàng đã được thêm thành công!",
+              placement: "top",
+              duration: 3,
+              icon: <FaRegSmileBeam style={{ color: "green" }} />,
+              style: { borderLeft: "5px solid green" },
+            });
+            route.push("/orders");
+          } else {
+            openNotification({
+              message: "Thất bại",
+              description: "Không thể thêm đơn hàng. Vui lòng thử lại!",
+              placement: "top",
+              duration: 3,
+              style: { borderLeft: "5px solid red" },
+            });
+            setLoading(false);
+          }
         } else {
           openNotification({
             message: "Cảnh báo",
@@ -47,28 +73,6 @@ export const InfoOrder = () => {
           });
           setLoading(false);
           return;
-        }
-        const res = await OrderService.createOrder(data);
-        console.log(res);
-        if (res.success) {
-          openNotification({
-            message: "Thành công",
-            description: "Đơn hàng đã được thêm thành công!",
-            placement: "top",
-            duration: 3,
-            icon: <FaRegSmileBeam style={{ color: "green" }} />,
-            style: { borderLeft: "5px solid green" },
-          });
-          route.push("/orders");
-        } else {
-          openNotification({
-            message: "Thất bại",
-            description: "Không thể thêm đơn hàng. Vui lòng thử lại!",
-            placement: "top",
-            duration: 3,
-            style: { borderLeft: "5px solid red" },
-          });
-          setLoading(false);
         }
       } catch (error) {
         console.log(error);
@@ -118,16 +122,16 @@ export const InfoOrder = () => {
           <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">
             Thông tin thanh toán
           </h2>
-          <Form onSubmit={handleSubmit} mode="multipart" method="POST" className="space-y-4">
+          <Form onSubmit={handleSubmit} method="POST" className="space-y-4">
             <InputForm
               type="phone"
               label="Số điện thoại"
-              name="Phone"
+              name="phone"
               placeholder="Nhập số điện thoại"
             />
             <InputForm
               label="Địa chỉ"
-              name="Address"
+              name="address"
               placeholder="Nhập địa chỉ giao hàng"
             />
             <Button

@@ -8,6 +8,7 @@ export const UserPermissionSchema = z.object({
   phoneNumber: z.string().nullable(),
   address: z.string().nullable(),
   localPicture: z.string().nullable(),
+  staffType: z.number(),
   gender: z.number().nullable(),
   roles: z.array(z.string()),
   lastLogin: z.string().nullable(),

@@ -64,7 +64,7 @@ const CategoryRow: React.FC<{
               <Image
                 width={100}
                 height={100}
-                src={"/images/cards/card-03.png"}
+                src={item.image||"/images/cards/card-03.png"}
                 alt={item.categoryName}
               />
             </div>
