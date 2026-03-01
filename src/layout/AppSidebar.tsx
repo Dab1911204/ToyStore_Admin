@@ -14,7 +14,6 @@ import { MdOutlineCategory, MdLogout, MdKeyboardArrowDown, MdOutlineMenu } from 
 import { CgProfile } from "react-icons/cg";
 import { NavItem } from "@/types/context";
 import { AuthService } from "@/services/authService";
-import { useUserPermission } from "@/context/UserPermissionContext";
 
 const navItems: NavItem[] = [
   { icon: <AiOutlineHome size={20} />, name: "Trang chủ", path: "/" },
@@ -40,39 +39,6 @@ const othersItems: NavItem[] = [
   { icon: <MdLogout />, name: "Đăng xuất", action: "sign-out" },
 ];
 
-// mapping navItem path -> required permission code
-const navPermissionMap: Record<string, string[]> = {
-  "/categories": ["CATEGORY_VIEW"],
-  "/products": ["PRODUCT_VIEW"],
-  "/orders": ["ORDER_VIEW"],
-  "/news": ["NEWS_VIEW"],
-  "/promotions": ["PROMOTION_VIEW"],
-  "/suppliers": ["SUPPLIER_VIEW"],
-  "/warehouses": ["WAREHOUSE_VIEW"],
-  "/employees": ["STAFF_VIEW"],
-  "/employees/authorization": ["PERMISSION_VIEW"],
-  "/customers": ["USER_VIEW"],
-};
-
-const filterNavItemsByPermissions = (navItems: NavItem[], permissions: string[]): NavItem[] => {
-  return navItems
-    .map(item => {
-      if (item.subItems) {
-        const filteredSubItems = item.subItems.filter(sub => {
-          const required = navPermissionMap[sub.path] || [];
-          return required.every(p => permissions.includes(p));
-        });
-        if (filteredSubItems.length === 0) return null; // bỏ item nếu không còn subItems
-        return { ...item, subItems: filteredSubItems };
-      } else {
-        const required = item.path ? navPermissionMap[item.path] || [] : [];
-        if (!required.every(p => permissions.includes(p))) return null;
-        return item;
-      }
-    })
-    .filter(Boolean) as NavItem[];
-};
-
 interface Props {
   setHandling: (value: boolean) => void;
   handling: boolean;
@@ -82,7 +48,6 @@ const AppSidebar: React.FC<Props> = ({ setHandling, handling }) => {
   const router = useRouter();
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const pathname = usePathname();
-  const { userPermissions } = useUserPermission();
 
   const [openSubmenu, setOpenSubmenu] = useState<{ type: "main" | "others"; index: number } | null>(null);
   const [subMenuHeight, setSubMenuHeight] = useState<Record<string, number>>({});
@@ -116,12 +81,6 @@ const AppSidebar: React.FC<Props> = ({ setHandling, handling }) => {
     }
   }, [openSubmenu]);
 
-  // Lọc menu dựa trên quyền
-  const permissionCodes = userPermissions?.permissions
-    .filter(p => p.isGranted)   // nếu bạn muốn chỉ lấy quyền được cấp
-    .map(p => p.code) || [];
-
-  const filteredNavItems = filterNavItemsByPermissions(navItems, permissionCodes);
 
   const renderMenuItems = (items: NavItem[], menuType: "main" | "others") => (
     <ul className="flex flex-col gap-4">
@@ -195,7 +154,7 @@ const AppSidebar: React.FC<Props> = ({ setHandling, handling }) => {
               <h2 className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${!isExpanded && !isHovered ? "lg:justify-center" : "justify-start"}`}>
                 {isExpanded || isHovered || isMobileOpen ? "Menu" : <MdOutlineMenu />}
               </h2>
-              {renderMenuItems(filteredNavItems, "main")}
+              {renderMenuItems(navItems, "main")}
             </div>
             <div>
               <h2 className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${!isExpanded && !isHovered ? "lg:justify-center" : "justify-start"}`}>
